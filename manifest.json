@@ -1,6 +1,6 @@
 {
-  "name": "Better Schoolbox styling",
-  "description": "Change the styling of the new schoolbox page into something more like the old version",
+  "name": "Older SchoolBox styling",
+  "description": "Change the styling of the new school box page into something more like the old version",
   "version": "1.0",
   "manifest_version": 3,
   "content_scripts": [
