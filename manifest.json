@@ -8,5 +8,7 @@
       "matches": ["https://schoolbox.emmanuel.qld.edu.au/*"],
       "css": ["content.css"]
     }
-  ]
+  ],
+  "icons": {"32": "Binary swift icon.png"}
+
 }
