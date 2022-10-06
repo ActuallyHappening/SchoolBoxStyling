@@ -1,0 +1,12 @@
+{
+  "name": "Better Schoolbox styling",
+  "description": "Change the styling of the new schoolbox page into something more like the old version",
+  "version": "1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["https://schoolbox.emmanuel.qld.edu.au/*"],
+      "css": ["content.css"]
+    }
+  ]
+}
