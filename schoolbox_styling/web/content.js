@@ -6,12 +6,10 @@ console.log("content.js loaded");
 
   chrome.storage.sync.get(["savedColour"], (items) => {
     console.log("[content.js] [Initial load] Got items from storage", items);
-    items.find((item) => {
-      if (item.savedColour) {
-        console.log("[content.js] [Initial load] Found saved colour", item.savedColour);
-        elem.style.backgroundColor = item.savedColour; 
-      }
-    });
+    if (item.savedColour) {
+      console.log("[content.js] [Initial load] Found saved colour", item.savedColour);
+      elem.style.backgroundColor = item.savedColour; 
+    }
   });
 }
 
@@ -24,7 +22,8 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
     console.log("[content.js] Found element", elem);
 
     elem.style.backgroundColor = msg.colour;
-    chrome.storage.sync.set({savedColour: msg.colour});
+    chrome.storage.sync.set({ savedColour: msg.colour });
+    console.log("[content.js] Set colour to", msg.colour, "and saved to storage");
 
     response({ ...msg, status: "ok" });
     
