@@ -7,7 +7,7 @@
     },
     "action": {
         "default_popup": "index.html",
-        "default_icon": "icons/Icon-192.png"
+        "default_icon": "icons/Binary swift icon.png"
     },
     "content_scripts": [{
       "matches": ["https://schoolbox.emmanuel.qld.edu.au/*"],
@@ -15,7 +15,7 @@
     }],
     "permissions": [
       "activeTab",
-      "scripting"
+      "storage"
     ],
     "manifest_version": 3
 }
