@@ -10,7 +10,7 @@
         "default_icon": "icons/Icon-192.png"
     },
     "content_scripts": [{
-      "matches": ["<all_urls>"],
+      "matches": ["https://schoolbox.emmanuel.qld.edu.au/*"],
       "js": ["content.js"]
     }],
     "permissions": [

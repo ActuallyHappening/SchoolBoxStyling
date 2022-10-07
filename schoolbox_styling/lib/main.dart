@@ -3,14 +3,22 @@ import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-void changeColourTo(String colour) {
-  js.context.callMethod('changeColour', [colour]);
+void changeColourTo(Color colour) {
+  String cssColour =
+      "rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha})";
+  print("Colour changed to: $cssColour");
+
+  js.context.callMethod('changeColour', [cssColour]);
 }
 
 void main() {
-  changeColourTo("green");
   runApp(const MyApp());
 }
+
+final Map<String, Color> knownColours = {
+  "Set top bar to newer colour": const Color(0xFF82c3eb),
+  "Set top bar to older colour": const Color(0xFF193c64),
+};
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -23,18 +31,28 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ColourPicker(),
+      home: Scaffold(
+        body: const ColourPicker(),
+        appBar: AppBar(title: const Text("Change Top Bar Colour")),
+      ),
     );
   }
 }
 
-extension HexColor on Color {
-  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
-  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
-      '${alpha.toRadixString(16).padLeft(2, '0')}'
-      '${red.toRadixString(16).padLeft(2, '0')}'
-      '${green.toRadixString(16).padLeft(2, '0')}'
-      '${blue.toRadixString(16).padLeft(2, '0')}';
+List<Widget> genChildren(Map<String, Color> beginColours) {
+  List<Widget> children = [];
+  for (String name in beginColours.keys) {
+    final Color colour = beginColours[name]!;
+    children.add(ActionChip(
+        label: Text(
+          name,
+        ),
+        // backgroundColor: Color(colour.value).withAlpha(10),
+        onPressed: () {
+          changeColourTo(colour);
+        }));
+  }
+  return children;
 }
 
 class ColourPicker extends StatefulWidget {
@@ -45,17 +63,16 @@ class ColourPicker extends StatefulWidget {
 }
 
 class _ColourPickerState extends State<ColourPicker> {
-  Color chosenColour = Colors.blue;
+
+  final knownChips = genChildren(knownColours);
   @override
   Widget build(BuildContext context) {
-    return MaterialPicker(
-        pickerColor: chosenColour,
-        onColorChanged: (Color colour) {
-          setState(() {
-            chosenColour = colour;
-          });
-          print("Colour changed to: ${colour.toHex()}");
-          changeColourTo(chosenColour.toHex());
-        });
+    return ListView(
+      children: [
+        ...knownChips,
+        const MaterialPicker(
+            pickerColor: Colors.blue, onColorChanged: changeColourTo)
+      ],
+    );
   }
 }
