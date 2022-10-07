@@ -6,9 +6,10 @@ console.log("content.js loaded");
 
   chrome.storage.sync.get(["savedColour"], (items) => {
     console.log("[content.js] [Initial load] Got items from storage", items);
-    if (item.savedColour) {
-      console.log("[content.js] [Initial load] Found saved colour", item.savedColour);
-      elem.style.backgroundColor = item.savedColour; 
+    const savedColour = items.savedColour;
+    if (savedColour) {
+      console.log("[content.js] [Initial load] Found saved colour", savedColour);
+      elem.style.backgroundColor = savedColour; 
     }
   });
 }
