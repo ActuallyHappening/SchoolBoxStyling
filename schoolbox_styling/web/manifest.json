@@ -1,7 +1,7 @@
 {
-    "name": "Schoolbox Styling",
-    "description": "Style schoolbox, but better!",
-    "version": "1.1.0",
+    "name": "Better Schoolbox",
+    "description": "Style school box, but better!",
+    "version": "1.2.0",
     "content_security_policy": {
         "extension_pages": "script-src 'self' ; object-src 'self'"
     },
