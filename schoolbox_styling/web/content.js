@@ -1,4 +1,5 @@
 console.log("content.js loaded");
+console.log("content.js - Includes left")
 
 { // When first loaded
   const elem = document.querySelectorAll(".tab-bar")[0];
@@ -9,6 +10,18 @@ console.log("content.js loaded");
     const savedColour = items.savedColour;
     if (savedColour) {
       console.log("[content.js] [Initial load] Found saved colour", savedColour);
+      elem.style.backgroundColor = savedColour;
+    }
+  });
+}{
+  const elem = document.querySelectorAll("aside, #left-menu")[0];
+  console.log("[content.js] [Initial load -left] Found element", elem);
+
+  chrome.storage.sync.get(["savedColourLeftMenu"], (items) => {
+    console.log("[content.js] [Initial load-left] Got items from storage", items);
+    const savedColour = items.savedColourLeftMenu;
+    if (savedColour) {
+      console.log("[content.js] [Initial load-left] Found saved colour", savedColour);
       elem.style.backgroundColor = savedColour; 
     }
   });
@@ -28,5 +41,14 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
     response({ ...msg, status: "ok" });
     
+  } else if (msg?.type === "setColourLeftMenu") {
+    const elem = document.querySelectorAll("aside, #left-menu")[0];
+    console.log("[content.js]-left Found element", elem);
+
+    elem.style.backgroundColor = msg.colour;
+    chrome.storage.sync.set({ savedColourLeftMenu: msg.colour });
+    console.log("[content.js]-left Set colour to", msg.colour, "and saved to storage");
+
+    response({ ...msg, status: "ok" });
   }
 })
