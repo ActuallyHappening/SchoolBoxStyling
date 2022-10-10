@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.knownKeys = void 0;
 /**
  * Actions are serializable constructs that define how to update the DOM.
  *
@@ -16,7 +13,7 @@ exports.knownKeys = void 0;
  * ## Examples:
  * popup.ts sends action to content.ts:
  */
-exports.knownKeys = [
+knownKeys = [
     "topBarColour",
     "leftBarColour",
     "rightBarColour",
@@ -51,6 +48,7 @@ function setToStorage(itemName, value) {
 function listenForMessage(key, callback) {
     chrome.runtime.onMessage.addListener((msg, sender, response) => {
         if (msg.key === key) {
+            console.log("[listenForMessage] Received message for key", key, "with value", msg.newValue);
             callback(msg.newValue);
         }
     });
@@ -130,6 +128,10 @@ const knownActionStatics = [
     },
 ];
 knownActionStatics.forEach(registerAction);
+chrome.runtime.onMessage.addListener((msg, sender, response) => {
+    console.log("[debug all] Received message", msg, "from sender", sender);
+});
+// #region dead
 // {
 //   // When first loaded
 //   const elem = document.querySelectorAll(".tab-bar")[0];
@@ -223,3 +225,5 @@ knownActionStatics.forEach(registerAction);
 //     response({ ...msg, status: "ok" });
 //   }
 // });
+// #endregion
+//# sourceMappingURL=content.js.map

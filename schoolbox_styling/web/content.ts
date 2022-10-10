@@ -87,6 +87,12 @@ function listenForMessage(
   chrome.runtime.onMessage.addListener(
     (msg: EventPayload, sender, response) => {
       if (msg.key === key) {
+        console.log(
+          "[listenForMessage] Received message for key",
+          key,
+          "with value",
+          msg.newValue
+        );
         callback(msg.newValue);
       }
     }
@@ -238,6 +244,12 @@ const knownActionStatics: Action[] = [
 
 knownActionStatics.forEach(registerAction);
 
+chrome.runtime.onMessage.addListener((msg, sender, response) => {
+  console.log("[debug all] Received message", msg, "from sender", sender);
+});
+
+
+// #region dead
 // {
 //   // When first loaded
 //   const elem = document.querySelectorAll(".tab-bar")[0];
@@ -341,3 +353,4 @@ knownActionStatics.forEach(registerAction);
 //     response({ ...msg, status: "ok" });
 //   }
 // });
+// #endregion

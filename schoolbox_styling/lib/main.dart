@@ -13,6 +13,11 @@ enum KnownKeys {
   leftBarColour,
   mainSchoolBoxIconURL,
 }
+extension KnownKeysExt on KnownKeys {
+  String get key => toString().split('.').last;
+}
+
+
 
 final Map<String, Widget Function(BuildContext)> routes = {
   "/topbarcolour": (context) => const TopBarRoute(),
@@ -21,7 +26,8 @@ final Map<String, Widget Function(BuildContext)> routes = {
 };
 
 void sendNewValue(KnownKeys key, String value) {
-  js.context.callMethod("sendNewValue", [key.toString(), value]);
+  print("Sending new value for $key: $value");
+  js.context.callMethod("sendNewValue", [key.key, value]);
 }
 
 String toCSSColour(Color colour) {
@@ -137,15 +143,20 @@ class ColourPicker extends StatelessWidget {
   ColourPicker({
     super.key,
     required this.propertyKey,
-  });
+  }) {
+    chips = [
+      ListTile(
+        leading: const Icon(Icons.restart_alt_rounded),
+        iconColor: knownColours["Reset"],
+        title: const Text("Reset"),
+        onTap: () =>
+            sendNewValue(propertyKey, toCSSColour(knownColours["Reset"]!)),
+      )
+    ];
+  }
 
   final KnownKeys propertyKey;
-  final List<Widget> chips = [
-    ListTile(
-      iconColor: knownColours["Reset"],
-      title: const Text("Reset"),
-    )
-  ];
+  late List<Widget> chips;
 
   @override
   Widget build(BuildContext context) {
