@@ -3,15 +3,17 @@ import 'dart:js' as js;
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-void changeColourTo(Color colour, String whichBar) {
+void changeColourTo(Color colour, PossibleOptions whichBar) {
   String cssColour =
       "rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha})";
   print("Colour changed to: $cssColour, whichBar: $whichBar");
 
-  if (whichBar == "topbarcolour") {
+  if (whichBar == PossibleOptions.topbarcolour) {
     js.context.callMethod("changeTopBarColour", [cssColour]);
-  } else if (whichBar == "leftbarcolour") {
+  } else if (whichBar == PossibleOptions.leftbarcolour) {
     js.context.callMethod("changeLeftBarColour", [cssColour]);
+  } else if (whichBar == PossibleOptions.mainschoolboxicon) {
+    js.context.callbac
   } else {
     print("Error: whichBar is not set correctly, $whichBar");
   }
@@ -22,9 +24,27 @@ void main() {
 }
 
 final Map<String, Color> knownColours = {
-  "Set top bar to newer colour": const Color(0xFF82c3eb),
-  "Set top bar to older colour": const Color(0xFF193c64),
+  "To newer colour (reset)": const Color(0xFF82c3eb),
+  // "Set top bar to older colour": const Color(0xFF193c64),
 };
+
+enum PossibleOptions {
+  leftbarcolour,
+  topbarcolour,
+  mainschoolboxicon,
+}
+String toStr(PossibleOptions option) {
+  switch (option) {
+    case (PossibleOptions.leftbarcolour):
+      return "leftbarcolour";
+    case (PossibleOptions.topbarcolour):
+      return "topbarcolour";
+    case (PossibleOptions.mainschoolboxicon):
+      return "mainschoolboxicon";
+    default: 
+      throw FlutterError("Unknown `PossibleOption` $option, please provide proper option");
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -39,9 +59,59 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "/topbarcolour": (context) => const TopBarRoute(),
-        "/leftbarcolour": (context) => const LeftBarRoute()
+        "/leftbarcolour": (context) => const LeftBarRoute(),
+        "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
       },
       initialRoute: "/topbarcolour",
+    );
+  }
+}
+
+class MyAppDrawer extends StatelessWidget {
+  const MyAppDrawer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+        child: ListView(
+      children: [
+        // const DrawerHeader(child: Text("Extra Options ...")),
+        ListTile(
+          title: const Text("Top bar colour"),
+          onTap: () {
+            Navigator.pushNamed(context, "/topbarcolour");
+          },
+        ),
+        ListTile(
+          title: const Text("Left bar colour ✨Beta!✨"),
+          onTap: () {
+            Navigator.pushNamed(context, "/leftbarcolour");
+          },
+        ),
+        ListTile(
+          title: const Text("Main school box icon ✨Beta!✨"),
+          onTap: () {
+            Navigator.pushNamed(context, "/mainschoolboxicon");
+          },
+        )
+      ],
+    ));
+  }
+}
+
+class MainSchoolboxIconRoute extends StatelessWidget {
+  const MainSchoolboxIconRoute({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Picture URL Choser"),
+      ),
+      drawer: const MyAppDrawer(),
+      body: const Center(
+        child: ,
+      ),
     );
   }
 }
@@ -71,13 +141,7 @@ class TopBarRoute extends StatelessWidget {
     return Scaffold(
         body: const ColourPicker("topbarcolour"),
         appBar: AppBar(title: const Text("Change Top Bar Colour")),
-        drawer: Drawer(
-            child: ListTile(
-          title: const Text("Left bar colour"),
-          onTap: () {
-            Navigator.pushNamed(context, "/leftbarcolour");
-          },
-        )));
+        drawer: const MyAppDrawer());
   }
 }
 
@@ -89,13 +153,7 @@ class LeftBarRoute extends StatelessWidget {
     return Scaffold(
         body: const ColourPicker("leftbarcolour"),
         appBar: AppBar(title: const Text("Change Left Bar Colour")),
-        drawer: Drawer(
-            child: ListTile(
-          title: const Text("Top bar colour"),
-          onTap: () {
-            Navigator.pushNamed(context, "/topbarcolour");
-          },
-        )));
+        drawer: const MyAppDrawer());
   }
 }
 
