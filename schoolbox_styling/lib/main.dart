@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:js' as js;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -6,21 +8,21 @@ void main() {
   runApp(const MyApp());
 }
 
-final Map<String, Color> knownColours = {
-  "Reset": const Color(0xFF82c3eb),
-  // "Set top bar to older colour": const Color(0xFF193c64),
-};
-
-enum RouteNames {
+enum KnownKeys {
   topBarColour,
   leftBarColour,
-  iconUrl,
+  mainSchoolBoxIconURL,
 }
+
 final Map<String, Widget Function(BuildContext)> routes = {
   "/topbarcolour": (context) => const TopBarRoute(),
   "/leftbarcolour": (context) => const LeftBarRoute(),
   "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
 };
+
+void sendNewValue(KnownKeys key, String value) {
+  js.context.callMethod("sendNewValue", [key.toString(), value]);
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -71,8 +73,8 @@ class MyAppDrawer extends StatelessWidget {
   }
 }
 
-class MainSchoolboxIconRoute extends StatelessWidget {
-  const MainSchoolboxIconRoute({Key? key}) : super(key: key);
+class MainSchoolBoxIconRoute extends StatelessWidget {
+  const MainSchoolBoxIconRoute({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -81,29 +83,27 @@ class MainSchoolboxIconRoute extends StatelessWidget {
         title: const Text("Picture URL Choser"),
       ),
       drawer: const MyAppDrawer(),
-      body: const Center(
-        child: ,
+      body: Center(
+        child: TextField(
+          onChanged: (String text) {
+            print("New URL text: $text");
+            sendNewValue(KnownKeys.mainSchoolBoxIconURL, text);
+          },
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText:
+                'Copy Paste a picture url here, e.g. https://picsum.photos/300/300 ',
+          ),
+        ),
       ),
     );
   }
 }
 
-List<Widget> genChildren(Map<String, Color> beginColours, String whichBar) {
-  List<Widget> children = [];
-  for (String name in beginColours.keys) {
-    final Color colour = beginColours[name]!;
-    children.add(ActionChip(
-        label: Text(
-          name,
-        ),
-        // backgroundColor: Color(colour.value).withAlpha(10),
-        onPressed: () {
-          print("preset colour callback");
-          changeColourTo(colour, whichBar);
-        }));
-  }
-  return children;
-}
+final Map<String, Color> knownColours = {
+  "Reset": const Color(0xFF82c3eb),
+  // "Set top bar to older colour": const Color(0xFF193c64),
+};
 
 class TopBarRoute extends StatelessWidget {
   const TopBarRoute({Key? key}) : super(key: key);
@@ -111,7 +111,7 @@ class TopBarRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const ColourPicker("topbarcolour"),
+        body: const ColourPicker(KnownKeys.topBarColour),
         appBar: AppBar(title: const Text("Change Top Bar Colour")),
         drawer: const MyAppDrawer());
   }
@@ -123,38 +123,36 @@ class LeftBarRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const ColourPicker("leftbarcolour"),
+        body: const ColourPicker(KnownKeys.leftBarColour),
         appBar: AppBar(title: const Text("Change Left Bar Colour")),
         drawer: const MyAppDrawer());
   }
 }
 
-class ColourPicker extends StatefulWidget {
-  const ColourPicker(this.whichBar, {super.key});
-  final String whichBar;
+class ColourPicker extends StatelessWidget {
+  ColourPicker({
+    super.key,
+    required this.propertyKey,
+  });
 
-  @override
-  State<ColourPicker> createState() => _ColourPickerState(whichBar);
-}
-
-class _ColourPickerState extends State<ColourPicker> {
-  _ColourPickerState(this.whichBar) {
-    knownChips = genChildren(knownColours, whichBar);
-  }
-
-  late List<Widget> knownChips;
-  late String whichBar;
+  final KnownKeys propertyKey;
+  final List<Widget> chips = [
+    ListTile(
+      iconColor: knownColours["Reset"],
+      title: const Text("Reset"),
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        ...knownChips,
+        ...chips,
         MaterialPicker(
             pickerColor: Colors.blue,
             onColorChanged: (colour) {
               print("Colour changed callback");
-              changeColourTo(colour, whichBar);
+              sendNewValue(propertyKey, colour);
             })
       ],
     );
