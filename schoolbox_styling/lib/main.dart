@@ -103,6 +103,15 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
                   "/images/logo.php?logo=skin_logo_large&size=hidpi");
             },
           ),
+          ListTile(
+            // leading: const Icon(Icons.bento_rounded),
+            title: const Text("Old Icon"),
+            onTap: () {
+              // print("$propertyKey reset");
+              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
+                  "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png");
+            },
+          ),
           Center(
             child: TextField(
               onChanged: (String text) {
