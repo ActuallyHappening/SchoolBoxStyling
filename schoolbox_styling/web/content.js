@@ -92,8 +92,13 @@ function registerAction(action) {
     const { key } = action;
     getFromStorage(key, (newestValue) => {
         // initial load, trigger 'update'
-        if (!newestValue)
-            return;
+        if (!newestValue || newestValue == "empty") {
+            if (action.defaultValue) {
+                console.log("Loading default value for", key, "which is", action.defaultValue);
+                executeActionInScope(action, "update", action.defaultValue);
+                return;
+            }
+        }
         console.log("initial load, triggering 'update' for key", key, "and action", action, "with newest value", newestValue);
         executeActionInScope(action, "update", newestValue);
     });
@@ -133,7 +138,7 @@ const knownActionStatics = [
         querySelector: "a.logo",
         firstLevelProperty: "style",
         secondLevelProperty: "background",
-        newValWrapper: "url($$$) center center no-repeat",
+        newValWrapper: "url($$$) center center / contain no-repeat",
     },
 ];
 knownActionStatics.forEach(registerAction);

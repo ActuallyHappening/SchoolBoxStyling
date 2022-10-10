@@ -17,6 +17,7 @@ const knownKeys = [
   "topBarColour",
   "leftBarColour",
   "rightBarColour",
+
   "mainSchoolBoxIconURL",
 ] as const;
 export type KnownKeys = typeof knownKeys[number];
@@ -134,6 +135,7 @@ interface Action {
   secondLevelProperty?: string;
 
   newValWrapper: `${string}$$$${string}`;
+  defaultValue?: ParamPayload;
 }
 
 /**
@@ -192,8 +194,18 @@ function registerAction(action: Action) {
   const { key } = action;
   getFromStorage(key, (newestValue) => {
     // initial load, trigger 'update'
-    if (!newestValue) return;
-    if (newestValue === "empty") return;
+    if (!newestValue || newestValue == "empty") {
+      if (action.defaultValue) {
+        console.log(
+          "Loading default value for",
+          key,
+          "which is",
+          action.defaultValue
+        );
+        executeActionInScope(action, "update", action.defaultValue);
+        return;
+      }
+    }
     console.log(
       "initial load, triggering 'update' for key",
       key,
@@ -255,7 +267,7 @@ const knownActionStatics: Action[] = [
     querySelector: "a.logo",
     firstLevelProperty: "style",
     secondLevelProperty: "background",
-    newValWrapper: "url($$$) center center no-repeat",
+    newValWrapper: "url($$$) center center / contain no-repeat",
   },
 ];
 
