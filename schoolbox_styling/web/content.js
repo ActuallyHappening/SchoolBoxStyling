@@ -29,10 +29,11 @@ function queryMany(querySelector, callback) {
     elements.forEach(callback);
 }
 function getFromStorage(itemName, callback) {
-    chrome.storage.sync.get([_genStorageKey(itemName)], (items) => {
-        const data = items[itemName];
+    const storageKey = _genStorageKey(itemName);
+    chrome.storage.sync.get([storageKey], (items) => {
+        const data = items[storageKey];
         if (!data) {
-            console.warn(`Retrieving item '${itemName}' from storage found nothing.\nIf no value for ${itemName} has ever been stored, this is expected.\nOtherwise, a typo in ${itemName} is likely the cause.`);
+            console.warn(`Retrieving item '${itemName}' from storage found nothing.\nIf no value for ${itemName} has ever been stored, this is expected.\nOtherwise, a typo in ${itemName} is likely the cause.\n Raw storage key: ${storageKey}`);
         }
         console.log("Retrieved", data, "under key", itemName, "from synced local storage.");
         callback(data);
@@ -42,8 +43,10 @@ function _genStorageKey(key) {
     return `betterSchoolBoxExtensionStorage-${key}`;
 }
 function setToStorage(itemName, value) {
+    const storageKey = _genStorageKey(itemName);
+    console.log("Setting", value, "under key", storageKey, "in synced local storage.");
     chrome.storage.sync.set({
-        [_genStorageKey(itemName)]: value,
+        [storageKey]: value,
     });
 }
 function listenForMessage(key, callback) {
@@ -89,7 +92,9 @@ function registerAction(action) {
     const { key } = action;
     getFromStorage(key, (newestValue) => {
         // initial load, trigger 'update'
-        console.log("initial load, triggering 'update' for key", key, "and action", action);
+        if (!newestValue)
+            return;
+        console.log("initial load, triggering 'update' for key", key, "and action", action, "with newest value", newestValue);
         executeActionInScope(action, "update", newestValue);
     });
     chrome.storage.onChanged.addListener((changes, areaName) => {

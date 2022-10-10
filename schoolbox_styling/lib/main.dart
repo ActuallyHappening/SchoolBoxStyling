@@ -13,6 +13,7 @@ enum KnownKeys {
   leftBarColour,
   mainSchoolBoxIconURL,
 }
+
 extension KnownKeysExt on KnownKeys {
   String get key => toString().split('.').last;
 }
@@ -147,8 +148,10 @@ class ColourPicker extends StatelessWidget {
         leading: const Icon(Icons.restart_alt_rounded),
         iconColor: resetColours[propertyKey],
         title: const Text("Reset"),
-        onTap: () =>
-            sendNewValue(propertyKey, toCSSColour(resetColours["Reset"]!)),
+        onTap: () {
+          // print("$propertyKey reset");
+          sendNewValue(propertyKey, toCSSColour(resetColours[propertyKey]!));
+        },
       )
     ];
   }

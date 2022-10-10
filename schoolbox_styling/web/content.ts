@@ -48,11 +48,12 @@ function getFromStorage(
   itemName: KnownKeys,
   callback: (value: StorageValue) => void
 ) {
-  chrome.storage.sync.get([_genStorageKey(itemName)], (items) => {
-    const data = items[itemName];
+  const storageKey = _genStorageKey(itemName);
+  chrome.storage.sync.get([storageKey], (items) => {
+    const data = items[storageKey];
     if (!data) {
       console.warn(
-        `Retrieving item '${itemName}' from storage found nothing.\nIf no value for ${itemName} has ever been stored, this is expected.\nOtherwise, a typo in ${itemName} is likely the cause.`
+        `Retrieving item '${itemName}' from storage found nothing.\nIf no value for ${itemName} has ever been stored, this is expected.\nOtherwise, a typo in ${itemName} is likely the cause.\n Raw storage key: ${storageKey}`
       );
     }
     console.log(
@@ -71,8 +72,16 @@ function _genStorageKey(key: KnownKeys): StorageKey {
 }
 
 function setToStorage(itemName: KnownKeys, value: StorageValue) {
+  const storageKey = _genStorageKey(itemName);
+  console.log(
+    "Setting",
+    value,
+    "under key",
+    storageKey,
+    "in synced local storage."
+  );
   chrome.storage.sync.set({
-    [_genStorageKey(itemName)]: value,
+    [storageKey]: value,
   });
 }
 
@@ -182,11 +191,14 @@ function registerAction(action: Action) {
   const { key } = action;
   getFromStorage(key, (newestValue) => {
     // initial load, trigger 'update'
+    if (!newestValue) return;
     console.log(
       "initial load, triggering 'update' for key",
       key,
       "and action",
-      action
+      action,
+      "with newest value",
+      newestValue
     );
     executeActionInScope(action, "update", newestValue);
   });
