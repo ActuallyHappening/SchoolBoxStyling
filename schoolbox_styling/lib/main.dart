@@ -24,6 +24,10 @@ void sendNewValue(KnownKeys key, String value) {
   js.context.callMethod("sendNewValue", [key.toString(), value]);
 }
 
+String toCSSColour(Color colour) {
+  return "rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha})";
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -111,7 +115,7 @@ class TopBarRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const ColourPicker(KnownKeys.topBarColour),
+        body: ColourPicker(propertyKey: KnownKeys.topBarColour),
         appBar: AppBar(title: const Text("Change Top Bar Colour")),
         drawer: const MyAppDrawer());
   }
@@ -123,7 +127,7 @@ class LeftBarRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: const ColourPicker(KnownKeys.leftBarColour),
+        body: ColourPicker(propertyKey: KnownKeys.leftBarColour),
         appBar: AppBar(title: const Text("Change Left Bar Colour")),
         drawer: const MyAppDrawer());
   }
@@ -152,7 +156,7 @@ class ColourPicker extends StatelessWidget {
             pickerColor: Colors.blue,
             onColorChanged: (colour) {
               print("Colour changed callback");
-              sendNewValue(propertyKey, colour);
+              sendNewValue(propertyKey, toCSSColour(colour));
             })
       ],
     );
