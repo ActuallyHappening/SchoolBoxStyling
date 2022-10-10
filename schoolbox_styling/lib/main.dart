@@ -92,18 +92,31 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
         title: const Text("Picture URL Choser"),
       ),
       drawer: const MyAppDrawer(),
-      body: Center(
-        child: TextField(
-          onChanged: (String text) {
-            print("New URL text: $text");
-            sendNewValue(KnownKeys.mainSchoolBoxIconURL, text);
-          },
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText:
-                'Copy Paste a picture url here, e.g. https://picsum.photos/300/300 ',
+      body: ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.restart_alt_rounded),
+            title: const Text("Reset"),
+            onTap: () {
+              // print("$propertyKey reset");
+              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
+                  "/images/logo.php?logo=skin_logo_large&size=hidpi");
+            },
           ),
-        ),
+          Center(
+            child: TextField(
+              onChanged: (String text) {
+                print("New URL text: $text");
+                sendNewValue(KnownKeys.mainSchoolBoxIconURL, text);
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText:
+                    'Copy Paste a picture url here, e.g. https://picsum.photos/300/300 ',
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

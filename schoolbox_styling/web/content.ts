@@ -142,7 +142,8 @@ interface Action {
  */
 export type ParamPayload =
   | `rgb(${number}, ${number}, ${number})`
-  | `https://${string}.${string}/${string}`;
+  | `https://${string}.${string}/${string}`
+  | "empty";
 
 function executeActionInScope(
   action: Action,
@@ -192,6 +193,7 @@ function registerAction(action: Action) {
   getFromStorage(key, (newestValue) => {
     // initial load, trigger 'update'
     if (!newestValue) return;
+    if (newestValue === "empty") return;
     console.log(
       "initial load, triggering 'update' for key",
       key,
