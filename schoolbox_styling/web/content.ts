@@ -13,7 +13,7 @@
  * ## Examples:
  * popup.ts sends action to content.ts:
  */
-export const knownKeys = [
+const knownKeys = [
   "topBarColour",
   "leftBarColour",
   "rightBarColour",
@@ -194,7 +194,7 @@ function registerAction(action: Action) {
     if (areaName === "sync" && changes[key].newValue) {
       // storageUpdated trigger update
       console.log(
-        "Detected change in storage key",
+        "[registered onChanged listener] Detected change in storage key",
         key,
         "and updating action",
         action,
@@ -214,7 +214,8 @@ function registerAction(action: Action) {
       "with new value",
       value
     );
-    executeActionInScope(action, "update", value);
+    setToStorage(key, value); // Should trigger update
+    // executeActionInScope(action, "update", value);
   });
 }
 

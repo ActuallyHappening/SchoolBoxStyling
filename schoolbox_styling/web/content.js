@@ -13,7 +13,7 @@
  * ## Examples:
  * popup.ts sends action to content.ts:
  */
-knownKeys = [
+const knownKeys = [
     "topBarColour",
     "leftBarColour",
     "rightBarColour",
@@ -94,14 +94,15 @@ function registerAction(action) {
     chrome.storage.onChanged.addListener((changes, areaName) => {
         if (areaName === "sync" && changes[key].newValue) {
             // storageUpdated trigger update
-            console.log("Detected change in storage key", key, "and updating action", action, "with new value", changes[key].newValue);
+            console.log("[registered onChanged listener] Detected change in storage key", key, "and updating action", action, "with new value", changes[key].newValue);
             executeActionInScope(action, "update", changes[key].newValue);
         }
     });
     listenForMessage(key, (value) => {
         // messageReceived trigger update
         console.log("Detected message for key", key, "and updating action", action, "with new value", value);
-        executeActionInScope(action, "update", value);
+        setToStorage(key, value); // Should trigger update
+        // executeActionInScope(action, "update", value);
     });
 }
 const knownActionStatics = [
