@@ -8,12 +8,10 @@
  *
  * There is a known set of possible keys that actions can take,
  *
- * ## Setting the same key twice can be thought of as updating the current value
- * (unless changes to the actions specification exist).
+ * ## Runtime action registering is NOT supported, as removing event listeners is hard!
  *
  * ## Examples:
  * popup.ts sends action to content.ts:
- * {}
  */
 export const knownKeys = [
   "topBarColour",
@@ -45,7 +43,7 @@ type StorageKey = `betterSchoolBoxExtensionStorage-${KnownKeys}`;
  * This is no different to `Action` interface,
  * as the 'current' value is in `Action.storedValue`
  */
-type StorageValue = Action;
+type StorageValue = ParamPayload;
 function getFromStorage(
   itemName: KnownKeys,
   callback: (value: StorageValue) => void
@@ -68,7 +66,7 @@ function getFromStorage(
   });
 }
 
-function _genStorageKey(key: KnownKeys) {
+function _genStorageKey(key: KnownKeys): StorageKey {
   return `betterSchoolBoxExtensionStorage-${key}`;
 }
 
@@ -78,16 +76,21 @@ function setToStorage(itemName: KnownKeys, value: StorageValue) {
   });
 }
 
-interface EventPayload {
-  type: KnownKeys;
-  value: Action;
+export interface EventPayload {
+  key: KnownKeys;
+  newValue: ParamPayload;
 }
-function listenForMessage(key: KnownKeys, callback: (value: Action) => void) {
-  chrome.runtime.onMessage.addListener((msg, sender, response) => {
-    if (msg?.type === key) {
-      callback(msg.value);
+function listenForMessage(
+  key: KnownKeys,
+  callback: (value: ParamPayload) => void
+) {
+  chrome.runtime.onMessage.addListener(
+    (msg: EventPayload, sender, response) => {
+      if (msg.key === key) {
+        callback(msg.newValue);
+      }
     }
-  });
+  );
 }
 
 /**
@@ -100,6 +103,11 @@ function _evalValueWrapper(param: string, wrapper: string) {
   return wrapper.replace("$$$", param);
 }
 
+/**
+ * Represents a possible thing that this extension updates in its entirety.
+ * This is only an explanation of what the action does.
+ * It does not contain a reference to the actions current value.
+ */
 interface Action {
   /**
    * Which action this updates.
@@ -111,15 +119,16 @@ interface Action {
   secondLevelProperty?: string;
 
   newValWrapper: `${string}$$$${string}`;
-
-  currentValue: ParamPayload;
 }
 
 /**
  * Either css colour,
  * or url to image
  */
-type ParamPayload = string;
+export type ParamPayload =
+  | `rgb(${number}, ${number}, ${number})`
+  | `https://${string}.${string}/${string}`;
+
 function executeActionInScope(
   action: Action,
   scope: "update",
@@ -165,122 +174,170 @@ function executeActionInScope(
  */
 function registerAction(action: Action) {
   const { key } = action;
-  getFromStorage(key, (param) => {
+  getFromStorage(key, (newestValue) => {
     // initial load, trigger 'update'
-    executeActionInScope(action, "update", param.storedValue);
+    console.log(
+      "initial load, triggering 'update' for key",
+      key,
+      "and action",
+      action
+    );
+    executeActionInScope(action, "update", newestValue);
   });
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "sync" && changes[key].newValue) {
       // storageUpdated trigger update
+      console.log(
+        "Detected change in storage key",
+        key,
+        "and updating action",
+        action,
+        "with new value",
+        changes[key].newValue
+      );
       executeActionInScope(action, "update", changes[key].newValue);
     }
   });
   listenForMessage(key, (value) => {
     // messageReceived trigger update
-    executeActionInScope(action, "update", value.value);
+    console.log(
+      "Detected message for key",
+      key,
+      "and updating action",
+      action,
+      "with new value",
+      value
+    );
+    executeActionInScope(action, "update", value);
   });
 }
 
-{
-  // When first loaded
-  const elem = document.querySelectorAll(".tab-bar")[0];
-  console.log("[content.js] [Initial load] Found element", elem);
+const knownActionStatics: Action[] = [
+  {
+    key: "topBarColour",
+    querySelector: "nav.tab-bar",
+    firstLevelProperty: "style",
+    secondLevelProperty: "backgroundColor",
+    newValWrapper: "$$$",
+  },
+  {
+    key: "leftBarColour",
+    querySelector: "aside#left-menu",
+    firstLevelProperty: "style",
+    secondLevelProperty: "backgroundColor",
+    newValWrapper: "$$$",
+  },
+  {
+    key: "mainSchoolBoxIconURL",
+    querySelector: "a.logo",
+    firstLevelProperty: "style",
+    secondLevelProperty: "background",
+    newValWrapper: "url($$$) center center no-repeat",
+  },
+];
 
-  chrome.storage.sync.get(["savedColour"], (items) => {
-    console.log("[content.js] [Initial load] Got items from storage", items);
-    const savedColour = items.savedColour;
-    if (savedColour) {
-      console.log(
-        "[content.js] [Initial load] Found saved colour",
-        savedColour
-      );
-      elem.style.backgroundColor = savedColour;
-    }
-  });
-}
-{
-  const elem = document.querySelectorAll("aside, #left-menu")[0];
-  console.log("[content.js] [Initial load -left] Found element", elem);
+knownActionStatics.forEach(registerAction);
 
-  chrome.storage.sync.get(["savedColourLeftMenu"], (items) => {
-    console.log(
-      "[content.js] [Initial load-left] Got items from storage",
-      items
-    );
-    const savedColour = items.savedColourLeftMenu;
-    if (savedColour) {
-      console.log(
-        "[content.js] [Initial load-left] Found saved colour",
-        savedColour
-      );
-      elem.style.backgroundColor = savedColour;
-    }
-  });
-}
-{
-  const elem = document.querySelectorAll("a, [class='logo']")[0];
-  console.log("[content.js] [Initial load -left] Found IMAGE", elem);
+// {
+//   // When first loaded
+//   const elem = document.querySelectorAll(".tab-bar")[0];
+//   console.log("[content.js] [Initial load] Found element", elem);
 
-  chrome.storage.sync.get(["savedMainSchoolboxIcon"], (items) => {
-    console.log(
-      "[content.js] [Initial load-img] Got items from storage",
-      items
-    );
-    const savedURL = items.savedMainSchoolboxIcon;
-    if (savedURL) {
-      console.log(
-        "[content.js] [Initial load-img] Found saved colour",
-        savedURL
-      );
-      elem.style.background = "url(" + savedURL + ") no-repeat center center";
-    }
-  });
-}
+//   chrome.storage.sync.get(["savedColour"], (items) => {
+//     console.log("[content.js] [Initial load] Got items from storage", items);
+//     const savedColour = items.savedColour;
+//     if (savedColour) {
+//       console.log(
+//         "[content.js] [Initial load] Found saved colour",
+//         savedColour
+//       );
+//       elem.style.backgroundColor = savedColour;
+//     }
+//   });
+// }
+// {
+//   const elem = document.querySelectorAll("aside, #left-menu")[0];
+//   console.log("[content.js] [Initial load -left] Found element", elem);
 
-chrome.runtime.onMessage.addListener((msg, sender, response) => {
-  console.log(
-    sender.tab
-      ? "[content.js] from a content script:" + sender.tab.url
-      : "[content.js] from the extension"
-  );
-  if (msg?.type === "setColour") {
-    const elem = document.querySelectorAll(".tab-bar")[0];
-    console.log("[content.js] Found element", elem);
+//   chrome.storage.sync.get(["savedColourLeftMenu"], (items) => {
+//     console.log(
+//       "[content.js] [Initial load-left] Got items from storage",
+//       items
+//     );
+//     const savedColour = items.savedColourLeftMenu;
+//     if (savedColour) {
+//       console.log(
+//         "[content.js] [Initial load-left] Found saved colour",
+//         savedColour
+//       );
+//       elem.style.backgroundColor = savedColour;
+//     }
+//   });
+// }
+// {
+//   const elem = document.querySelectorAll("a, [class='logo']")[0];
+//   console.log("[content.js] [Initial load -left] Found IMAGE", elem);
 
-    elem.style.backgroundColor = msg.colour;
-    chrome.storage.sync.set({ savedColour: msg.colour });
-    console.log(
-      "[content.js] Set colour to",
-      msg.colour,
-      "and saved to storage"
-    );
+//   chrome.storage.sync.get(["savedMainSchoolboxIcon"], (items) => {
+//     console.log(
+//       "[content.js] [Initial load-img] Got items from storage",
+//       items
+//     );
+//     const savedURL = items.savedMainSchoolboxIcon;
+//     if (savedURL) {
+//       console.log(
+//         "[content.js] [Initial load-img] Found saved colour",
+//         savedURL
+//       );
+//       elem.style.background = "url(" + savedURL + ") no-repeat center center";
+//     }
+//   });
+// }
 
-    response({ ...msg, status: "ok" });
-  } else if (msg?.type === "setColourLeftMenu") {
-    const elem = document.querySelectorAll("aside, #left-menu")[0];
-    console.log("[content.js]-left Found element", elem);
+// chrome.runtime.onMessage.addListener((msg, sender, response) => {
+//   console.log(
+//     sender.tab
+//       ? "[content.js] from a content script:" + sender.tab.url
+//       : "[content.js] from the extension"
+//   );
+//   if (msg?.type === "setColour") {
+//     const elem = document.querySelectorAll(".tab-bar")[0];
+//     console.log("[content.js] Found element", elem);
 
-    elem.style.backgroundColor = msg.colour;
-    chrome.storage.sync.set({ savedColourLeftMenu: msg.colour });
-    console.log(
-      "[content.js]-left Set colour to",
-      msg.colour,
-      "and saved to storage"
-    );
+//     elem.style.backgroundColor = msg.colour;
+//     chrome.storage.sync.set({ savedColour: msg.colour });
+//     console.log(
+//       "[content.js] Set colour to",
+//       msg.colour,
+//       "and saved to storage"
+//     );
 
-    response({ ...msg, status: "ok" });
-  } else if (msg?.type === "setMainSchoolboxIcon") {
-    const elem = document.querySelectorAll("a, [class='logo']")[0];
-    console.log("[content.js]-img Found element", elem);
+//     response({ ...msg, status: "ok" });
+//   } else if (msg?.type === "setColourLeftMenu") {
+//     const elem = document.querySelectorAll("aside, #left-menu")[0];
+//     console.log("[content.js]-left Found element", elem);
 
-    elem.style.background = "url(" + msg.iconURL + ") no-repeat center center";
-    chrome.storage.sync.set({ savedMainSchoolboxIcon: msg.iconURL });
-    console.log(
-      "[content.js]-img Set colour to",
-      msg.iconURL,
-      "and saved to storage"
-    );
+//     elem.style.backgroundColor = msg.colour;
+//     chrome.storage.sync.set({ savedColourLeftMenu: msg.colour });
+//     console.log(
+//       "[content.js]-left Set colour to",
+//       msg.colour,
+//       "and saved to storage"
+//     );
 
-    response({ ...msg, status: "ok" });
-  }
-});
+//     response({ ...msg, status: "ok" });
+//   } else if (msg?.type === "setMainSchoolboxIcon") {
+//     const elem = document.querySelectorAll("a, [class='logo']")[0];
+//     console.log("[content.js]-img Found element", elem);
+
+//     elem.style.background = "url(" + msg.iconURL + ") no-repeat center center";
+//     chrome.storage.sync.set({ savedMainSchoolboxIcon: msg.iconURL });
+//     console.log(
+//       "[content.js]-img Set colour to",
+//       msg.iconURL,
+//       "and saved to storage"
+//     );
+
+//     response({ ...msg, status: "ok" });
+//   }
+// });

@@ -1,50 +1,26 @@
-import 'dart:js' as js;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-
-void changeColourTo(Color colour, PossibleOptions whichBar) {
-  String cssColour =
-      "rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha})";
-  print("Colour changed to: $cssColour, whichBar: $whichBar");
-
-  if (whichBar == PossibleOptions.topbarcolour) {
-    js.context.callMethod("changeTopBarColour", [cssColour]);
-  } else if (whichBar == PossibleOptions.leftbarcolour) {
-    js.context.callMethod("changeLeftBarColour", [cssColour]);
-  } else if (whichBar == PossibleOptions.mainschoolboxicon) {
-    js.context.callbac
-  } else {
-    print("Error: whichBar is not set correctly, $whichBar");
-  }
-}
 
 void main() {
   runApp(const MyApp());
 }
 
 final Map<String, Color> knownColours = {
-  "To newer colour (reset)": const Color(0xFF82c3eb),
+  "Reset": const Color(0xFF82c3eb),
   // "Set top bar to older colour": const Color(0xFF193c64),
 };
 
-enum PossibleOptions {
-  leftbarcolour,
-  topbarcolour,
-  mainschoolboxicon,
+enum RouteNames {
+  topBarColour,
+  leftBarColour,
+  iconUrl,
 }
-String toStr(PossibleOptions option) {
-  switch (option) {
-    case (PossibleOptions.leftbarcolour):
-      return "leftbarcolour";
-    case (PossibleOptions.topbarcolour):
-      return "topbarcolour";
-    case (PossibleOptions.mainschoolboxicon):
-      return "mainschoolboxicon";
-    default: 
-      throw FlutterError("Unknown `PossibleOption` $option, please provide proper option");
-  }
-}
+final Map<String, Widget Function(BuildContext)> routes = {
+  "/topbarcolour": (context) => const TopBarRoute(),
+  "/leftbarcolour": (context) => const LeftBarRoute(),
+  "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
+};
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -57,11 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: {
-        "/topbarcolour": (context) => const TopBarRoute(),
-        "/leftbarcolour": (context) => const LeftBarRoute(),
-        "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
-      },
+      routes: routes,
       initialRoute: "/topbarcolour",
     );
   }
