@@ -17,8 +17,6 @@ extension KnownKeysExt on KnownKeys {
   String get key => toString().split('.').last;
 }
 
-
-
 final Map<String, Widget Function(BuildContext)> routes = {
   "/topbarcolour": (context) => const TopBarRoute(),
   "/leftbarcolour": (context) => const LeftBarRoute(),
@@ -110,9 +108,9 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
   }
 }
 
-final Map<String, Color> knownColours = {
-  "Reset": const Color(0xFF82c3eb),
-  // "Set top bar to older colour": const Color(0xFF193c64),
+final Map<KnownKeys, Color> resetColours = {
+  KnownKeys.topBarColour: const Color(0xFF82c3eb),
+  KnownKeys.leftBarColour: const Color(0xFF193c64),
 };
 
 class TopBarRoute extends StatelessWidget {
@@ -147,10 +145,10 @@ class ColourPicker extends StatelessWidget {
     chips = [
       ListTile(
         leading: const Icon(Icons.restart_alt_rounded),
-        iconColor: knownColours["Reset"],
+        iconColor: resetColours[propertyKey],
         title: const Text("Reset"),
         onTap: () =>
-            sendNewValue(propertyKey, toCSSColour(knownColours["Reset"]!)),
+            sendNewValue(propertyKey, toCSSColour(resetColours["Reset"]!)),
       )
     ];
   }

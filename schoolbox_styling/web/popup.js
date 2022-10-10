@@ -1,3 +1,4 @@
+"use strict";
 console.log("popup.js loaded");
 function sendNewValue(key, value) {
     if (!chrome.tabs) {

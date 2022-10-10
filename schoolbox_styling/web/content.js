@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Actions are serializable constructs that define how to update the DOM.
  *
@@ -92,10 +93,12 @@ function registerAction(action) {
         executeActionInScope(action, "update", newestValue);
     });
     chrome.storage.onChanged.addListener((changes, areaName) => {
-        if (areaName === "sync" && changes[key].newValue) {
+        console.log("storage changed", changes, areaName);
+        const keyChanges = changes[_genStorageKey(key)];
+        if (areaName === "sync" && (keyChanges === null || keyChanges === void 0 ? void 0 : keyChanges.newValue)) {
             // storageUpdated trigger update
-            console.log("[registered onChanged listener] Detected change in storage key", key, "and updating action", action, "with new value", changes[key].newValue);
-            executeActionInScope(action, "update", changes[key].newValue);
+            console.log("[registered onChanged listener] Detected change in storage key", key, "and enacting action in scope", action, "with new value", keyChanges.newValue);
+            executeActionInScope(action, "update", keyChanges.newValue);
         }
     });
     listenForMessage(key, (value) => {
@@ -132,7 +135,6 @@ knownActionStatics.forEach(registerAction);
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
     console.log("[debug all] Received message", msg, "from sender", sender);
 });
-// #region dead
 // {
 //   // When first loaded
 //   const elem = document.querySelectorAll(".tab-bar")[0];
