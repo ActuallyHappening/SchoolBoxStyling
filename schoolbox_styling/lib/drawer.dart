@@ -16,13 +16,13 @@ class MyAppDrawer extends StatelessWidget {
           },
         ),
         ListTile(
-          title: const Text("Left bar colour ✨Beta!✨"),
+          title: const Text("Left bar colour ✨ New! ✨"),
           onTap: () {
             Navigator.pushNamed(context, "/leftbarcolour");
           },
         ),
         ListTile(
-          title: const Text("Main school box icon ✨Beta!✨"),
+          title: const Text("Main school box icon ✨ New! ✨"),
           onTap: () {
             Navigator.pushNamed(context, "/mainschoolboxicon");
           },

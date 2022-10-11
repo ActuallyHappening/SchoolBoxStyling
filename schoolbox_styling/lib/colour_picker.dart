@@ -12,29 +12,10 @@ enum ColourTypes {
 
 extension ColourTypesExt on ColourTypes {
   String get name => {
-        ColourTypes.materialButtons: "Material Buttons",
+        ColourTypes.materialButtons: "Material",
         ColourTypes.pallet: "Pallet",
-        ColourTypes.sliders: "Sliders",
+        ColourTypes.sliders: "Buttons",
       }[this]!;
-
-  // Widget get constructor => {
-  //       ColourTypes.materialButtons: MaterialPicker,
-  //       ColourTypes.pallet: ColourPicker,
-  //       ColourTypes.sliders: BlockPicker,
-  //     }[this]!;
-}
-
-dynamic getConstructor(ColourTypes type, {pickerColour, onColourChanged}) {
-  switch (type) {
-    case ColourTypes.materialButtons:
-      return MaterialPicker;
-    case ColourTypes.pallet:
-      return CustomColourPicker;
-    case ColourTypes.sliders:
-      return BlockPicker;
-    default:
-      return MaterialPicker;
-  }
 }
 
 class CustomColourPicker extends StatelessWidget {
@@ -49,7 +30,6 @@ class CustomColourPicker extends StatelessWidget {
         iconColor: resetColours[propertyKey],
         title: const Text("Reset"),
         onTap: () {
-          // print("$propertyKey reset");
           sendNewValue(propertyKey, toCSSColour(resetColours[propertyKey]!));
         },
       )
@@ -90,8 +70,6 @@ class _CustomColourPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(getConstructor(colourPickerType));
-
     switch (colourPickerType) {
       case ColourTypes.materialButtons:
         return MaterialPicker(

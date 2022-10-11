@@ -13,11 +13,9 @@ class ColourGenericRoute extends StatelessWidget {
   const ColourGenericRoute({
     super.key,
     required this.propertyKey,
-    required this.colourType,
   });
 
   final KnownKeys propertyKey;
-  final ColourTypes colourType;
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +38,16 @@ class ColourGenericRoute extends StatelessWidget {
           ]),
           appBar: AppBar(
               title: Text(keysToNames[propertyKey]!),
-              bottom: const TabBar(
+              bottom: TabBar(
                 tabs: [
                   Tab(
-                    child: Text("Buttons"),
+                    child: Text(ColourTypes.materialButtons.name),
                   ),
                   Tab(
-                    child: Text("Pallet"),
+                    child: Text(ColourTypes.pallet.name),
                   ),
                   Tab(
-                    child: Text("Sliders"),
+                    child: Text(ColourTypes.sliders.name),
                   ),
                 ],
               )),
