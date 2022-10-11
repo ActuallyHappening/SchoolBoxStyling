@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/colour_picker.dart';
+import 'package:schoolbox_styling/routes/colourbar_route.dart';
 
-import 'routes/image_url.dart';
-import 'routes/leftbar_route.dart';
-import 'routes/topbar_route.dart';
 
 final Map<KnownKeys, Color> resetColours = {
   KnownKeys.topBarColour: const Color(0xFF82c3eb),
@@ -20,7 +19,11 @@ extension KnownKeysExt on KnownKeys {
 }
 
 final Map<String, Widget Function(BuildContext)> routes = {
-  "/topbarcolour": (context) => const TopBarRoute(),
-  "/leftbarcolour": (context) => const LeftBarRoute(),
-  "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
+  "/": (context) => const ColourGenericRoute(
+        propertyKey: KnownKeys.leftBarColour,
+        colourType: ColourTypes.pallet,
+      ),
+  // "/topbarcolour": (context) => const TopBarRoute(),
+  // "/leftbarcolour": (context) => const LeftBarRoute(),
+  // "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
 };

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'constants.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: "/topbarcolour",
+      // initialRoute: "/topbarcolour",
     );
   }
 }

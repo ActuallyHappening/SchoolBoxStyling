@@ -10,7 +10,7 @@ class TopBarRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ColourPicker(propertyKey: KnownKeys.topBarColour),
+        body: CustomColourPicker(propertyKey: KnownKeys.topBarColour),
         appBar: AppBar(title: const Text("Change Top Bar Colour")),
         drawer: const MyAppDrawer());
   }

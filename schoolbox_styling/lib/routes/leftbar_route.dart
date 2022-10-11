@@ -10,7 +10,7 @@ class LeftBarRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ColourPicker(propertyKey: KnownKeys.leftBarColour),
+        body: CustomColourPicker(propertyKey: KnownKeys.leftBarColour),
         appBar: AppBar(title: const Text("Change Left Bar Colour")),
         drawer: const MyAppDrawer());
   }
