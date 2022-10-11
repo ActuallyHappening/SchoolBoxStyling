@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/routes/colourbar_route.dart';
 
-import '../colour_picker.dart';
 import '../constants.dart';
-import '../drawer.dart';
 
 class TopBarRoute extends StatelessWidget {
   const TopBarRoute({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: CustomColourPicker(propertyKey: KnownKeys.topBarColour),
-        appBar: AppBar(title: const Text("Change Top Bar Colour")),
-        drawer: const MyAppDrawer());
+    return const ColourGenericRoute(propertyKey: KnownKeys.topBarColour);
   }
 }

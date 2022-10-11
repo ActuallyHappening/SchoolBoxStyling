@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      // initialRoute: "/topbarcolour",
+      initialRoute: "/topbarcolour",
     );
   }
 }
