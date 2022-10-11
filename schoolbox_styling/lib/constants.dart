@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/routes/bodybackground_route.dart';
+import 'package:schoolbox_styling/routes/periodheaders_route.dart';
 
 import 'routes/image_url.dart';
 import 'routes/leftbar_route.dart';
@@ -14,6 +16,9 @@ enum KnownKeys {
   topBarColour,
   leftBarColour,
   mainSchoolBoxIconURL,
+
+  bodyBackgroundColour,
+  timetablePeriodHeaders,
 }
 
 extension KnownKeysExt on KnownKeys {
@@ -27,4 +32,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   "/topbarcolour": (context) => const TopBarRoute(),
   "/leftbarcolour": (context) => const LeftBarRoute(),
   "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
+
+  "/bodybackgroundcolour": (context) => const BodyBackgroundRoute(),
+  "/timetableperiodheaders": (context) => const PeriodHeadersRoute(),
 };

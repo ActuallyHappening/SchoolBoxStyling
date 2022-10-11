@@ -20,6 +20,9 @@ const knownKeys = [
 
   "mainSchoolBoxIconURL",
   "deleteIMGSrc",
+
+  "bodyBackgroundColour",
+  "timetablePeriodHeaders",
 ] as const;
 export type KnownKeys = typeof knownKeys[number];
 
@@ -319,20 +322,20 @@ const knownActionStatics: Action[] = [
     newValWrapper: "$$$",
     defaultValue: "DELETE",
   },
-  // {
-  //   key: "deleteIMGSrc",
-  //   querySelector: 'img[src][alt="Emmanuel College"]',
-  //   firstLevelProperty: "src",
-  //   newValWrapper: "$$$",
-  //   defaultValue: "",
-  // },
-  // {
-  //   key: "deleteIMGSrcSetURL",
-  //   querySelector: "img[srcset]",
-  //   firstLevelProperty: "srcset",
-  //   newValWrapper: "$$$",
-  //   defaultValue: "empty",
-  // },
+  {
+    key: "bodyBackgroundColour",
+    querySelector: "body",
+    firstLevelProperty: "style",
+    secondLevelProperty: "backgroundColor",
+    newValWrapper: "$$$",
+  },
+  {
+    key: "timetablePeriodHeaders",
+    querySelector: "body",
+    firstLevelProperty: "style",
+    secondLevelProperty: "backgroundColor",
+    newValWrapper: "$$$",
+  },
 ];
 
 knownActionStatics.forEach(registerAction);
