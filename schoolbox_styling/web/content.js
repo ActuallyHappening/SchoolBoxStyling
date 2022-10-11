@@ -19,6 +19,7 @@ const knownKeys = [
     "leftBarColour",
     "rightBarColour",
     "mainSchoolBoxIconURL",
+    "deleteIMGSrc",
 ];
 console.log("content.js loaded");
 function queryMany(querySelector, callback) {
@@ -80,6 +81,26 @@ function executeActionInScope(action, scope, param) {
                     console.error("error caught which execute action", action, "in scope", scope, "with param", param, ";; Error:", e);
                 }
             }
+            else {
+                try {
+                    // @ts-ignore
+                    element[firstLevelProperty] = _evalValueWrapper(param, newValWrapper);
+                    if (action.key == "deleteIMGSrc") {
+                        console.warn("DELETE IMG SRC", "element", element, "firstLevelProperty", firstLevelProperty, "secondLevelProperty", secondLevelProperty, "newValWrapper", newValWrapper, "param", param);
+                    }
+                }
+                catch (e) {
+                    console.error("error caught which execute action", action, "in scope", scope, "with param", param, ";; Error:", e);
+                }
+            }
+        });
+    }
+    else if (scope == "delete") {
+        // Delete DOM in some way
+        const { querySelector } = action;
+        queryMany(querySelector, (element) => {
+            var _a;
+            (_a = element.parentElement) === null || _a === void 0 ? void 0 : _a.removeChild(element);
         });
     }
 }
@@ -95,7 +116,7 @@ function registerAction(action) {
         if (!newestValue || newestValue == "empty") {
             if (action.defaultValue) {
                 console.log("Loading default value for", key, "which is", action.defaultValue);
-                executeActionInScope(action, "update", action.defaultValue);
+                executeActionInScope(action, action.defaultValue == "DELETE" ? "delete" : "update", action.defaultValue);
                 return;
             }
         }
@@ -135,108 +156,35 @@ const knownActionStatics = [
     },
     {
         key: "mainSchoolBoxIconURL",
-        querySelector: "a.logo",
+        querySelector: 'a.logo, img[alt="Emmanuel College"]',
         firstLevelProperty: "style",
         secondLevelProperty: "background",
         newValWrapper: "url($$$) center center / contain no-repeat",
     },
+    {
+        key: "deleteIMGSrc",
+        querySelector: 'img[src][alt="Emmanuel College"]',
+        firstLevelProperty: "srcset",
+        newValWrapper: "$$$",
+        defaultValue: "DELETE",
+    },
+    // {
+    //   key: "deleteIMGSrc",
+    //   querySelector: 'img[src][alt="Emmanuel College"]',
+    //   firstLevelProperty: "src",
+    //   newValWrapper: "$$$",
+    //   defaultValue: "",
+    // },
+    // {
+    //   key: "deleteIMGSrcSetURL",
+    //   querySelector: "img[srcset]",
+    //   firstLevelProperty: "srcset",
+    //   newValWrapper: "$$$",
+    //   defaultValue: "empty",
+    // },
 ];
 knownActionStatics.forEach(registerAction);
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
     console.log("[debug all] Received message", msg, "from sender", sender);
 });
-// {
-//   // When first loaded
-//   const elem = document.querySelectorAll(".tab-bar")[0];
-//   console.log("[content.js] [Initial load] Found element", elem);
-//   chrome.storage.sync.get(["savedColour"], (items) => {
-//     console.log("[content.js] [Initial load] Got items from storage", items);
-//     const savedColour = items.savedColour;
-//     if (savedColour) {
-//       console.log(
-//         "[content.js] [Initial load] Found saved colour",
-//         savedColour
-//       );
-//       elem.style.backgroundColor = savedColour;
-//     }
-//   });
-// }
-// {
-//   const elem = document.querySelectorAll("aside, #left-menu")[0];
-//   console.log("[content.js] [Initial load -left] Found element", elem);
-//   chrome.storage.sync.get(["savedColourLeftMenu"], (items) => {
-//     console.log(
-//       "[content.js] [Initial load-left] Got items from storage",
-//       items
-//     );
-//     const savedColour = items.savedColourLeftMenu;
-//     if (savedColour) {
-//       console.log(
-//         "[content.js] [Initial load-left] Found saved colour",
-//         savedColour
-//       );
-//       elem.style.backgroundColor = savedColour;
-//     }
-//   });
-// }
-// {
-//   const elem = document.querySelectorAll("a, [class='logo']")[0];
-//   console.log("[content.js] [Initial load -left] Found IMAGE", elem);
-//   chrome.storage.sync.get(["savedMainSchoolboxIcon"], (items) => {
-//     console.log(
-//       "[content.js] [Initial load-img] Got items from storage",
-//       items
-//     );
-//     const savedURL = items.savedMainSchoolboxIcon;
-//     if (savedURL) {
-//       console.log(
-//         "[content.js] [Initial load-img] Found saved colour",
-//         savedURL
-//       );
-//       elem.style.background = "url(" + savedURL + ") no-repeat center center";
-//     }
-//   });
-// }
-// chrome.runtime.onMessage.addListener((msg, sender, response) => {
-//   console.log(
-//     sender.tab
-//       ? "[content.js] from a content script:" + sender.tab.url
-//       : "[content.js] from the extension"
-//   );
-//   if (msg?.type === "setColour") {
-//     const elem = document.querySelectorAll(".tab-bar")[0];
-//     console.log("[content.js] Found element", elem);
-//     elem.style.backgroundColor = msg.colour;
-//     chrome.storage.sync.set({ savedColour: msg.colour });
-//     console.log(
-//       "[content.js] Set colour to",
-//       msg.colour,
-//       "and saved to storage"
-//     );
-//     response({ ...msg, status: "ok" });
-//   } else if (msg?.type === "setColourLeftMenu") {
-//     const elem = document.querySelectorAll("aside, #left-menu")[0];
-//     console.log("[content.js]-left Found element", elem);
-//     elem.style.backgroundColor = msg.colour;
-//     chrome.storage.sync.set({ savedColourLeftMenu: msg.colour });
-//     console.log(
-//       "[content.js]-left Set colour to",
-//       msg.colour,
-//       "and saved to storage"
-//     );
-//     response({ ...msg, status: "ok" });
-//   } else if (msg?.type === "setMainSchoolboxIcon") {
-//     const elem = document.querySelectorAll("a, [class='logo']")[0];
-//     console.log("[content.js]-img Found element", elem);
-//     elem.style.background = "url(" + msg.iconURL + ") no-repeat center center";
-//     chrome.storage.sync.set({ savedMainSchoolboxIcon: msg.iconURL });
-//     console.log(
-//       "[content.js]-img Set colour to",
-//       msg.iconURL,
-//       "and saved to storage"
-//     );
-//     response({ ...msg, status: "ok" });
-//   }
-// });
-// #endregion
 //# sourceMappingURL=content.js.map
