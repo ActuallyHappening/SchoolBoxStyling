@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'colour_picker.dart';
-import 'constants.dart';
-import 'drawer.dart';
+import '../colour_picker.dart';
+import '../constants.dart';
+import '../drawer.dart';
 
 class LeftBarRoute extends StatelessWidget {
   const LeftBarRoute({Key? key}) : super(key: key);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'constants.dart';
-import 'drawer.dart';
-import 'js_integration.dart';
-import 'main.dart';
+
+import '../constants.dart';
+import '../drawer.dart';
+import '../js_integration.dart';
 
 class MainSchoolBoxIconRoute extends StatelessWidget {
   const MainSchoolBoxIconRoute({Key? key}) : super(key: key);

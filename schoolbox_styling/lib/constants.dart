@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'image_url.dart';
-import 'leftbar_route.dart';
-import 'topbar_route.dart';
+import 'routes/image_url.dart';
+import 'routes/leftbar_route.dart';
+import 'routes/topbar_route.dart';
 
 final Map<KnownKeys, Color> resetColours = {
   KnownKeys.topBarColour: const Color(0xFF82c3eb),
