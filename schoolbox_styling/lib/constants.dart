@@ -10,7 +10,9 @@ final Map<KnownKeys, Color> resetColours = {
   KnownKeys.topBarColour: const Color(0xFF82c3eb),
   KnownKeys.leftBarColour: const Color(0xFF193c64),
   KnownKeys.bodyBackgroundColour: const Color(0xFFdddddd),
-  KnownKeys.timetablePeriodHeaders: const Color(0xFFFFFFFF)
+  KnownKeys.timetablePeriodHeaders: const Color(0xFFFFFFFF),
+  KnownKeys.topBarIconColour: const Color(0xFF193C64),
+  KnownKeys.topBarIconTextColour: const Color(0xFF193C64),
 };
 
 final Map<KnownKeys, String> routeNames = {
@@ -28,6 +30,9 @@ enum KnownKeys {
 
   bodyBackgroundColour,
   timetablePeriodHeaders,
+
+  topBarIconColour,
+  topBarIconTextColour,
 }
 
 extension KnownKeysExt on KnownKeys {
