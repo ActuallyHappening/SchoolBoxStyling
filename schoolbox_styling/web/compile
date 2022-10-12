@@ -1,0 +1,2 @@
+tsc
+python3 -c "import macro;macro.main()"

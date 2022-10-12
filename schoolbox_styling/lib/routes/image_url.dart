@@ -34,16 +34,19 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
                   "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png");
             },
           ),
-          const Center(child: URLInputFieldWithPassword()),
           ListTile(
             // leading: const Icon(Icons.bento_rounded),
             title: const Text("New Icon"),
             onTap: () {
               // print("$propertyKey reset");
               sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "https://variety.com/wp-content/uploads/2021/07/Rick-Astley-Never-Gonna-Give-You-Up.png?w=681&h=383&crop=1");
+                  "https://media1.giphy.com/media/g7GKcSzwQfugw/giphy.gif?cid=790b7611fe5cbbfe2351ac8a4fb422325c00e2650709b600&rid=giphy.gif&ct=g");
             },
           ),
+          const Text(
+              "This feature allows you to set any picture as schoolbox's logo. As this can be abused, a password is required to unlock this feature. I am not responsible for you if you get in trouble for using this feature."),
+          const Text("Hint: My OneNote"),
+          const Center(child: URLInputFieldWithPassword()),
         ],
       ),
     );
@@ -76,7 +79,7 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
                   }
                 },
                 decoration: const InputDecoration(
-                  hintText: "Enter password to be able to set schoolbox icon to ANY url",
+                  hintText: "Enter password to unlock",
                 ),
               )
             : const Card(child: Text("Unlocked!")),
@@ -91,9 +94,11 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
             }
           },
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             hintText:
-                isLocked ? 'Great power comes with great responsibility. Unlock to use' : "Copy and paste url here, e.g. picsum.photos/300/300",
+                isLocked
+                ? 'Great power comes with great responsibility'
+                : "Copy and paste url here, e.g. picsum.photos/300/300",
           ),
         )
       ],
