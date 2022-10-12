@@ -10,7 +10,7 @@ final Map<KnownKeys, Color> resetColours = {
   KnownKeys.topBarColour: const Color(0xFF82c3eb),
   KnownKeys.leftBarColour: const Color(0xFF193c64),
   KnownKeys.bodyBackgroundColour: const Color(0xFFdddddd),
-  KnownKeys.timetablePeriodHeaders: const Color(0xFF333333)
+  KnownKeys.timetablePeriodHeaders: const Color(0xFFFFFFFF)
 };
 
 enum KnownKeys {

@@ -1,1 +1,13 @@
-tsc && python3 -c "import macro;macro.main()" && flutter build web --web-renderer html --csp && rm -rf ../build/web/__pycache__
+tsc
+python3 -c "import macro;macro.main()"
+flutter build web --web-renderer html --csp
+cd ../build/web
+rm -rf ./__pycache__
+rm content.ts
+rm package-lock.json
+rm package.json
+rm popup.ts
+rm tsconfig.json
+rm build
+rm macro.py
+# rm -rf ./node_modules
