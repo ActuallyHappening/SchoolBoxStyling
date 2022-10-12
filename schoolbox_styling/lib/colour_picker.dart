@@ -77,11 +77,11 @@ class _CustomColourPicker extends StatelessWidget {
           onColorChanged: onColourChanged,
           // enableLabel: true,
         );
-      // case ColourTypes.pallet:
-      //   return ColorPicker(
-      //     pickerColor: defaultColour,
-      //     onColorChanged: onColourChanged,
-      //   );
+      case ColourTypes.pallet:
+        return ColorPicker(
+          pickerColor: defaultColour,
+          onColorChanged: onColourChanged,
+        );
       case ColourTypes.sliders:
         return BlockPicker(
           pickerColor: defaultColour,
