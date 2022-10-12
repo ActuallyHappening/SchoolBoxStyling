@@ -4,13 +4,6 @@ import '../colour_picker.dart';
 import '../constants.dart';
 import '../drawer.dart';
 
-const Map<KnownKeys, String> keysToNames = {
-  KnownKeys.topBarColour: "ChangeTop Bar Colour",
-  KnownKeys.leftBarColour: "Change Left Bar Colour",
-  KnownKeys.bodyBackgroundColour: "Change background Colour",
-  KnownKeys.timetablePeriodHeaders: "Change Period Headers Colour",
-};
-
 class ColourGenericRoute extends StatelessWidget {
   const ColourGenericRoute({
     super.key,
@@ -40,7 +33,7 @@ class ColourGenericRoute extends StatelessWidget {
             )
           ]),
           appBar: AppBar(
-              title: Text(keysToNames[propertyKey]!),
+              title: Text(routeNames[propertyKey]!),
               bottom: TabBar(
                 tabs: [
                   Tab(

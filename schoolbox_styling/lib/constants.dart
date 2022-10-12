@@ -13,6 +13,14 @@ final Map<KnownKeys, Color> resetColours = {
   KnownKeys.timetablePeriodHeaders: const Color(0xFFFFFFFF)
 };
 
+final Map<KnownKeys, String> routeNames = {
+  KnownKeys.topBarColour: "Top Bar",
+  KnownKeys.leftBarColour: "Left Bar",
+  KnownKeys.mainSchoolBoxIconURL: "Main School Box Icon",
+  KnownKeys.bodyBackgroundColour: "Background",
+  KnownKeys.timetablePeriodHeaders: "Period Headers",
+};
+
 enum KnownKeys {
   topBarColour,
   leftBarColour,
