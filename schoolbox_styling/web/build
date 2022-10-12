@@ -1,0 +1,1 @@
+tsc && python3 -c "import macro;macro.main()" && flutter build web --web-renderer html --csp && rm -rf ../build/web/__pycache__

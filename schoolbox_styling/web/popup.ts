@@ -1,5 +1,4 @@
-import { EventPayload } from "./../build/web/content";
-import { KnownKeys, ParamPayload } from "./content";
+import { KnownKeys, ParamPayload, EventPayload } from "./content";
 console.log("popup.js loaded");
 
 function sendNewValue(key: KnownKeys, value: ParamPayload) {

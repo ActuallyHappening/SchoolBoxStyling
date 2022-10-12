@@ -172,14 +172,14 @@ const knownActionStatics = [
         defaultValue: "DELETE",
     },
     {
-        key: "bodyBackgroundColour",
+        key: "timetablePeriodHeaders",
         querySelector: "table.timetable[data-timetable]>thead>tr>th",
         firstLevelProperty: "style",
         secondLevelProperty: "backgroundColor",
         newValWrapper: "$$$",
     },
     {
-        key: "timetablePeriodHeaders",
+        key: "bodyBackgroundColour",
         querySelector: "body",
         firstLevelProperty: "style",
         secondLevelProperty: "backgroundColor",

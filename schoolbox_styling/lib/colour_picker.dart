@@ -75,7 +75,7 @@ class _CustomColourPicker extends StatelessWidget {
         return MaterialPicker(
           pickerColor: defaultColour,
           onColorChanged: onColourChanged,
-          enableLabel: true,
+          // enableLabel: true,
         );
       // case ColourTypes.pallet:
       //   return ColorPicker(
@@ -91,7 +91,7 @@ class _CustomColourPicker extends StatelessWidget {
         return MaterialPicker(
           pickerColor: defaultColour,
           onColorChanged: onColourChanged,
-          enableLabel: true,
+          // enableLabel: true,
         );
     }
   }
