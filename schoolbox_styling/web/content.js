@@ -190,4 +190,3 @@ knownActionStatics.forEach(registerAction);
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
     console.log("[debug all] Received message", msg, "from sender", sender);
 });
-//# sourceMappingURL=content.js.map

@@ -11,4 +11,3 @@ function sendNewValue(key, value) {
         chrome.tabs.sendMessage(tabs[0].id, payload);
     });
 }
-//# sourceMappingURL=popup.js.map
