@@ -38,7 +38,7 @@ class DrawerOption extends StatelessWidget {
     return ListTile(
       title: Text(routeNames[knownKey]!),
       onTap: () {
-        Navigator.pushNamed(context, knownKey.key);
+        Navigator.pushNamed(context, knownKey.route);
       },
     );
   }

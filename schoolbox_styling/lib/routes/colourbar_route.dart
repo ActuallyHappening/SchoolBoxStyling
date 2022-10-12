@@ -22,17 +22,18 @@ class ColourGenericRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      // length: 3,
+      length: 2,
       child: Scaffold(
           body: TabBarView(children: [
             CustomColourPicker(
               propertyKey: propertyKey,
               colourPickerType: ColourTypes.materialButtons,
             ),
-            CustomColourPicker(
-              propertyKey: propertyKey,
-              colourPickerType: ColourTypes.pallet,
-            ),
+            // CustomColourPicker(
+            //   propertyKey: propertyKey,
+            //   colourPickerType: ColourTypes.pallet,
+            // ),
             CustomColourPicker(
               propertyKey: propertyKey,
               colourPickerType: ColourTypes.sliders,
@@ -45,9 +46,9 @@ class ColourGenericRoute extends StatelessWidget {
                   Tab(
                     child: Text(ColourTypes.materialButtons.name),
                   ),
-                  Tab(
-                    child: Text(ColourTypes.pallet.name),
-                  ),
+                  // Tab(
+                  //   child: Text(ColourTypes.pallet.name),
+                  // ),
                   Tab(
                     child: Text(ColourTypes.sliders.name),
                   ),

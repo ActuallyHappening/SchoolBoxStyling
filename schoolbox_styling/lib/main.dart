@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 
 void main() {
+  debugPrint("Route names are: ${routes.keys}");
   runApp(const MyApp());
 }
 
@@ -18,9 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: "/topbarcolour",
+      initialRoute: "/${KnownKeys.topBarColour.key}",
     );
   }
 }
-
-

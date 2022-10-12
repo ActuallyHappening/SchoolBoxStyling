@@ -24,6 +24,8 @@ enum KnownKeys {
 
 extension KnownKeysExt on KnownKeys {
   String get key => toString().split('.').last;
+
+  String get route => "/$key";
 }
 
 final Map<String, Widget Function(BuildContext)> routes = {
