@@ -16,44 +16,50 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Picture URL Chooser"),
+        title: Text(KnownKeys.mainSchoolBoxIconURL.routeTitle),
       ),
       drawer: const MyAppDrawer(),
       body: ListView(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.restart_alt_rounded),
-            title: const Text("Reset"),
-            onTap: () {
-              // print("$propertyKey reset");
-              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "/images/logo.php?logo=skin_logo_large&size=hidpi");
-            },
-          ),
-          ListTile(
-            // leading: const Icon(Icons.bento_rounded),
-            title: const Text("Old Icon"),
-            onTap: () {
-              // print("$propertyKey reset");
-              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png");
-            },
-          ),
-          ListTile(
-            // leading: const Icon(Icons.bento_rounded),
-            title: const Text("New Icon"),
-            onTap: () {
-              // print("$propertyKey reset");
-              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "https://media1.giphy.com/media/g7GKcSzwQfugw/giphy.gif?cid=790b7611fe5cbbfe2351ac8a4fb422325c00e2650709b600&rid=giphy.gif&ct=g");
-            },
-          ),
-          const Text(
+        children: const [
+          _DefaultURLOption(
+              url: mainSchoolBoxIconURLDefault,
+              name: "Reset",
+              icon: _DefaultURLOption.resetIcon),
+          _DefaultURLOption(
+              url:
+                  "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png",
+              name: "Old Icon"),
+          _DefaultURLOption(
+              url:
+                  "https://media1.giphy.com/media/g7GKcSzwQfugw/giphy.gif?cid=790b7611fe5cbbfe2351ac8a4fb422325c00e2650709b600&rid=giphy.gif&ct=g",
+              name: "New Icon"),
+          Text(
               "This feature allows you to set any picture as schoolbox's logo. As this can be abused, a password is required to unlock this feature. I am not responsible for you if you get in trouble for using this feature."),
-          const Text("Hint: My OneNote"),
-          const Center(child: URLInputFieldWithPassword()),
+          Text("Hint: My OneNote"),
+          Center(child: URLInputFieldWithPassword()),
         ],
       ),
+    );
+  }
+}
+
+class _DefaultURLOption extends StatelessWidget {
+  const _DefaultURLOption({required this.url, required this.name, this.icon});
+
+  final String url;
+  final String name;
+  final Icon? icon;
+
+  static const resetIcon = Icon(Icons.restart_alt_rounded);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: icon,
+      title: Text(name),
+      onTap: () {
+        sendNewValue(KnownKeys.mainSchoolBoxIconURL, url);
+      },
     );
   }
 }

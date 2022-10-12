@@ -17,6 +17,9 @@ extension ConstantsKeysExt on KnownKeys {
       }[this]!;
 }
 
+const mainSchoolBoxIconURLDefault =
+    "/images/logo.php?logo=skin_logo_large&size=hidpi";
+
 enum KnownKeys {
   topBarColour,
   leftBarColour,
@@ -40,6 +43,14 @@ extension RoutingKeysExt on KnownKeys {
         KnownKeys.mainSchoolBoxIconURL: "Main School Box Icon",
         KnownKeys.bodyBackgroundColour: "Background",
         KnownKeys.timetablePeriodHeaders: "Period Headers",
+      }[this]!;
+
+  String get routeTitle => {
+        KnownKeys.topBarColour: "Change Top Bar Colour",
+        KnownKeys.leftBarColour: "Change Left Bar Colour",
+        KnownKeys.mainSchoolBoxIconURL: "Set Schoolbox Icon",
+        KnownKeys.bodyBackgroundColour: "Change Background Colour",
+        KnownKeys.timetablePeriodHeaders: "Change Period Colours",
       }[this]!;
 }
 
