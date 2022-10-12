@@ -324,7 +324,7 @@ const knownActionStatics: Action[] = [
   },
   {
     key: "bodyBackgroundColour",
-    querySelector: "body",
+    querySelector: "table.timetable[data-timetable]>thead>tr>th",
     firstLevelProperty: "style",
     secondLevelProperty: "backgroundColor",
     newValWrapper: "$$$",

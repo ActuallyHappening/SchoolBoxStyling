@@ -1,4 +1,5 @@
 "use strict";
+// Replaced by macro.py
 /**
  * Actions are serializable constructs that define how to update the DOM.
  *
@@ -172,7 +173,7 @@ const knownActionStatics = [
     },
     {
         key: "bodyBackgroundColour",
-        querySelector: "body",
+        querySelector: "table.timetable[data-timetable]>thead>tr>th",
         firstLevelProperty: "style",
         secondLevelProperty: "backgroundColor",
         newValWrapper: "$$$",

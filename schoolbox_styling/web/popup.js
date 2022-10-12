@@ -1,4 +1,5 @@
 "use strict";
+// Replaced by macro.py
 console.log("popup.js loaded");
 function sendNewValue(key, value) {
     if (!chrome.tabs) {
