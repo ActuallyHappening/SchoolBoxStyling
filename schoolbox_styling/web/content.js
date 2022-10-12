@@ -20,6 +20,8 @@ const knownKeys = [
     "rightBarColour",
     "mainSchoolBoxIconURL",
     "deleteIMGSrc",
+    "bodyBackgroundColour",
+    "timetablePeriodHeaders",
 ];
 console.log("content.js loaded");
 function queryMany(querySelector, callback) {
@@ -168,20 +170,20 @@ const knownActionStatics = [
         newValWrapper: "$$$",
         defaultValue: "DELETE",
     },
-    // {
-    //   key: "deleteIMGSrc",
-    //   querySelector: 'img[src][alt="Emmanuel College"]',
-    //   firstLevelProperty: "src",
-    //   newValWrapper: "$$$",
-    //   defaultValue: "",
-    // },
-    // {
-    //   key: "deleteIMGSrcSetURL",
-    //   querySelector: "img[srcset]",
-    //   firstLevelProperty: "srcset",
-    //   newValWrapper: "$$$",
-    //   defaultValue: "empty",
-    // },
+    {
+        key: "bodyBackgroundColour",
+        querySelector: "body",
+        firstLevelProperty: "style",
+        secondLevelProperty: "backgroundColor",
+        newValWrapper: "$$$",
+    },
+    {
+        key: "timetablePeriodHeaders",
+        querySelector: "body",
+        firstLevelProperty: "style",
+        secondLevelProperty: "backgroundColor",
+        newValWrapper: "$$$",
+    },
 ];
 knownActionStatics.forEach(registerAction);
 chrome.runtime.onMessage.addListener((msg, sender, response) => {

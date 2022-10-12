@@ -6,10 +6,11 @@ import 'routes/image_url.dart';
 import 'routes/leftbar_route.dart';
 import 'routes/topbar_route.dart';
 
-
 final Map<KnownKeys, Color> resetColours = {
   KnownKeys.topBarColour: const Color(0xFF82c3eb),
   KnownKeys.leftBarColour: const Color(0xFF193c64),
+  KnownKeys.bodyBackgroundColour: const Color(0xFFdddddd),
+  KnownKeys.timetablePeriodHeaders: const Color(0xFF333333)
 };
 
 enum KnownKeys {
@@ -26,13 +27,13 @@ extension KnownKeysExt on KnownKeys {
 }
 
 final Map<String, Widget Function(BuildContext)> routes = {
-  // "/": (context) => const ColourGenericRoute(
-  //       propertyKey: KnownKeys.leftBarColour,
-  //     ),
-  "/topbarcolour": (context) => const TopBarRoute(),
-  "/leftbarcolour": (context) => const LeftBarRoute(),
-  "/mainschoolboxicon": (context) => const MainSchoolBoxIconRoute(),
+  "/${KnownKeys.topBarColour.key}": (context) => const TopBarRoute(),
+  "/${KnownKeys.leftBarColour.key}": (context) => const LeftBarRoute(),
+  "/${KnownKeys.mainSchoolBoxIconURL.key}": (context) =>
+      const MainSchoolBoxIconRoute(),
 
-  "/bodybackgroundcolour": (context) => const BodyBackgroundRoute(),
-  "/timetableperiodheaders": (context) => const PeriodHeadersRoute(),
+  "/${KnownKeys.bodyBackgroundColour.key}": (context) =>
+      const BodyBackgroundRoute(),
+  "/${KnownKeys.timetablePeriodHeaders.key}": (context) =>
+      const PeriodHeadersRoute(),
 };
