@@ -27,10 +27,10 @@ class CustomColourPicker extends StatelessWidget {
     chips = [
       ListTile(
         leading: const Icon(Icons.restart_alt_rounded),
-        iconColor: resetColours[propertyKey],
+        iconColor: propertyKey.resetColour,
         title: const Text("Reset"),
         onTap: () {
-          sendNewValue(propertyKey, toCSSColour(resetColours[propertyKey]!));
+          sendNewValue(propertyKey, toCSSColour(propertyKey.resetColour));
         },
       )
     ];

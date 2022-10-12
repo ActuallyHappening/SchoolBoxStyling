@@ -28,9 +28,10 @@ class DrawerOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(routeNames[knownKey]!),
+      title: Text(knownKey.routeName),
       onTap: () {
-        print("Changing screen to ${knownKey.route} for key $knownKey");
+        print(
+            "Changing screen to ${knownKey.route} for key $knownKey, name ${knownKey.routeName}.");
         Navigator.pushNamed(context, knownKey.route);
       },
     );

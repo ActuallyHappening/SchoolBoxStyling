@@ -33,7 +33,7 @@ class ColourGenericRoute extends StatelessWidget {
             )
           ]),
           appBar: AppBar(
-              title: Text(routeNames[propertyKey]!),
+              title: Text(propertyKey.routeName),
               bottom: TabBar(
                 tabs: [
                   Tab(
