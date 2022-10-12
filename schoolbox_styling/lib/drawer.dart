@@ -30,6 +30,7 @@ class DrawerOption extends StatelessWidget {
     return ListTile(
       title: Text(routeNames[knownKey]!),
       onTap: () {
+        print("Changing screen to ${knownKey.route} for key $knownKey");
         Navigator.pushNamed(context, knownKey.route);
       },
     );

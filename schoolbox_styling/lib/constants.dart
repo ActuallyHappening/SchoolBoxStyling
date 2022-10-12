@@ -37,13 +37,13 @@ extension KnownKeysExt on KnownKeys {
 }
 
 final Map<String, Widget Function(BuildContext)> routes = {
-  "/${KnownKeys.topBarColour.key}": (context) => const TopBarRoute(),
-  "/${KnownKeys.leftBarColour.key}": (context) => const LeftBarRoute(),
-  "/${KnownKeys.mainSchoolBoxIconURL.key}": (context) =>
+  KnownKeys.topBarColour.route: (context) => const TopBarRoute(),
+  KnownKeys.leftBarColour.route: (context) => const LeftBarRoute(),
+  KnownKeys.mainSchoolBoxIconURL.route: (context) =>
       const MainSchoolBoxIconRoute(),
 
-  "/${KnownKeys.bodyBackgroundColour.key}": (context) =>
+  KnownKeys.bodyBackgroundColour.route: (context) =>
       const BodyBackgroundRoute(),
-  "/${KnownKeys.timetablePeriodHeaders.key}": (context) =>
+  KnownKeys.timetablePeriodHeaders.route: (context) =>
       const PeriodHeadersRoute(),
 };
