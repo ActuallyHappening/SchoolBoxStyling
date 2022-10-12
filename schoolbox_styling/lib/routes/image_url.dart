@@ -11,7 +11,7 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Picture URL Choser"),
+        title: const Text("Picture URL Chooser"),
       ),
       drawer: const MyAppDrawer(),
       body: ListView(
