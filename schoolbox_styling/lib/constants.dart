@@ -6,22 +6,16 @@ import 'routes/image_url.dart';
 import 'routes/leftbar_route.dart';
 import 'routes/topbar_route.dart';
 
-final Map<KnownKeys, Color> resetColours = {
-  KnownKeys.topBarColour: const Color(0xFF82c3eb),
-  KnownKeys.leftBarColour: const Color(0xFF193c64),
-  KnownKeys.bodyBackgroundColour: const Color(0xFFdddddd),
-  KnownKeys.timetablePeriodHeaders: const Color(0xFFFFFFFF),
-  KnownKeys.topBarIconColour: const Color(0xFF193C64),
-  KnownKeys.topBarIconTextColour: const Color(0xFF193C64),
-};
-
-final Map<KnownKeys, String> routeNames = {
-  KnownKeys.topBarColour: "Top Bar",
-  KnownKeys.leftBarColour: "Left Bar",
-  KnownKeys.mainSchoolBoxIconURL: "Main School Box Icon",
-  KnownKeys.bodyBackgroundColour: "Background",
-  KnownKeys.timetablePeriodHeaders: "Period Headers",
-};
+extension ConstantsKeysExt on KnownKeys {
+  Color get resetColour => {
+        KnownKeys.topBarColour: const Color(0xFF82c3eb),
+        KnownKeys.leftBarColour: const Color(0xFF193c64),
+        KnownKeys.bodyBackgroundColour: const Color(0xFFdddddd),
+        KnownKeys.timetablePeriodHeaders: const Color(0xFFFFFFFF),
+        KnownKeys.topBarIconColour: const Color(0xFF193C64),
+        KnownKeys.topBarIconTextColour: const Color(0xFF193C64),
+      }[this]!;
+}
 
 enum KnownKeys {
   topBarColour,
@@ -35,10 +29,18 @@ enum KnownKeys {
   topBarIconTextColour,
 }
 
-extension KnownKeysExt on KnownKeys {
+extension RoutingKeysExt on KnownKeys {
   String get key => toString().split('.').last;
 
   String get route => "/$key";
+
+  String get routeName => {
+        KnownKeys.topBarColour: "Top Bar",
+        KnownKeys.leftBarColour: "Left Bar",
+        KnownKeys.mainSchoolBoxIconURL: "Main School Box Icon",
+        KnownKeys.bodyBackgroundColour: "Background",
+        KnownKeys.timetablePeriodHeaders: "Period Headers",
+      }[this]!;
 }
 
 final Map<String, Widget Function(BuildContext)> routes = {
@@ -46,7 +48,6 @@ final Map<String, Widget Function(BuildContext)> routes = {
   KnownKeys.leftBarColour.route: (context) => const LeftBarRoute(),
   KnownKeys.mainSchoolBoxIconURL.route: (context) =>
       const MainSchoolBoxIconRoute(),
-
   KnownKeys.bodyBackgroundColour.route: (context) =>
       const BodyBackgroundRoute(),
   KnownKeys.timetablePeriodHeaders.route: (context) =>

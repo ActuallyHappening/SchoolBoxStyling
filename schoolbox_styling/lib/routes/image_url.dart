@@ -4,6 +4,11 @@ import '../constants.dart';
 import '../drawer.dart';
 import '../js_integration.dart';
 
+List<String> urls {
+  "https://media.tenor.com/a6YLqoCk4cQAAAAM/kanye-west-king.gif",
+  "https://media1.giphy.com/media/g7GKcSzwQfugw/giphy.gif?cid=790b7611fe5cbbfe2351ac8a4fb422325c00e2650709b600&rid=giphy.gif&ct=g",
+}
+
 class MainSchoolBoxIconRoute extends StatelessWidget {
   const MainSchoolBoxIconRoute({Key? key}) : super(key: key);
 
