@@ -19,6 +19,7 @@ const knownKeys = [
   "rightBarColour",
 
   "mainSchoolBoxIconURL",
+  "secondarySchoolBoxIconURL",
   "deleteIMGSrc",
 
   "bodyBackgroundColour",
@@ -310,10 +311,19 @@ const knownActionStatics: Action[] = [
   },
   {
     key: "mainSchoolBoxIconURL",
-    querySelector: 'a.logo, img[alt="Emmanuel College"]',
+    querySelector: "div.logo-wrapper>a.logo",
     firstLevelProperty: "style",
     secondLevelProperty: "background",
     newValWrapper: "url($$$) center center / contain no-repeat",
+    defaultValue: "/images/logo.php?logo=skin_logo_large&size=hidpi" as any,
+  },
+  {
+    key: "secondarySchoolBoxIconURL",
+    querySelector: "section.tab-bar-section>a.logo",
+    firstLevelProperty: "style",
+    secondLevelProperty: "background",
+    newValWrapper: "url($$$) center center / contain no-repeat",
+    defaultValue: "/images/logo.php?logo=skin_logo_square&size=normal" as any,
   },
   {
     key: "deleteIMGSrc",

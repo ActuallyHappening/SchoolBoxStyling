@@ -8,6 +8,6 @@ class LeftBarRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ColourGenericRoute(propertyKey: KnownKeys.leftBarColour);
+    return const ColourGenericRoute(propertyKey: KnownKey.leftBarColour);
   }
 }

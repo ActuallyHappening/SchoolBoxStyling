@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: "/${KnownKeys.topBarColour.key}",
+      initialRoute: "/${KnownKey.topBarColour.key}",
     );
   }
 }

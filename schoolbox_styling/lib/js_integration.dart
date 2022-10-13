@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'constants.dart';
 
-void sendNewValue(KnownKeys key, String value) {
+void sendNewValue(KnownKey key, String value) {
   print("Sending new value for $key: $value");
   js.context.callMethod("sendNewValue", [key.key, value]);
 }

@@ -10,12 +10,12 @@ class MyAppDrawer extends StatelessWidget {
         child: ListView(
       children: const [
       DrawerOption(
-        knownKey: KnownKeys.topBarColour,
+        knownKey: KnownKey.topBarColour,
       ),
-      DrawerOption(knownKey: KnownKeys.leftBarColour),
-      DrawerOption(knownKey: KnownKeys.mainSchoolBoxIconURL),
-      DrawerOption(knownKey: KnownKeys.bodyBackgroundColour),
-      DrawerOption(knownKey: KnownKeys.timetablePeriodHeaders),
+      DrawerOption(knownKey: KnownKey.leftBarColour),
+      DrawerOption(knownKey: KnownKey.mainSchoolBoxIconURL),
+      DrawerOption(knownKey: KnownKey.bodyBackgroundColour),
+      DrawerOption(knownKey: KnownKey.timetablePeriodHeaders),
     ]));
   }
 }
@@ -23,7 +23,7 @@ class MyAppDrawer extends StatelessWidget {
 class DrawerOption extends StatelessWidget {
   const DrawerOption({super.key, required this.knownKey});
 
-  final KnownKeys knownKey;
+  final KnownKey knownKey;
 
   @override
   Widget build(BuildContext context) {

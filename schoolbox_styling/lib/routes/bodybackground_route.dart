@@ -9,6 +9,6 @@ class BodyBackgroundRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ColourGenericRoute(
-        propertyKey: KnownKeys.bodyBackgroundColour);
+        propertyKey: KnownKey.bodyBackgroundColour);
   }
 }

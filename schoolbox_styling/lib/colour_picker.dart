@@ -36,7 +36,7 @@ class CustomColourPicker extends StatelessWidget {
     ];
   }
 
-  final KnownKeys propertyKey;
+  final KnownKey propertyKey;
   final ColourTypes colourPickerType;
 
   late List<Widget> chips;

@@ -9,6 +9,6 @@ class PeriodHeadersRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ColourGenericRoute(
-        propertyKey: KnownKeys.timetablePeriodHeaders);
+        propertyKey: KnownKey.timetablePeriodHeaders);
   }
 }

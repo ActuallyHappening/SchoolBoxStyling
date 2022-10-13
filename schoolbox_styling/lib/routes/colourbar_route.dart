@@ -10,7 +10,7 @@ class ColourGenericRoute extends StatelessWidget {
     required this.propertyKey,
   });
 
-  final KnownKeys propertyKey;
+  final KnownKey propertyKey;
 
   @override
   Widget build(BuildContext context) {
