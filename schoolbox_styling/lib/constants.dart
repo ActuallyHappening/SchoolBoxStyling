@@ -43,7 +43,7 @@ extension RoutingKeysExt on KnownKey {
   String get routeName => {
         KnownKey.topBarColour: "Top Bar",
         KnownKey.leftBarColour: "Left Bar",
-        KnownKey.mainSchoolBoxIconURL: "Main School Box Icon",
+        KnownKey.mainSchoolBoxIconURL: "Schoolbox Icon",
         KnownKey.bodyBackgroundColour: "Background",
         KnownKey.timetablePeriodHeaders: "Period Headers",
       }[this]!;

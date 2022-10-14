@@ -64,9 +64,9 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GenericURLChooserBody(
-      presets: mainSchoolBoxPresets,
-      propertyKey: KnownKey.mainSchoolBoxIconURL,
+    return GenericURLChooserRoute(
+      propertyKey: KnownKey.bothSchoolBoxIconURL,
+      presets: bothSchoolBoxIconPresets,
     );
   }
 }
@@ -81,13 +81,14 @@ class BothSchoolBoxIconRoute extends StatelessWidget {
 }
 
 class GenericURLChooserRoute extends StatelessWidget {
-  const GenericURLChooserRoute({super.key, presets, required this.propertyKey})
+  const GenericURLChooserRoute(
+      {super.key, List<URLPresetOption>? presets, required this.propertyKey})
       : isBoth = propertyKey == KnownKey.bodyBackgroundColour,
-        presets = presets
-            ? presets
-            : propertyKey == KnownKey.mainSchoolBoxIconURL
-                ? mainSchoolBoxPresets
-                : secondarySchoolBoxPresets;
+        presets = (propertyKey == KnownKey.mainSchoolBoxIconURL
+            ? mainSchoolBoxPresets
+            : propertyKey == KnownKey.secondarySchoolBoxIconURL
+                ? secondarySchoolBoxPresets
+                : bothSchoolBoxIconPresets);
 
   final KnownKey propertyKey;
   final bool isBoth;
@@ -160,12 +161,13 @@ class URLPresetOption extends StatelessWidget {
       required this.url,
       required this.name,
       this.icon,
-      this.isBothResetButton});
+      isBothResetButton})
+      : isBothResetButton = isBothResetButton ?? false;
 
   final String url;
   final String name;
   final Icon? icon;
-  final bool? isBothResetButton;
+  final bool isBothResetButton;
 
   static const resetIcon = Icon(Icons.restart_alt_rounded);
 
@@ -175,7 +177,7 @@ class URLPresetOption extends StatelessWidget {
       leading: icon,
       title: Text(name),
       onTap: () {
-        if (isBothResetButton != null && isBothResetButton == true) {
+        if (isBothResetButton == true) {
           // Send both default values
           KnownKey.mainSchoolBoxIconURL.send(mainSchoolBoxIconURLDefault);
           KnownKey.secondarySchoolBoxIconURL
