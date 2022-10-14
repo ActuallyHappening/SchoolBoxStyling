@@ -29,7 +29,7 @@ class SecondarySchoolBoxIconRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GenericURLChooserRoute(
+    return const GenericURLChooserBody(
       presets: mainSchoolBoxPresets,
       propertyKey: KnownKey.secondarySchoolBoxIconURL,
     );
@@ -41,24 +41,40 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GenericURLChooserRoute(
+    return const GenericURLChooserBody(
       presets: mainSchoolBoxPresets,
       propertyKey: KnownKey.mainSchoolBoxIconURL,
     );
   }
 }
 
+class BothSchoolBoxIconRoute extends StatelessWidget {
+  const BothSchoolBoxIconRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class GenericURLChooserRoute extends StatelessWidget {
-  const GenericURLChooserRoute(
+  const GenericURLChooserRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class GenericURLChooserBody extends StatelessWidget {
+  const GenericURLChooserBody(
       {super.key,
       required this.presets,
-      this.extras,
       required this.propertyKey});
 
   final KnownKey propertyKey;
 
   final List<URLPresetOption> presets;
-  final List<Widget>? extras;
 
   final List<Widget> others = const [
     Text(
@@ -76,7 +92,6 @@ class GenericURLChooserRoute extends StatelessWidget {
       body: ListView(
         children: [
           ...presets,
-          ...?extras,
           Center(
               child: URLInputFieldWithPassword(
             propertyKey: propertyKey,
@@ -103,7 +118,7 @@ class URLPresetOption extends StatelessWidget {
       leading: icon,
       title: Text(name),
       onTap: () {
-        sendNewValue(KnownKey.mainSchoolBoxIconURL, url);
+        KnownKey.mainSchoolBoxIconURL.send(url);
       },
     );
   }
@@ -138,15 +153,17 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
                   if (isLocked) {
                     print("LOCKED new text: $text");
                   } else {
-                    print("New URL text: $text");
-                    sendNewValue(widget.propertyKey, text);
+                    print("New URL: $text");
+                    widget.propertyKey.send(text);
                   }
                 },
                 decoration: const InputDecoration(
                   hintText: "Enter password to unlock",
                 ),
               )
-            : const Card(child: Text("Unlocked!")),
+            : const Padding(
+                padding: EdgeInsets.all(5),
+                child: Card(child: Text("Unlocked!"))),
       ],
     );
   }

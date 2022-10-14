@@ -23,6 +23,7 @@ enum KnownKey {
 
   mainSchoolBoxIconURL,
   secondarySchoolBoxIconURL,
+  bothSchoolBoxIconURL,
 
   bodyBackgroundColour,
   timetablePeriodHeaders,
@@ -32,10 +33,13 @@ enum KnownKey {
 }
 
 extension RoutingKeysExt on KnownKey {
+  /// Returns the raw key, which interfaces with popup.ts
   String get key => toString().split('.').last;
 
+  /// Returns the route name
   String get route => "/$key";
 
+  /// Put in the drawer
   String get routeName => {
         KnownKey.topBarColour: "Top Bar",
         KnownKey.leftBarColour: "Left Bar",
@@ -44,10 +48,13 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.timetablePeriodHeaders: "Period Headers",
       }[this]!;
 
+  /// Put in the appBar title
   String get routeTitle => {
         KnownKey.topBarColour: "Change Top Bar Colour",
         KnownKey.leftBarColour: "Change Left Bar Colour",
-        KnownKey.mainSchoolBoxIconURL: "Set Schoolbox Icon",
+        KnownKey.bothSchoolBoxIconURL: "Set Schoolbox Icons",
+        KnownKey.mainSchoolBoxIconURL: "Set Larger Schoolbox Icon",
+        KnownKey.secondarySchoolBoxIconURL: "Set Small Schoolbox Icon",
         KnownKey.bodyBackgroundColour: "Change Background Colour",
         KnownKey.timetablePeriodHeaders: "Change Period Colours",
       }[this]!;

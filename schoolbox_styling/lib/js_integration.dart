@@ -14,6 +14,11 @@ String toCSSColour(Color colour) {
 
 extension KeySendValue on KnownKey {
   void send(String value) {
+    if (this == KnownKey.bothSchoolBoxIconURL) {
+      sendNewValue(KnownKey.mainSchoolBoxIconURL, value);
+      sendNewValue(KnownKey.secondarySchoolBoxIconURL, value);
+      return;
+    }
     sendNewValue(this, value);
   }
 }
