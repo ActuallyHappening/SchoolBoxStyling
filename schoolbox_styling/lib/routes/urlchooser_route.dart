@@ -1,27 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/drawer.dart';
 
 import '../constants.dart';
-import '../drawer.dart';
 import '../js_integration.dart';
 
 const mainSchoolBoxIconURLDefault =
     "/images/logo.php?logo=skin_logo_large&size=hidpi";
 
-const List<URLPresetOption> mainSchoolBoxPresets = [
-  URLPresetOption(
-      url: mainSchoolBoxIconURLDefault,
-      name: "Reset",
-      icon: URLPresetOption.resetIcon),
+const secondarySchoolBoxIconURLDefault =
+    "/images/logo.php?logo=skin_logo_square&size=normal"; // FIXME
+
+const List<URLPresetOption> _bothSchoolBoxIconPresets = [
   URLPresetOption(
       url:
           "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png",
       name: "Old Icon"),
   URLPresetOption(
       url: "https://media.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif",
-      name: "Rick Roll"),
+      name: "New Icon"),
   URLPresetOption(
       url: "https://media.tenor.com/a6YLqoCk4cQAAAAM/kanye-west-king.gif",
       name: "Kanye"),
+];
+
+const List<URLPresetOption> bothSchoolBoxIconPresets = [
+  URLPresetOption(
+    url: "ERROR: Both Reset Logic is broken (you should never see this)",
+    name: "Reset (both)",
+    isBothResetButton: true,
+  )
+];
+
+const List<URLPresetOption> mainSchoolBoxPresets = [
+  URLPresetOption(
+      url: mainSchoolBoxIconURLDefault,
+      name: "Reset",
+      icon: URLPresetOption.resetIcon),
+  ..._bothSchoolBoxIconPresets,
+];
+
+const List<URLPresetOption> secondarySchoolBoxPresets = [
+  URLPresetOption(
+      url: mainSchoolBoxIconURLDefault,
+      name: "Reset",
+      icon: URLPresetOption.resetIcon),
+  ..._bothSchoolBoxIconPresets,
 ];
 
 class SecondarySchoolBoxIconRoute extends StatelessWidget {
@@ -58,19 +81,54 @@ class BothSchoolBoxIconRoute extends StatelessWidget {
 }
 
 class GenericURLChooserRoute extends StatelessWidget {
-  const GenericURLChooserRoute({super.key});
+  const GenericURLChooserRoute({super.key, presets, required this.propertyKey})
+      : isBoth = propertyKey == KnownKey.bodyBackgroundColour,
+        presets = presets
+            ? presets
+            : propertyKey == KnownKey.mainSchoolBoxIconURL
+                ? mainSchoolBoxPresets
+                : secondarySchoolBoxPresets;
+
+  final KnownKey propertyKey;
+  final bool isBoth;
+
+  final List<URLPresetOption> presets;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    if (!isBoth) {
+      return Scaffold(
+          drawer: const MyAppDrawer(),
+          appBar: AppBar(
+            title: Text(propertyKey.routeTitle),
+          ),
+          body: GenericURLChooserBody(
+              presets: presets, propertyKey: propertyKey));
+    }
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        drawer: const MyAppDrawer(),
+        appBar: AppBar(
+            title: Text(propertyKey.routeTitle),
+            bottom: const TabBar(tabs: [
+              Tab(
+                child: Text("All Icons"),
+              ),
+              Tab(child: Text("Large Icon Only")),
+              Tab(child: Text("Small Icon Only")),
+            ])),
+        body: TabBarView(children: [
+          GenericURLChooserBody(presets: presets, propertyKey: propertyKey)
+        ]),
+      ),
+    );
   }
 }
 
 class GenericURLChooserBody extends StatelessWidget {
   const GenericURLChooserBody(
-      {super.key,
-      required this.presets,
-      required this.propertyKey});
+      {super.key, required this.presets, required this.propertyKey});
 
   final KnownKey propertyKey;
 
@@ -84,31 +142,30 @@ class GenericURLChooserBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(KnownKey.mainSchoolBoxIconURL.routeTitle),
-      ),
-      drawer: const MyAppDrawer(),
-      body: ListView(
-        children: [
-          ...presets,
-          Center(
-              child: URLInputFieldWithPassword(
-            propertyKey: propertyKey,
-          )),
-        ],
-      ),
+    return ListView(
+      children: [
+        ...presets,
+        Center(
+            child: URLInputFieldWithPassword(
+          propertyKey: propertyKey,
+        )),
+      ],
     );
   }
 }
 
 class URLPresetOption extends StatelessWidget {
   const URLPresetOption(
-      {super.key, required this.url, required this.name, this.icon});
+      {super.key,
+      required this.url,
+      required this.name,
+      this.icon,
+      this.isBothResetButton});
 
   final String url;
   final String name;
   final Icon? icon;
+  final bool? isBothResetButton;
 
   static const resetIcon = Icon(Icons.restart_alt_rounded);
 
@@ -118,6 +175,13 @@ class URLPresetOption extends StatelessWidget {
       leading: icon,
       title: Text(name),
       onTap: () {
+        if (isBothResetButton != null && isBothResetButton == true) {
+          // Send both default values
+          KnownKey.mainSchoolBoxIconURL.send(mainSchoolBoxIconURLDefault);
+          KnownKey.secondarySchoolBoxIconURL
+              .send(secondarySchoolBoxIconURLDefault);
+          return;
+        }
         KnownKey.mainSchoolBoxIconURL.send(url);
       },
     );
