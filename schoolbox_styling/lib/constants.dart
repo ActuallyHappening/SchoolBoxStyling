@@ -57,7 +57,7 @@ final Map<String, Widget Function(BuildContext)> routes = {
   KnownKey.topBarColour.route: (context) => const TopBarRoute(),
   KnownKey.leftBarColour.route: (context) => const LeftBarRoute(),
   KnownKey.mainSchoolBoxIconURL.route: (context) =>
-      const GenericURLChooserRoute(),
+      const MainSchoolBoxIconRoute(),
   KnownKey.bodyBackgroundColour.route: (context) =>
       const BodyBackgroundRoute(),
   KnownKey.timetablePeriodHeaders.route: (context) =>

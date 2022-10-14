@@ -11,3 +11,9 @@ void sendNewValue(KnownKey key, String value) {
 String toCSSColour(Color colour) {
   return "rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha})";
 }
+
+extension KeySendValue on KnownKey {
+  void send(String value) {
+    sendNewValue(this, value);
+  }
+}

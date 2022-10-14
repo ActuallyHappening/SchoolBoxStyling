@@ -77,7 +77,10 @@ class GenericURLChooserRoute extends StatelessWidget {
         children: [
           ...presets,
           ...?extras,
-          const Center(child: URLInputFieldWithPassword()),
+          Center(
+              child: URLInputFieldWithPassword(
+            propertyKey: propertyKey,
+          )),
         ],
       ),
     );
@@ -107,7 +110,9 @@ class URLPresetOption extends StatelessWidget {
 }
 
 class URLInputFieldWithPassword extends StatefulWidget {
-  const URLInputFieldWithPassword({super.key});
+  const URLInputFieldWithPassword({super.key, required this.propertyKey});
+
+  final KnownKey propertyKey;
 
   @override
   State<URLInputFieldWithPassword> createState() =>
@@ -134,7 +139,7 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
                     print("LOCKED new text: $text");
                   } else {
                     print("New URL text: $text");
-                    sendNewValue(KnownKey.mainSchoolBoxIconURL, text);
+                    sendNewValue(widget.propertyKey, text);
                   }
                 },
                 decoration: const InputDecoration(
