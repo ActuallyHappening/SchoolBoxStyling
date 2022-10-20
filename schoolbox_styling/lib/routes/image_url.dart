@@ -15,38 +15,42 @@ class MainSchoolBoxIconRoute extends StatelessWidget {
       ),
       drawer: const MyAppDrawer(),
       body: ListView(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.restart_alt_rounded),
-            title: const Text("Reset"),
-            onTap: () {
-              // print("$propertyKey reset");
-              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "/images/logo.php?logo=skin_logo_large&size=hidpi");
-            },
-          ),
-          ListTile(
-            // leading: const Icon(Icons.bento_rounded),
-            title: const Text("Old Icon"),
-            onTap: () {
-              // print("$propertyKey reset");
-              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png");
-            },
-          ),
-          ListTile(
-            // leading: const Icon(Icons.bento_rounded),
-            title: const Text("New Icon"),
-            onTap: () {
-              // print("$propertyKey reset");
-              sendNewValue(KnownKeys.mainSchoolBoxIconURL,
-                  "https://media1.giphy.com/media/g7GKcSzwQfugw/giphy.gif?cid=790b7611fe5cbbfe2351ac8a4fb422325c00e2650709b600&rid=giphy.gif&ct=g");
-            },
-          ),
-          const Text(
-              "This feature allows you to set any picture as schoolbox's logo. As this can be abused, a password is required to unlock this feature. I am not responsible for you if you get in trouble for using this feature."),
-          const Text("Hint: My OneNote"),
-          const Center(child: URLInputFieldWithPassword()),
+        children: const [
+          Text(
+            "This feature is disabled, to avoid me (Caleb Yates) getting in trouble by the school. Don't worry, I will release a major update in the near future ;)",
+            style: TextStyle(fontSize: 20),
+          )
+          // ListTile(
+          //   leading: const Icon(Icons.restart_alt_rounded),
+          //   title: const Text("Reset"),
+          //   onTap: () {
+          //     // print("$propertyKey reset");
+          //     sendNewValue(KnownKeys.mainSchoolBoxIconURL,
+          //         "/images/logo.php?logo=skin_logo_large&size=hidpi");
+          //   },
+          // ),
+          // ListTile(
+          //   // leading: const Icon(Icons.bento_rounded),
+          //   title: const Text("Old Icon"),
+          //   onTap: () {
+          //     // print("$propertyKey reset");
+          //     sendNewValue(KnownKeys.mainSchoolBoxIconURL,
+          //         "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png");
+          //   },
+          // ),
+          // ListTile(
+          //   // leading: const Icon(Icons.bento_rounded),
+          //   title: const Text("New Icon"),
+          //   onTap: () {
+          //     // print("$propertyKey reset");
+          //     sendNewValue(KnownKeys.mainSchoolBoxIconURL,
+          //         "https://media1.giphy.com/media/g7GKcSzwQfugw/giphy.gif?cid=790b7611fe5cbbfe2351ac8a4fb422325c00e2650709b600&rid=giphy.gif&ct=g");
+          //   },
+          // ),
+          // const Text(
+          //     "This feature allows you to set any picture as schoolbox's logo. As this can be abused, a password is required to unlock this feature. I am not responsible for you if you get in trouble for using this feature."),
+          // const Text("Hint: My OneNote"),
+          // const Center(child: URLInputFieldWithPassword()),
         ],
       ),
     );
@@ -95,8 +99,7 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
           },
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
-            hintText:
-                isLocked
+            hintText: isLocked
                 ? 'Great power comes with great responsibility'
                 : "Copy and paste url here, e.g. picsum.photos/300/300",
           ),
