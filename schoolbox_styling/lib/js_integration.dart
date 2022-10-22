@@ -3,9 +3,21 @@ import 'dart:ui';
 
 import 'constants.dart';
 
-void sendNewValue(KnownKey key, String value) {
-  print("Sending new value for $key: $value");
-  js.context.callMethod("sendNewValue", [key.key, value]);
+enum PossibleActions {
+  reset,
+
+  /// Assign a new value to a known key.
+  newAssignedValue,
+}
+
+void sendNewValue(KnownKey key, PossibleActions action, String? value) {
+  String userRequest;
+  if (action == PossibleActions.reset) {
+    userRequest = 'RESET';
+  } else {
+    userRequest = value!;
+  }
+  js.context.callMethod("sendNewValue", [key.key, userRequest]);
 }
 
 String toCSSColour(Color colour) {
@@ -14,11 +26,6 @@ String toCSSColour(Color colour) {
 
 extension KeySendValue on KnownKey {
   void send(String value) {
-    if (this == KnownKey.bothSchoolBoxIconURL) {
-      sendNewValue(KnownKey.mainSchoolBoxIconURL, value);
-      sendNewValue(KnownKey.secondarySchoolBoxIconURL, value);
-      return;
-    }
-    sendNewValue(this, value);
+    sendNewValue(this, PossibleActions.newAssignedValue, value);
   }
 }
