@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/constants.dart';
 import 'package:schoolbox_styling/value_chosers/colour_picker.dart';
+import 'package:schoolbox_styling/value_chosers/urlchooser_route.dart';
 
 class ValueChooser {
   ValueChooser({
@@ -12,7 +13,10 @@ class ValueChooser {
   final WidgetBuilder Function(KnownKey key) body;
 }
 
-List<ValueChooser> valueChoosers = [...colourValueChoosers];
+List<ValueChooser> valueChoosers = [
+  ...colourValueChoosers,
+  ...urlValueChoosers
+];
 
 class AllValueChoosersRoute extends StatelessWidget {
   const AllValueChoosersRoute({super.key, required this.propertyKey});
