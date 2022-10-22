@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import './value_choosers.dart';
@@ -46,14 +47,63 @@ class GenericURLChooserBody extends StatelessWidget {
   }
 }
 
-class FireStorePresetURLs extends StatelessWidget {
+class FireStorePresetURLs extends StatefulWidget {
   const FireStorePresetURLs({super.key, required this.propertyKey});
 
   final KnownKey propertyKey;
 
   @override
+  State<FireStorePresetURLs> createState() => _FireStorePresetURLsState();
+}
+
+class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
+  Map<String, String> loadedURLPresets = {"Loading ...": "Loading ..."};
+
+  var dio = Dio();
+
+  loadURLPresets() {
+    getURLPresets().then((value) {
+      setState(() {
+        loadedURLPresets = value;
+      });
+    });
+  }
+
+  Future<Map<String, String>> getURLPresets() async {
+    // Using dio
+    // return Dio().get("https://schoolbox-website.web.app/presets.json").then((value) => value.data);
+    const String projectID = "better-schoolbox-1f647";
+    const String collectionID = "preset-urls";
+    return await dio
+        .get(
+            "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/$collectionID")
+        .then((value) => value.data)
+        .then((value) => value["documents"])
+        .then((value) => value.map((e) => MapEntry(
+            e["fields"]["name"]["stringValue"],
+            e["fields"]["url"]["stringValue"])));
+  }
+
+  @override
+  initState() {
+    super.initState();
+    loadURLPresets();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column()
+    return Column(children: [
+      const Text("Presets:"),
+      ...loadedURLPresets.entries
+          .map((e) => ListTile(
+                title: Text(e.key),
+                subtitle: Text(e.value),
+                onTap: () {
+                  widget.propertyKey.send(value: e.value);
+                },
+              ))
+          .toList(),
+    ]);
     // return StreamBuilder(
     //     stream:
     //         FirebaseFirestore.instance.collection('preset-urls').snapshots(),
