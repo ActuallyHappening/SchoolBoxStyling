@@ -3,6 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../constants.dart';
 import '../js_integration.dart';
+import './value_choosers.dart';
 
 enum ColourTypes {
   materialButtons,
@@ -17,6 +18,10 @@ extension ColourTypesExt on ColourTypes {
         ColourTypes.sliders: "Colour (✨ sliders ✨)",
       }[this]!;
 }
+
+List<ValueChooser> colourValueChoosers = [
+  ...ColourTypes.values.map((type) => ValueChooser(name: type.name, body: (context) => CustomColourPicker(colourPickerType: type,))).toList(),
+]
 
 class ColourPickers extends StatelessWidget {
   const ColourPickers({

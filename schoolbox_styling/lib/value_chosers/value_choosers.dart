@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/constants.dart';
+import 'package:schoolbox_styling/value_chosers/colour_picker.dart';
+
+class ValueChooser {
+  ValueChooser({
+    required this.name,
+    required this.body,
+  });
+
+  final String name;
+  final WidgetBuilder Function(KnownKey key) body;
+}
+
+List<ValueChooser> valueChoosers = [...colourValueChoosers];
+
+class AllValueChoosersRoute extends StatelessWidget {
+  AllValueChoosersRoute({super.key, required this.propertyKey}) {
+    names = valueChoosers.map((e) => e.name).toList();
+    bodies = valueChoosers.map((chooser) => chooser.body(propertyKey)).toList();
+  }
+
+  final KnownKey propertyKey;
+  late List<String> names;
+  late List<WidgetBuilder> bodies;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: valueChoosers.length,
+        child: Scaffold(children: [
+          TabBarView(
+              children:
+                  bodies.map((constructor) => constructor(context)).toList()),
+          TabBar(
+              tabs: names
+                  .map((name) => Tab(
+                        text: name,
+                      ))
+                  .toList()),
+        ]));
+  }
+}
