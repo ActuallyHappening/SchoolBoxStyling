@@ -1,33 +1,156 @@
-/**
- * Actions are serializable constructs that define how to update the DOM.
- *
- * In storage, an action (which contains the current value) are stored with the actions name as the key.
- *
- * Popup.ts can only send full actions to content.ts,
- * who manages storing it and updating the DOM according to the actions specifications.
- *
- * There is a known set of possible keys that actions can take,
- *
- * ## Runtime action registering is NOT supported, as removing event listeners is hard!
- *
- * ## Examples:
- * popup.ts sends action to content.ts:
- */
 const knownKeys = [
-  "topBarColour",
-  "leftBarColour",
-  "rightBarColour",
+  "topBar",
+  "topBarIcons",
+  "leftBar",
+  "timetableHeaders",
+  "background",
 
-  "mainSchoolBoxIconURL",
-  "secondarySchoolBoxIconURL",
-  "deleteIMGSrc",
+  "sectionHeaders",
 
-  "bodyBackgroundColour",
-  "timetablePeriodHeaders",
+  // "topBarColour",
+  // "leftBarColour",
+  // "rightBarColour",
+
+  // "mainSchoolBoxIconURL",
+  // "secondarySchoolBoxIconURL",
+  // "deleteIMGSrc",
+
+  // "bodyBackgroundColour",
+  // "timetablePeriodHeaders",
 ] as const;
 export type KnownKeys = typeof knownKeys[number];
 
 console.log("content.js loaded");
+
+// #region Memory manipulation
+
+/**
+ * Represents what is stored in memory, actually.
+ * Abstracts away from specific storage types,
+ * so that e.g. switching to firebase is as simple as implementing this
+ */
+interface MemoryUnit {
+  domSpec: DOMSpecification;
+}
+
+/**
+ * What should be stored in memory.
+ * Example: `cache` should be of this type, return of chrome storage retrieval should be of this type, e.t.c.
+ */
+type Memory = {
+  [key in KnownKeys]?: MemoryUnit;
+};
+
+// #region Cache
+
+const cache: Memory = {};
+
+// #endregion cache
+
+// #region Storage manipulation
+
+/**
+ * Get a key. Use this function, as it handles caching for you.
+ * @param key Key to retrieve from storage
+ * @returns The Memory Unit stored (as promise)
+ */
+async function getKey(key: KnownKeys): Promise<MemoryUnit> {
+  if (cache[key]) {
+    return cache[key]!;
+  } else {
+    console.warn("Key", key, "not found in cache. Searching storage...");
+    return await getStorageData(key);
+  }
+}
+
+async function setKey(key: KnownKeys, value: any) {}
+
+/**
+ * Usage:
+ * ```ts
+ * const dataUnderKey = await getStorageData("myKey");
+ * ```
+ *
+ * @param key Key to retrieve from storage
+ * @returns Promise that resolves to the value stored under the key
+ */
+const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
+  new Promise((resolve, reject) =>
+    chrome.storage.sync.get([key], (result) =>
+      chrome.runtime.lastError
+        ? reject(Error(chrome.runtime.lastError.message))
+        : resolve(result[key])
+    )
+  );
+
+/**
+ * Usage:
+ * ``ts
+ * await setStorageData("myKey", "newValue");
+ * ```
+ * @param data Data to be stored
+ * @returns true if good, else rejects
+ */
+const setStorageData = (key: KnownKeys, data: any) =>
+  new Promise((resolve, reject) =>
+    chrome.storage.sync.set({ key: data }, () =>
+      chrome.runtime.lastError
+        ? reject(Error(chrome.runtime.lastError.message))
+        : resolve(true)
+    )
+  );
+
+// #endregion storage
+
+// #endregion memory
+
+// #region UserRequests
+
+/**
+ * What is sent to content.ts
+ */
+export interface UserRequest {
+  key: KnownKeys;
+  do: PossibleActions;
+}
+
+type PossibleActions =
+  | "RESET"
+  | {
+      newAssignedValue: DOMSpecification["assignedValue"];
+    };
+
+// #endregion user requests
+
+// #region DOM manipulation
+
+/**
+ * Represents a specific mutation to the DOM.
+ * Examples include:
+ * - Setting an attribute, like style
+ */
+interface DOMSpecification {
+  querySelector: string;
+  attribute1: string;
+  attribute2?: string;
+  assignedValue: string;
+
+  // warn: {
+  //   onMany: boolean;
+  // }
+}
+
+function executeDOMSpecification(spec: DOMSpecification) {
+  queryMany(spec.querySelector, (elem) => {
+    if (spec.attribute2) {
+      // @ts-ignore
+      elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
+    } else {
+      // @ts-ignore
+      elem[spec.attribute1] = spec.assignedValue;
+    }
+  });
+}
 
 function queryMany(querySelector: string, callback: (elem: Node) => void) {
   const elements = document.querySelectorAll(querySelector);
@@ -39,6 +162,17 @@ function queryMany(querySelector: string, callback: (elem: Node) => void) {
   elements.forEach(callback);
 }
 
+// #endregion
+
+//
+
+// #region Execution
+
+// Retrieve data from chrome storage
+
+// #region
+
+// #region OTHER
 /**
  * Keys used to find known values in storage.
  * This is simple a prefixed version of `KnownKeys`.
@@ -410,3 +544,4 @@ function addStylesheetRules(rules: (string[] | string)[]) {
     );
   }
 }
+// #endregion
