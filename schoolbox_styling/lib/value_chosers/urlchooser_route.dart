@@ -1,13 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import './value_choosers.dart';
 import '../constants.dart';
 import '../js_integration.dart';
 
+List<ValueChooser> urlValueChoosers = [
+  ValueChooser(
+      name: "Image (URL)",
+      body: (key) => (context) => GenericURLChooserBody(
+            propertyKey: key,
+          )),
+  ValueChooser(
+      name: "Image (Presets)",
+      body: (key) => (context) => GenericURLChooserBody(
+            propertyKey: key,
+            showPresets: true,
+          )),
+];
+
 class GenericURLChooserBody extends StatelessWidget {
-  const GenericURLChooserBody({super.key, required this.propertyKey});
+  const GenericURLChooserBody(
+      {super.key, required this.propertyKey, this.showPresets = true});
 
   final KnownKey propertyKey;
+  final bool showPresets;
 
   final List<Widget> others = const [
     Text(
@@ -24,35 +41,44 @@ class GenericURLChooserBody extends StatelessWidget {
             child: URLInputFieldWithPassword(
           propertyKey: propertyKey,
         )),
-        StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('preset-urls')
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return const Text(
-                    'Something went wrong retrieving preset urls :(');
-              }
-              if (!snapshot.hasData) {
-                return const Text("Loading preset urls ...");
-              }
-              return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final doc = snapshot.data!.docs[index];
-                  assert(doc['name']);
-                  assert(doc['url']);
-                  return ListTile(
-                    title: Text(doc['name']),
-                    onTap: () {
-                      propertyKey.send(value: doc['url']);
-                    },
-                  );
-                },
-              );
-            })
+        if (showPresets) FireStorePresetURLs(propertyKey: propertyKey),
       ],
     );
+  }
+}
+
+class FireStorePresetURLs extends StatelessWidget {
+  const FireStorePresetURLs({super.key, required this.propertyKey});
+
+  final KnownKey propertyKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection('preset-urls').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong retrieving preset urls :(');
+          }
+          if (!snapshot.hasData) {
+            return const Text("Loading preset urls ...");
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final doc = snapshot.data!.docs[index];
+              assert(doc['name']);
+              assert(doc['url']);
+              return ListTile(
+                title: Text(doc['name']),
+                onTap: () {
+                  propertyKey.send(value: doc['url']);
+                },
+              );
+            },
+          );
+        });
   }
 }
 
