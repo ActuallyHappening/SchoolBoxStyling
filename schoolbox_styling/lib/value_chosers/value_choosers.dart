@@ -28,16 +28,14 @@ class AllValueChoosersRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: valueChoosers.length,
-        child: Scaffold(children: [
+        child: Scaffold(
+            body: 
           TabBarView(
               children:
                   bodies.map((constructor) => constructor(context)).toList()),
-          TabBar(
-              tabs: names
-                  .map((name) => Tab(
-                        text: name,
-                      ))
-                  .toList()),
-        ]));
+            appBar: AppBar(
+                title: Text(propertyKey.routeTitle),
+                bottom: TabBar(
+                    tabs: names.map((name) => Tab(text: name)).toList()))));
   }
 }
