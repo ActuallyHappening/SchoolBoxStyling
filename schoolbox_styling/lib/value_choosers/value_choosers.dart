@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/constants.dart';
-import 'package:schoolbox_styling/value_chosers/colour_picker.dart';
-import 'package:schoolbox_styling/value_chosers/urlchooser_route.dart';
+import 'package:schoolbox_styling/value_choosers/colour_picker.dart';
+import 'package:schoolbox_styling/value_choosers/urlchooser_route.dart';
 
 class ValueChooser {
   ValueChooser({
