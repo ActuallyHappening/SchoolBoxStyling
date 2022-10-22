@@ -36,7 +36,7 @@ final Map<String, Widget Function(BuildContext)> routes = (() {
   Map<String, Widget Function(BuildContext)> routes = {};
   for (var key in KnownKey.values) {
     // Every key has a routeName -> ValueChoosersRoute mapping
-    routes[key.routeName] = (context) => AllValueChoosersRoute(
+    routes[key.route] = (context) => AllValueChoosersRoute(
           propertyKey: key,
         );
   }

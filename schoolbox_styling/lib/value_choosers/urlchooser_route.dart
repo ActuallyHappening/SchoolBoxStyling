@@ -59,6 +59,7 @@ class FireStorePresetURLs extends StatelessWidget {
             FirebaseFirestore.instance.collection('preset-urls').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            debugPrint(snapshot.error.toString());
             return const Text('Something went wrong retrieving preset urls :(');
           }
           if (!snapshot.hasData) {
