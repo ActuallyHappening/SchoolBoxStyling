@@ -1,24 +1,20 @@
 const knownKeys = [
   "topBar",
-  "topBarIcons",
+  // "topBarIcons",
   "leftBar",
   "timetableHeaders",
   "background",
 
-  "sectionHeaders",
-
-  // "topBarColour",
-  // "leftBarColour",
-  // "rightBarColour",
-
-  // "mainSchoolBoxIconURL",
-  // "secondarySchoolBoxIconURL",
-  // "deleteIMGSrc",
-
-  // "bodyBackgroundColour",
-  // "timetablePeriodHeaders",
+  // "sectionHeaders",
 ] as const;
 export type KnownKeys = typeof knownKeys[number];
+
+// TODO: Populate default values for known keys
+
+const knownDefaults: Record<KnownKeys, DOMSpecification> = {
+  topBar: {
+    
+};
 
 console.log("content.js loaded");
 
@@ -71,13 +67,6 @@ interface MemoryUnit {
 }
 
 /**
- * Information needed to reset a specific knownKey
- */
-type ResetInfo = {
-  initialSpec: DOMSpecification;
-};
-
-/**
  * What should be stored in memory.
  * Example: `cache` should be of this type, return of chrome storage retrieval should be of this type, e.t.c.
  */
@@ -88,9 +77,23 @@ type Memory<Unit extends MemoryUnit | any = MemoryUnit> = {
 // #region Cache
 
 const cache: Memory<MemoryUnit> = {};
-const resetInfo: Memory<ResetInfo> = {};
 
 // #endregion cache
+
+// #region ResetInfo
+
+/**
+ * Information needed to reset a specific knownKey
+ */
+type ResetInfo = {
+  initialSpec: DOMSpecification;
+};
+
+const resetInfo: Memory<ResetInfo[]> = {};
+
+// TODO: Find reset values from DOM
+
+// #endregion
 
 // #region Storage manipulation
 
@@ -222,21 +225,22 @@ function handleUserRequest(request: UserRequest) {
     console.log("Handling RESET request for request: ", request);
     if (!resetInfo[key]) {
       console.warn(
-        "Reset info not found for key",
-        key,
-        "during reset.\nThis is probably a bug. When initializing, remember to capture the initial DOM state.\nDoing nothing"
+        `Reset info not found for key '${key}' during reset.\nThis is probably a bug. When initializing, remember to capture the initial DOM state.\nDoing nothing.`
       );
       return;
     }
-    const initial = resetInfo[key]!.initialSpec;
-    // Loop through initial, and set each property
-    for (const _property in initial) {
-      const property = _property as keyof typeof initial;
+    // Loop through each initialSpec
+    resetInfo[key]!.forEach((info) => {
+      const initial = info.initialSpec;
+      // Loop through initial, and set each property
+      for (const _property in initial) {
+        const property = _property as keyof typeof initial;
 
-      console.log("Setting", property, "of key", key, "to", initial[property]);
+        console.log(`Setting ${key}.${property} to ${initial[property]}`);
 
-      setKey(key, initial[property], property);
-    }
+        setKey(key, initial[property], property);
+      }
+    });
   } else {
     console.log("Handling request:", request);
     setKey(key, action.newAssignedValue);
@@ -293,6 +297,7 @@ function queryMany(querySelector: string, callback: (elem: Node) => void) {
 
 // Retrieve data from chrome storage and put into cache
 knownKeys.forEach(async (key) => {
+  // Populate cache
   const data = await getStorageData(key);
   if (data) {
     if (cache[key]) {
