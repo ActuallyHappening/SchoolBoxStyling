@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import './value_choosers.dart';
@@ -54,30 +53,31 @@ class FireStorePresetURLs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection('preset-urls').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            debugPrint(snapshot.error.toString());
-            return const Text('Something went wrong retrieving preset urls :(');
-          }
-          if (!snapshot.hasData) {
-            return const Text("Loading preset urls ...");
-          }
-          assert(snapshot.data?.docs != null);
-          return Column(
-              children: snapshot.data!.docs.map((doc) {
-            assert(doc['name'] != null);
-            assert(doc['url'] != null);
-            return ListTile(
-              title: Text(doc['name']),
-              onTap: () {
-                propertyKey.send(value: doc['url']);
-              },
-            );
-          }).toList());
-        });
+    return Column()
+    // return StreamBuilder(
+    //     stream:
+    //         FirebaseFirestore.instance.collection('preset-urls').snapshots(),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) {
+    //         debugPrint(snapshot.error.toString());
+    //         return const Text('Something went wrong retrieving preset urls :(');
+    //       }
+    //       if (!snapshot.hasData) {
+    //         return const Text("Loading preset urls ...");
+    //       }
+    //       assert(snapshot.data?.docs != null);
+    //       return Column(
+    //           children: snapshot.data!.docs.map((doc) {
+    //         assert(doc['name'] != null);
+    //         assert(doc['url'] != null);
+    //         return ListTile(
+    //           title: Text(doc['name']),
+    //           onTap: () {
+    //             propertyKey.send(value: doc['url']);
+    //           },
+    //         );
+    //       }).toList());
+    //     });
   }
 }
 
