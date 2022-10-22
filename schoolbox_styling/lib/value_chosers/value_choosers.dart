@@ -15,24 +15,21 @@ class ValueChooser {
 List<ValueChooser> valueChoosers = [...colourValueChoosers];
 
 class AllValueChoosersRoute extends StatelessWidget {
-  AllValueChoosersRoute({super.key, required this.propertyKey}) {
-    names = valueChoosers.map((e) => e.name).toList();
-    bodies = valueChoosers.map((chooser) => chooser.body(propertyKey)).toList();
-  }
+  const AllValueChoosersRoute({super.key, required this.propertyKey});
 
   final KnownKey propertyKey;
-  late List<String> names;
-  late List<WidgetBuilder> bodies;
 
   @override
   Widget build(BuildContext context) {
+    List<String> names = valueChoosers.map((e) => e.name).toList();
+    List<WidgetBuilder> bodies =
+        valueChoosers.map((chooser) => chooser.body(propertyKey)).toList();
     return DefaultTabController(
         length: valueChoosers.length,
         child: Scaffold(
-            body: 
-          TabBarView(
-              children:
-                  bodies.map((constructor) => constructor(context)).toList()),
+            body: TabBarView(
+                children:
+                    bodies.map((constructor) => constructor(context)).toList()),
             appBar: AppBar(
                 title: Text(propertyKey.routeTitle),
                 bottom: TabBar(
