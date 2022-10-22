@@ -4,12 +4,6 @@ import 'package:schoolbox_styling/drawer.dart';
 import '../constants.dart';
 import '../js_integration.dart';
 
-const mainSchoolBoxIconURLDefault =
-    "/images/logo.php?logo=skin_logo_large&size=hidpi";
-
-const secondarySchoolBoxIconURLDefault =
-    "/images/logo.php?logo=skin_logo_square&size=normal"; // FIXME
-
 const List<URLPresetOption> _bothSchoolBoxIconPresets = [
   URLPresetOption(
       url:
@@ -23,107 +17,23 @@ const List<URLPresetOption> _bothSchoolBoxIconPresets = [
       name: "Kanye"),
 ];
 
-const List<URLPresetOption> bothSchoolBoxIconPresets = [
-  URLPresetOption(
-    url: "ERROR: Both Reset Logic is broken (you should never see this)",
-    name: "Reset (both)",
-    isBothResetButton: true,
-  )
-];
-
-const List<URLPresetOption> mainSchoolBoxPresets = [
-  URLPresetOption(
-      url: mainSchoolBoxIconURLDefault,
-      name: "Reset",
-      icon: URLPresetOption.resetIcon),
-  ..._bothSchoolBoxIconPresets,
-];
-
-const List<URLPresetOption> secondarySchoolBoxPresets = [
-  URLPresetOption(
-      url: mainSchoolBoxIconURLDefault,
-      name: "Reset",
-      icon: URLPresetOption.resetIcon),
-  ..._bothSchoolBoxIconPresets,
-];
-
-class SecondarySchoolBoxIconRoute extends StatelessWidget {
-  const SecondarySchoolBoxIconRoute({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const GenericURLChooserBody(
-      presets: mainSchoolBoxPresets,
-      propertyKey: KnownKey.secondarySchoolBoxIconURL,
-    );
-  }
-}
-
-class MainSchoolBoxIconRoute extends StatelessWidget {
-  const MainSchoolBoxIconRoute({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GenericURLChooserRoute(
-      propertyKey: KnownKey.bothSchoolBoxIconURL,
-      presets: bothSchoolBoxIconPresets,
-    );
-  }
-}
-
-class BothSchoolBoxIconRoute extends StatelessWidget {
-  const BothSchoolBoxIconRoute({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
 class GenericURLChooserRoute extends StatelessWidget {
   const GenericURLChooserRoute(
-      {super.key, List<URLPresetOption>? presets, required this.propertyKey})
-      : isBoth = propertyKey == KnownKey.bodyBackgroundColour,
-        presets = (propertyKey == KnownKey.mainSchoolBoxIconURL
-            ? mainSchoolBoxPresets
-            : propertyKey == KnownKey.secondarySchoolBoxIconURL
-                ? secondarySchoolBoxPresets
-                : bothSchoolBoxIconPresets);
+      {super.key, required this.presets, required this.propertyKey});
 
   final KnownKey propertyKey;
-  final bool isBoth;
 
   final List<URLPresetOption> presets;
 
   @override
   Widget build(BuildContext context) {
-    if (!isBoth) {
-      return Scaffold(
-          drawer: const MyAppDrawer(),
-          appBar: AppBar(
-            title: Text(propertyKey.routeTitle),
-          ),
-          body: GenericURLChooserBody(
-              presets: presets, propertyKey: propertyKey));
-    }
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
+    return Scaffold(
         drawer: const MyAppDrawer(),
         appBar: AppBar(
-            title: Text(propertyKey.routeTitle),
-            bottom: const TabBar(tabs: [
-              Tab(
-                child: Text("All Icons"),
-              ),
-              Tab(child: Text("Large Icon Only")),
-              Tab(child: Text("Small Icon Only")),
-            ])),
-        body: TabBarView(children: [
-          GenericURLChooserBody(presets: presets, propertyKey: propertyKey)
-        ]),
-      ),
-    );
+          title: Text(propertyKey.routeTitle),
+        ),
+        body:
+            GenericURLChooserBody(presets: presets, propertyKey: propertyKey));
   }
 }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'constants.dart';
-import 'js_integration.dart';
+import '../constants.dart';
+import '../js_integration.dart';
 
 enum ColourTypes {
   materialButtons,
