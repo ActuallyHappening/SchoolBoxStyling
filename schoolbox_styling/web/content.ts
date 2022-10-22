@@ -53,15 +53,20 @@ for (const _key of Object.keys(_knownDefaults)) {
   let assignedValue: DOMSpecification["assignedValue"];
 
   const spec = _knownDefaults[key];
+  const query = document.querySelector(spec.querySelector);
+  if (!query) {
+    console.error(
+      `Could not find element with querySelector: ${spec.querySelector}`
+    );
+    continue;
+  }  
 
   if (spec.attribute2) {
     // @ts-ignore
-    assignedValue = document.querySelector(spec.querySelector)[spec.attribute1][
-      spec.attribute2!
-    ];
+    assignedValue = query[spec.attribute1][spec.attribute2!];
   } else {
     // @ts-ignore
-    assignedValue = document.querySelector(spec.querySelector)[spec.attribute1];
+    assignedValue = query[spec.attribute1];
   }
 
   knownDefaults[key] = {
