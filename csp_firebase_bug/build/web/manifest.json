@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "version": "1.0",
+    "name": "csp_firebase_bug",
+    "description": "A new Flutter project.",
+
+    "action": {
+        "default_popup": "index.html"
+    }
+}
