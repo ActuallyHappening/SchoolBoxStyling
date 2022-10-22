@@ -152,12 +152,12 @@ const _setKey = debounce(setStorageData, 1000, {
  * note this *uses a cache*.
  *
  * ## Use this function, as it will properly update the DOM.
- * ### Note: this will set the `assignedValue` property on the internal `MemoryUnit` object by default.
+ * ### Note: this will set the `assignedValue` property on the internal `MemoryUnit.domSpec` object by default. To set the `domSpec` property, repeatedly call this function
  *
  *
  * Usage:
  * ```ts
- * await setKey("topbar", "new colour", "background-color");
+ * await setKey("topbar", "new colour", "assignedValue");
  * ```
  * @param key Key to set
  * @param value Value to set key to
@@ -208,7 +208,31 @@ type PossibleActions =
  * @param request Request to handle
  */
 function handleUserRequest(request: UserRequest) {
-  console.log("Handling user request", request);
+  const key = request.key;
+  const action = request.do;
+  if (action === "RESET") {
+    console.log("Handling RESET request for request: ", request);
+    if (!resetInfo[key]) {
+      console.warn(
+        "Reset info not found for key",
+        key,
+        "during reset.\nThis is probably a bug. When initializing, remember to capture the initial DOM state.\nDoing nothing"
+      );
+      return;
+    }
+    const initial = resetInfo[key]!.initialSpec;
+    // Loop through initial, and set each property
+    for (const _property in initial) {
+      const property = _property as keyof typeof initial;
+
+      console.log("Setting", property, "of key", key, "to", initial[property]);
+
+      setKey(key, initial[property], property);
+    }
+  } else {
+    console.log("Handling request:", request);
+    setKey(key, action.newAssignedValue);
+  }
 }
 
 // #endregion user requests
