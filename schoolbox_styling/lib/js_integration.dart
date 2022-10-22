@@ -43,4 +43,8 @@ extension KeySendValue on KnownKey {
   void reset() {
     sendNewValue(key: this, action: PossibleActions.reset);
   }
+
+  void sendColour(Color colour) {
+    send(value: toCSSColour(colour));
+  }
 }

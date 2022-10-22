@@ -28,9 +28,7 @@ class CustomColourPicker extends StatelessWidget {
       ListTile(
         leading: const Icon(Icons.restart_alt_rounded),
         title: const Text("Reset"),
-        onTap: () {
-          propertyKey.reset();
-        },
+        onTap: propertyKey.reset,
       )
     ];
   }
@@ -49,7 +47,7 @@ class CustomColourPicker extends StatelessWidget {
             colourPickerType: colourPickerType,
             defaultColour: Colors.blue,
             onColourChanged: (colour) {
-              sendNewValue(propertyKey, toCSSColour(colour));
+              propertyKey.sendColour(colour);
             }),
       ],
     );
