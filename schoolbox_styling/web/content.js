@@ -1,31 +1,36 @@
 "use strict";
 // Replaced by macro.py
-/**
- * Actions are serializable constructs that define how to update the DOM.
- *
- * In storage, an action (which contains the current value) are stored with the actions name as the key.
- *
- * Popup.ts can only send full actions to content.ts,
- * who manages storing it and updating the DOM according to the actions specifications.
- *
- * There is a known set of possible keys that actions can take,
- *
- * ## Runtime action registering is NOT supported, as removing event listeners is hard!
- *
- * ## Examples:
- * popup.ts sends action to content.ts:
- */
 const knownKeys = [
-    "topBarColour",
-    "leftBarColour",
-    "rightBarColour",
-    "mainSchoolBoxIconURL",
-    "secondarySchoolBoxIconURL",
-    "deleteIMGSrc",
-    "bodyBackgroundColour",
-    "timetablePeriodHeaders",
+    "topBar",
+    "topBarIcons",
+    "leftBar",
+    "timetableHeaders",
+    "background",
+    "sectionHeaders",
+    // "topBarColour",
+    // "leftBarColour",
+    // "rightBarColour",
+    // "mainSchoolBoxIconURL",
+    // "secondarySchoolBoxIconURL",
+    // "deleteIMGSrc",
+    // "bodyBackgroundColour",
+    // "timetablePeriodHeaders",
 ];
 console.log("content.js loaded");
+// #region Cache
+const cache = {};
+function executeDOMSpecification(spec) {
+    queryMany(spec.querySelector, (elem) => {
+        if (spec.attribute2) {
+            // @ts-ignore
+            elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
+        }
+        else {
+            // @ts-ignore
+            elem[spec.attribute1] = spec.assignedValue;
+        }
+    });
+}
 function queryMany(querySelector, callback) {
     const elements = document.querySelectorAll(querySelector);
     if (elements.length == 0) {

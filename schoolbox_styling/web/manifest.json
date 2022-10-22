@@ -1,7 +1,7 @@
 {
-    "name": "Better Schoolbox",
-    "description": "Style school box, autosaves, and more",
-    "version": "1.4.2",
+    "name": "Better Schoolbox Styling",
+    "description": "Allows you to style schoolbox to your hearts content!",
+    "version": "1.6.0",
     "content_security_policy": {
         "extension_pages": "script-src 'self' ; object-src 'self'"
     },
