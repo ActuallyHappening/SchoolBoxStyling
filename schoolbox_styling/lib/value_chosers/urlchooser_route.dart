@@ -5,12 +5,9 @@ import '../constants.dart';
 import '../js_integration.dart';
 
 class GenericURLChooserBody extends StatelessWidget {
-  const GenericURLChooserBody(
-      {super.key, required this.presets, required this.propertyKey});
+  const GenericURLChooserBody({super.key, required this.propertyKey});
 
   final KnownKey propertyKey;
-
-  final List<URLPresetOption> presets;
 
   final List<Widget> others = const [
     Text(
@@ -22,6 +19,7 @@ class GenericURLChooserBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        ...others,
         Center(
             child: URLInputFieldWithPassword(
           propertyKey: propertyKey,
@@ -58,32 +56,6 @@ class GenericURLChooserBody extends StatelessWidget {
   }
 }
 
-class URLPresetOption extends StatelessWidget {
-  const URLPresetOption(
-      {super.key,
-      required this.url,
-      required this.name,
-      this.icon,
-      isBothResetButton});
-
-  final String url;
-  final String name;
-  final Icon? icon;
-
-  static const resetIcon = Icon(Icons.restart_alt_rounded);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: icon,
-      title: Text(name),
-      onTap: () {
-        KnownKey.mainSchoolBoxIconURL.send(url);
-      },
-    );
-  }
-}
-
 class URLInputFieldWithPassword extends StatefulWidget {
   const URLInputFieldWithPassword({super.key, required this.propertyKey});
 
@@ -101,29 +73,25 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        isLocked
-            ? TextField(
-                onChanged: (text) {
-                  if (text == "cheat") {
-                    print("Unlocked field!");
-                    setState(() {
-                      isLocked = false;
-                    });
-                  }
-                  if (isLocked) {
-                    print("LOCKED new text: $text");
-                  } else {
-                    print("New URL: $text");
-                    widget.propertyKey.send(text);
-                  }
-                },
-                decoration: const InputDecoration(
-                  hintText: "Enter password to unlock",
-                ),
-              )
-            : const Padding(
-                padding: EdgeInsets.all(5),
-                child: Card(child: Text("Unlocked!"))),
+        TextField(
+          onChanged: (text) {
+            if (text == "cheat") {
+              setState(() {
+                isLocked = false;
+              });
+            }
+            if (isLocked) {
+            } else {
+              widget.propertyKey.send(value: text);
+            }
+          },
+          decoration: const InputDecoration(
+            hintText: "Enter password to unlock",
+          ),
+        ),
+        Padding(
+            padding: const EdgeInsets.all(7),
+            child: Card(child: Text(isLocked ? "Locked" : "Unlocked!"))),
       ],
     );
   }
