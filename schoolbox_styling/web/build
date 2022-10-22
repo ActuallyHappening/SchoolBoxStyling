@@ -30,9 +30,13 @@ rm macro.py
 rm -rf ./node_modules
 rm compile
 
+# Remove files from web/ dir
 cd ../../web
 rm content.js
 rm popup.js
+rm content.js.map
+rm popup.js.map
+
 echo "Done"
 
 # Success!
