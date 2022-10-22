@@ -1,3 +1,4 @@
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:js' as js;
 import 'dart:ui';
 
@@ -17,6 +18,8 @@ void sendNewValue(KnownKey key, PossibleActions action, String? value) {
   } else {
     userRequest = value!;
   }
+  // ignore: avoid_print
+  print('Sending $userRequest to $key');
   js.context.callMethod("sendNewValue", [key.key, userRequest]);
 }
 
