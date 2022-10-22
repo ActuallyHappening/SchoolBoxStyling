@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'routes/leftbar_route.dart';
-import 'routes/topbar_route.dart';
-
+import 'package:schoolbox_styling/value_choosers/value_choosers.dart';
 
 enum KnownKey {
   topBar,
@@ -35,8 +32,14 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.timetableHeaders: "Change Period Colours",
       }[this]!;
 }
+final Map<String, Widget Function(BuildContext)> routes = (() {
+  Map<String, Widget Function(BuildContext)> routes = {};
+  for (var key in KnownKey.values) {
+    // Every key has a routeName -> ValueChoosersRoute mapping
+    routes[key.routeName] = (context) => AllValueChoosersRoute(
+          propertyKey: key,
+        );
+  }
+  return routes;
+})();
 
-final Map<String, Widget Function(BuildContext)> routes = {
-  KnownKey.topBar.route: (context) => const TopBarRoute(),
-  KnownKey.leftBar.route: (context) => const LeftBarRoute(),
-};
