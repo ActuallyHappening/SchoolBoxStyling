@@ -11,10 +11,71 @@ export type KnownKeys = typeof knownKeys[number];
 
 // TODO: Populate default values for known keys
 
-const knownDefaults: Record<KnownKeys, DOMSpecification> = {
+const _knownDefaults: Record<
+  KnownKeys,
+  Omit<DOMSpecification, "assignedValue">
+> = {
   topBar: {
-    
+    querySelector: "nav.tab-bar",
+    attribute1: "style",
+    attribute2: "backgroundColor",
+    // assignedValue:
+    //   document.querySelector("nav.tab-bar")?.style.backgroundColor,
+  },
+  leftBar: {
+    querySelector: "aside#left-menu",
+    attribute1: "style",
+    attribute2: "backgroundColor",
+    // assignedValue:
+    //   document.querySelector("aside#left-menu")?.style.backgroundColor,
+  },
+  timetableHeaders: {
+    querySelector: "table.timetable[data-timetable]>thead>tr>th",
+    attribute1: "style",
+    attribute2: "backgroundColor",
+    // assignedValue: document.querySelector(
+    //   "table.timetable[data-timetable]>thead>tr>th"
+    // )?.style.backgroundColor,
+  },
+  background: {
+    querySelector: "body",
+    attribute1: "style",
+    attribute2: "backgroundColor",
+    // assignedValue:
+    //   document.querySelector("body")?.style.backgroundColor ??
+    //   "rgb(237, 237, 237)",
+  },
 };
+
+const knownDefaults: Record<KnownKeys, DOMSpecification> = {} as any;
+for (const _key of Object.keys(_knownDefaults)) {
+  const key = _key as KnownKeys;
+  let assignedValue: DOMSpecification["assignedValue"];
+
+  const spec = _knownDefaults[key];
+
+  if (spec.attribute2) {
+    // @ts-ignore
+    assignedValue = document.querySelector(spec.querySelector)[spec.attribute1][
+      spec.attribute2!
+    ];
+  } else {
+    // @ts-ignore
+    assignedValue = document.querySelector(spec.querySelector)[spec.attribute1];
+  }
+
+  knownDefaults[key] = {
+    ..._knownDefaults[key],
+    assignedValue,
+  };
+}
+//   {
+//     key: "deleteIMGSrc",
+//     querySelector: 'img[src][alt="Emmanuel College"]',
+//     firstLevelProperty: "srcset",
+//     newValWrapper: "$$$",
+//     defaultValue: "DELETE",
+//   },
 
 console.log("content.js loaded");
 
@@ -91,7 +152,15 @@ type ResetInfo = {
 
 const resetInfo: Memory<ResetInfo[]> = {};
 
-// TODO: Find reset values from DOM
+for (const _key of knownKeys) {
+  const key = _key as KnownKeys;
+  resetInfo[key] = [
+    {
+      initialSpec: knownDefaults[key],
+    },
+  ];
+}
+// XXX: Add other reset info here
 
 // #endregion
 
@@ -267,15 +336,19 @@ interface DOMSpecification {
   // }
 }
 
+function _updateElem(elem: Node, spec: DOMSpecification) {
+  if (spec.attribute2) {
+    // @ts-ignore
+    elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
+  } else {
+    // @ts-ignore
+    elem[spec.attribute1] = spec.assignedValue;
+  }
+}
+
 function executeDOMSpecification(spec: DOMSpecification) {
   queryMany(spec.querySelector, (elem) => {
-    if (spec.attribute2) {
-      // @ts-ignore
-      elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
-    } else {
-      // @ts-ignore
-      elem[spec.attribute1] = spec.assignedValue;
-    }
+    _updateElem(elem, spec);
   });
 }
 
