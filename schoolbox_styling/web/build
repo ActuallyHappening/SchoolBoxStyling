@@ -1,8 +1,19 @@
-tsc
-python3 -c "import macro;macro.main()"
-rm -rf ../build/web
+echo "Building ..."
+
+# Copmile typescript
+./compile
+
+# Move to flutter project root directory
+cd ..
+
+# Remove build directory, forces flutter to rebuild every time
+rm -rf ./build/web
+# Build
 flutter build web --web-renderer html --csp
-cd ../build/web
+# Move into build folder
+cd ./build/web
+
+# Remove unnecessary files for production
 rm -rf ./__pycache__
 rm content.ts
 rm package-lock.json
@@ -11,4 +22,8 @@ rm popup.ts
 rm tsconfig.json
 rm build
 rm macro.py
-# rm -rf ./node_modules
+rm -rf ./node_modules
+rm compile
+
+# Success!
+echo "Built."
