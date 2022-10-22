@@ -79,15 +79,7 @@ class CustomColourPicker extends StatelessWidget {
     super.key,
     required this.propertyKey,
     required this.colourPickerType,
-  }) {
-    chips = [
-      ListTile(
-        leading: const Icon(Icons.restart_alt_rounded),
-        title: const Text("Reset"),
-        onTap: propertyKey.reset,
-      )
-    ];
-  }
+  });
 
   final KnownKey propertyKey;
   final ColourTypes colourPickerType;
@@ -96,6 +88,13 @@ class CustomColourPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    chips = [
+      ListTile(
+        leading: const Icon(Icons.restart_alt_rounded),
+        title: const Text("Reset"),
+        onTap: propertyKey.reset,
+      )
+    ];
     return ListView(
       children: [
         ...chips,
