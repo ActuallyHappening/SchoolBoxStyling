@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/constants.dart';
 
+// TODO: Rename to `AllRouteNamesDrawer`
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({Key? key}) : super(key: key);
 
@@ -13,6 +14,7 @@ class MyAppDrawer extends StatelessWidget {
     }).toList()));
   }
 }
+
 
 class DrawerOption extends StatelessWidget {
   const DrawerOption({super.key, required this.knownKey});

@@ -12,9 +12,9 @@ enum ColourTypes {
 
 extension ColourTypesExt on ColourTypes {
   String get name => {
-        ColourTypes.materialButtons: "Material",
-        ColourTypes.pallet: "Pallet",
-        ColourTypes.sliders: "Buttons",
+        ColourTypes.pallet: "Colour (pallet)",
+        ColourTypes.materialButtons: "Colour (buttons)",
+        ColourTypes.sliders: "Colour (✨ sliders ✨)",
       }[this]!;
 }
 
@@ -27,10 +27,9 @@ class CustomColourPicker extends StatelessWidget {
     chips = [
       ListTile(
         leading: const Icon(Icons.restart_alt_rounded),
-        iconColor: propertyKey.resetColour,
         title: const Text("Reset"),
         onTap: () {
-          sendNewValue(propertyKey, toCSSColour(propertyKey.resetColour));
+          propertyKey.reset();
         },
       )
     ];

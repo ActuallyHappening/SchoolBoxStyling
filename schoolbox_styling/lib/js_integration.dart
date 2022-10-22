@@ -11,7 +11,11 @@ enum PossibleActions {
   newAssignedValue,
 }
 
-void sendNewValue(KnownKey key, PossibleActions action, String? value) {
+void sendNewValue({
+  required KnownKey key,
+  required PossibleActions action,
+  String? value,
+}) {
   String userRequest;
   if (action == PossibleActions.reset) {
     userRequest = 'RESET';
@@ -28,7 +32,15 @@ String toCSSColour(Color colour) {
 }
 
 extension KeySendValue on KnownKey {
-  void send(String value) {
-    sendNewValue(this, PossibleActions.newAssignedValue, value);
+  void send({required String value, bool reset = false}) {
+    sendNewValue(
+      value: value,
+      key: this,
+      action: reset ? PossibleActions.reset : PossibleActions.newAssignedValue,
+    );
+  }
+
+  void reset() {
+    sendNewValue(key: this, action: PossibleActions.reset);
   }
 }
