@@ -18,6 +18,50 @@ extension ColourTypesExt on ColourTypes {
       }[this]!;
 }
 
+class ColourPickers extends StatelessWidget {
+  const ColourPickers({
+    super.key,
+    required this.propertyKey,
+  });
+
+  final KnownKey propertyKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+        length: 3,
+        child: Column(children: [
+          TabBarView(children: [
+            CustomColourPicker(
+              propertyKey: propertyKey,
+              colourPickerType: ColourTypes.materialButtons,
+            ),
+            CustomColourPicker(
+              propertyKey: propertyKey,
+              colourPickerType: ColourTypes.pallet,
+            ),
+            CustomColourPicker(
+              propertyKey: propertyKey,
+              colourPickerType: ColourTypes.sliders,
+            )
+          ]),
+          TabBar(
+            tabs: [
+              Tab(
+                child: Text(ColourTypes.materialButtons.name),
+              ),
+              Tab(
+                child: Text(ColourTypes.pallet.name),
+              ),
+              Tab(
+                child: Text(ColourTypes.sliders.name),
+              ),
+            ],
+          ),
+        ]));
+  }
+}
+
 class CustomColourPicker extends StatelessWidget {
   CustomColourPicker({
     super.key,
@@ -74,11 +118,11 @@ class _CustomColourPicker extends StatelessWidget {
           onColorChanged: onColourChanged,
           // enableLabel: true,
         );
-      // case ColourTypes.pallet:
-      //   return ColorPicker(
-      //     pickerColor: defaultColour,
-      //     onColorChanged: onColourChanged,
-      //   );
+      case ColourTypes.pallet:
+        return ColorPicker(
+          pickerColor: defaultColour,
+          onColorChanged: onColourChanged,
+        );
       case ColourTypes.sliders:
         return BlockPicker(
           pickerColor: defaultColour,
