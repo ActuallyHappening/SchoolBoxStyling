@@ -65,20 +65,18 @@ class FireStorePresetURLs extends StatelessWidget {
           if (!snapshot.hasData) {
             return const Text("Loading preset urls ...");
           }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              final doc = snapshot.data!.docs[index];
-              assert(doc['name']);
-              assert(doc['url']);
-              return ListTile(
-                title: Text(doc['name']),
-                onTap: () {
-                  propertyKey.send(value: doc['url']);
-                },
-              );
-            },
-          );
+          assert(snapshot.data?.docs != null);
+          return Column(
+              children: snapshot.data!.docs.map((doc) {
+            assert(doc['name']);
+            assert(doc['url']);
+            return ListTile(
+              title: Text(doc['name']),
+              onTap: () {
+                propertyKey.send(value: doc['url']);
+              },
+            );
+          }).toList());
         });
   }
 }
@@ -100,6 +98,9 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Padding(
+            padding: const EdgeInsets.all(7),
+            child: Card(child: Text(isLocked ? "Locked" : "Unlocked!"))),
         TextField(
           onChanged: (text) {
             if (text == "cheat") {
@@ -116,9 +117,6 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
             hintText: "Enter password to unlock",
           ),
         ),
-        Padding(
-            padding: const EdgeInsets.all(7),
-            child: Card(child: Text(isLocked ? "Locked" : "Unlocked!"))),
       ],
     );
   }
