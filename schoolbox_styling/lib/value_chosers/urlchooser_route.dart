@@ -1,41 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:schoolbox_styling/drawer.dart';
 
 import '../constants.dart';
 import '../js_integration.dart';
-
-const List<URLPresetOption> _bothSchoolBoxIconPresets = [
-  URLPresetOption(
-      url:
-          "https://raw.githubusercontent.com/ActuallyHappening/SchoolBoxStyling/master/styling/Old%20Icon.png",
-      name: "Old Icon"),
-  URLPresetOption(
-      url: "https://media.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif",
-      name: "New Icon"),
-  URLPresetOption(
-      url: "https://media.tenor.com/a6YLqoCk4cQAAAAM/kanye-west-king.gif",
-      name: "Kanye"),
-];
-
-class GenericURLChooserRoute extends StatelessWidget {
-  const GenericURLChooserRoute(
-      {super.key, required this.presets, required this.propertyKey});
-
-  final KnownKey propertyKey;
-
-  final List<URLPresetOption> presets;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        drawer: const MyAppDrawer(),
-        appBar: AppBar(
-          title: Text(propertyKey.routeTitle),
-        ),
-        body:
-            GenericURLChooserBody(presets: presets, propertyKey: propertyKey));
-  }
-}
 
 class GenericURLChooserBody extends StatelessWidget {
   const GenericURLChooserBody(
@@ -55,11 +22,37 @@ class GenericURLChooserBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        ...presets,
         Center(
             child: URLInputFieldWithPassword(
           propertyKey: propertyKey,
         )),
+        StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('preset-urls')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text(
+                    'Something went wrong retrieving preset urls :(');
+              }
+              if (!snapshot.hasData) {
+                return const Text("Loading preset urls ...");
+              }
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  final doc = snapshot.data!.docs[index];
+                  assert(doc['name']);
+                  assert(doc['url']);
+                  return ListTile(
+                    title: Text(doc['name']),
+                    onTap: () {
+                      propertyKey.send(value: doc['url']);
+                    },
+                  );
+                },
+              );
+            })
       ],
     );
   }
