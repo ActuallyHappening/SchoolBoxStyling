@@ -68,8 +68,8 @@ class FireStorePresetURLs extends StatelessWidget {
           assert(snapshot.data?.docs != null);
           return Column(
               children: snapshot.data!.docs.map((doc) {
-            assert(doc['name']);
-            assert(doc['url']);
+            assert(doc['name'] != null);
+            assert(doc['url'] != null);
             return ListTile(
               title: Text(doc['name']),
               onTap: () {
