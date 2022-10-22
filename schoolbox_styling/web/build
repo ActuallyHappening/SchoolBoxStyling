@@ -1,6 +1,6 @@
 echo "Building ..."
 
-# Copmile typescript
+# Compile typescript
 ./compile
 
 # Move to flutter project root directory
@@ -8,12 +8,17 @@ cd ..
 
 # Remove build directory, forces flutter to rebuild every time
 rm -rf ./build/web
+
 # Build
+echo "Building flutter web ..."
 flutter build web --web-renderer html --csp
+echo "Flutter build complete"
+
 # Move into build folder
 cd ./build/web
 
 # Remove unnecessary files for production
+echo "Removing unnecessary files ..."
 rm -rf ./__pycache__
 rm content.ts
 rm package-lock.json
@@ -25,5 +30,10 @@ rm macro.py
 rm -rf ./node_modules
 rm compile
 
+cd ../../web
+rm content.js
+rm popup.js
+echo "Done"
+
 # Success!
-echo "Built."
+echo "Built. Success!"
