@@ -8,15 +8,9 @@ class MyAppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: ListView(
-      children: const [
-      DrawerOption(
-        knownKey: KnownKey.topBarColour,
-      ),
-      DrawerOption(knownKey: KnownKey.leftBarColour),
-      DrawerOption(knownKey: KnownKey.mainSchoolBoxIconURL),
-      DrawerOption(knownKey: KnownKey.bodyBackgroundColour),
-      DrawerOption(knownKey: KnownKey.timetablePeriodHeaders),
-    ]));
+            children: KnownKey.values.map((key) {
+      return DrawerOption(knownKey: key);
+    }).toList()));
   }
 }
 
@@ -30,6 +24,7 @@ class DrawerOption extends StatelessWidget {
     return ListTile(
       title: Text(knownKey.routeName),
       onTap: () {
+        // ignore: avoid_print
         print(
             "Changing screen to ${knownKey.route} for key $knownKey, name ${knownKey.routeName}.");
         Navigator.pushNamed(context, knownKey.route);

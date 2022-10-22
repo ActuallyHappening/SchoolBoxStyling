@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'School Box Styling v1.3',
+      title: 'School Box Styling v1.6',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: "/${KnownKey.topBarColour.key}",
+      initialRoute: "/${KnownKey.topBar.key}",
     );
   }
 }
