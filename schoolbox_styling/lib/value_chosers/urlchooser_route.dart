@@ -71,13 +71,11 @@ class URLPresetOption extends StatelessWidget {
       required this.url,
       required this.name,
       this.icon,
-      isBothResetButton})
-      : isBothResetButton = isBothResetButton ?? false;
+      isBothResetButton});
 
   final String url;
   final String name;
   final Icon? icon;
-  final bool isBothResetButton;
 
   static const resetIcon = Icon(Icons.restart_alt_rounded);
 
@@ -87,13 +85,6 @@ class URLPresetOption extends StatelessWidget {
       leading: icon,
       title: Text(name),
       onTap: () {
-        if (isBothResetButton == true) {
-          // Send both default values
-          KnownKey.mainSchoolBoxIconURL.send(mainSchoolBoxIconURLDefault);
-          KnownKey.secondarySchoolBoxIconURL
-              .send(secondarySchoolBoxIconURLDefault);
-          return;
-        }
         KnownKey.mainSchoolBoxIconURL.send(url);
       },
     );

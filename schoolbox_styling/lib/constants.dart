@@ -39,5 +39,4 @@ extension RoutingKeysExt on KnownKey {
 final Map<String, Widget Function(BuildContext)> routes = {
   KnownKey.topBar.route: (context) => const TopBarRoute(),
   KnownKey.leftBar.route: (context) => const LeftBarRoute(),
-
 };
