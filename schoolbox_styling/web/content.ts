@@ -22,6 +22,42 @@ export type KnownKeys = typeof knownKeys[number];
 
 console.log("content.js loaded");
 
+// #region Helpers
+
+/**
+ * Usage:
+ * ```ts
+ * function expensiveFunction() {
+ *  // Do something expensive
+ * }
+ * const cheapFunc = debounce(expensiveFunction, 1000, {debugExecuted: "Expensive function executed", debugBounced: "Expensive function was debounced"});
+ * // Or call it directly
+ * expensiveFunction() // Immediate
+ * cheapFunc() // Debounced
+ * ```
+ * @param fn Function to be executed
+ * @param delay Delay before execution
+ */
+const debounce = <T extends (...args: any[]) => any>(
+  callback: T,
+  waitFor: number,
+  debug?: { debugExecuted?: string; debugBounced?: string }
+) => {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>): ReturnType<T> => {
+    let result: any;
+    console.log(debug?.debugBounced ?? "& Bounced");
+    timeout && clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      console.log(debug?.debugExecuted ?? "& Executed");
+      result = callback(...args);
+    }, waitFor);
+    return result;
+  };
+};
+
+// #endregion
+
 // #region Memory manipulation
 
 /**
@@ -50,22 +86,6 @@ const cache: Memory = {};
 // #region Storage manipulation
 
 /**
- * Get a key. Use this function, as it handles caching for you.
- * @param key Key to retrieve from storage
- * @returns The Memory Unit stored (as promise)
- */
-async function getKey(key: KnownKeys): Promise<MemoryUnit> {
-  if (cache[key]) {
-    return cache[key]!;
-  } else {
-    console.warn("Key", key, "not found in cache. Searching storage...");
-    return await getStorageData(key);
-  }
-}
-
-async function setKey(key: KnownKeys, value: any) {}
-
-/**
  * Usage:
  * ```ts
  * const dataUnderKey = await getStorageData("myKey");
@@ -91,7 +111,7 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
  * @param data Data to be stored
  * @returns true if good, else rejects
  */
-const setStorageData = (key: KnownKeys, data: any) =>
+const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
   new Promise((resolve, reject) =>
     chrome.storage.sync.set({ key: data }, () =>
       chrome.runtime.lastError
@@ -99,6 +119,37 @@ const setStorageData = (key: KnownKeys, data: any) =>
         : resolve(true)
     )
   );
+
+/**
+ * Get a key. Use this function, as it handles caching for you.
+ * @param key Key to retrieve from storage
+ * @returns The Memory Unit stored (as promise)
+ */
+async function getKey(key: KnownKeys): Promise<MemoryUnit> {
+  if (cache[key]) {
+    return cache[key]!;
+  } else {
+    console.warn("Key", key, "not found in cache. Searching storage...");
+    return await getStorageData(key);
+  }
+}
+
+const _setKey = debounce(setStorageData, 1000, {
+  debugExecuted: "Set key EXECUTED",
+  debugBounced: "Set key debounced",
+});
+/**
+ * Usage:
+ * ```ts
+ * await setKey("myKey", "newValue");
+ * ```
+ * @param key Key to set
+ * @param value Value to set key to
+ */
+async function setKey(key: KnownKeys, value: MemoryUnit) {
+  cache[key] = value;
+  _setKey(key, value);
+}
 
 // #endregion storage
 
