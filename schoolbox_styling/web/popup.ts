@@ -23,3 +23,6 @@ function sendNewValue(key: KnownKeys, value: "RESET" | string) {
 
   _sendNewValue(key, request);
 }
+
+// @ts-ignore
+window.sendNewValue = sendNewValue;

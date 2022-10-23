@@ -64,6 +64,8 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
   loadURLPresets() {
     getURLPresets().then((value) {
       setState(() {
+        // ignore: avoid_print
+        print("Setting preset URLS: $value");
         loadedURLPresets = value;
       });
     });
@@ -74,14 +76,22 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     // return Dio().get("https://schoolbox-website.web.app/presets.json").then((value) => value.data);
     const String projectID = "better-schoolbox-1f647";
     const String collectionID = "preset-urls";
-    return await dio
-        .get(
-            "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/$collectionID")
-        .then((value) => value.data)
-        .then((value) => value["documents"])
-        .then((value) => value.map((e) => MapEntry(
-            e["fields"]["name"]["stringValue"],
-            e["fields"]["url"]["stringValue"])));
+    final rawData = await dio.get(
+        "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/$collectionID");
+    final List<dynamic> documentsData = rawData.data["documents"];
+
+    // debugPrint("Got value: $documentsData");
+    final Map<String, String> data = {};
+
+    for (var presetReceived in documentsData) {
+      final fields = presetReceived["fields"]!;
+      final name = fields["name"]["stringValue"];
+      final url = fields["url"]["stringValue"];
+      data[name] = url;
+    }
+
+    // debugPrint("Finished data: $data");
+    return data;
   }
 
   @override
