@@ -217,7 +217,7 @@ for (const _key of knownKeys) {
  * @param key Key to retrieve from storage
  * @returns Promise that resolves to the value stored under the key
  */
-const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
+const getStorageData = (key: KnownKeys): Promise<MemoryUnit | undefined> =>
   new Promise((resolve, reject) =>
     chrome.storage.sync.get([key], (result) => {
       let parsedResult: MemoryUnit;
@@ -225,11 +225,9 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
         console.warn(
           "[getStorageData] No data found for key",
           key,
-          "in storage\nSetting default value"
+          "in storage"
         );
-        const defaultMem = defaultMemory[key];
-        setStorageData(key, defaultMem);
-        resolve(defaultMem);
+        resolve(undefined);
         return;
       }
       try {
@@ -252,7 +250,8 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
         PROD ? "" : chrome.runtime.lastError
       );
       if (!parsedResult) {
-        throw new Error("Parsed result is falsy");
+        reject(new Error("Parsed result is falsy"));
+        return;
       }
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
@@ -303,15 +302,35 @@ const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
 
 /**
  * Get a key. Use this function, as it handles caching for you.
+ * Returns a MemoryUnit or **undefined** if not found.
+ * Will **not** fill in defaults, unless `fillInDefaults` is set to true.
  * @param key Key to retrieve from storage
  * @returns The Memory Unit stored (as promise)
  */
-async function getKey(key: KnownKeys): Promise<MemoryUnit> {
+async function getKey(
+  key: KnownKeys,
+  options?: { fillDefaults: Boolean }
+): Promise<MemoryUnit | undefined> {
   if (cache[key]) {
     return cache[key]!;
   } else {
     console.warn("Key", key, "not found in cache. Searching storage...");
-    return await getStorageData(key);
+    const d = await getStorageData(key);
+    if (d) {
+      cache[key] = d;
+      return d;
+    } else {
+      if (options?.fillDefaults) {
+        console.warn("Key", key, "not found in storage. Setting default value");
+        const defaultMem = defaultMemory[key];
+        // setStorageData(key, defaultMem);
+        cache[key] = defaultMem;
+        return defaultMem;
+      } else {
+        console.warn("Key", key, "not found in storage. Returning undefined");
+        return undefined;
+      }
+    }
   }
 }
 
@@ -439,7 +458,7 @@ interface DOMSpecification {
 function _updateElem(elem: Node, spec: DOMSpecification) {
   if (spec.attribute2) {
     // @ts-ignore
-    elem[spec.attribute1][spec.attribute2] = "black";
+    elem[spec.attribute1][spec.attribute2] = "initial";
     // @ts-ignore
     elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
 
@@ -495,30 +514,42 @@ function queryMany(querySelector: string, callback: (elem: Node) => void) {
 
 // #region Execution
 
-// Retrieve data from chrome storage and put into cache
-knownKeys.forEach(async (key) => {
-  // Populate cache
-  const data = await getStorageData(key);
-  if (cache[key]) {
-    console.warn(
-      "Overwriting cache for key",
-      key,
-      "because it is initial run.\nThis could happen when duplicate items in `kno wnKeys` list exist."
-    );
+chrome.storage.sync.get(null, (everything) => {
+  for (const storageKey in everything) {
+    if (knownKeys.indexOf(storageKey as KnownKeys) == -1) {
+      console.warn(
+        `Key '${storageKey}' found in storage, but not in knownKeys.\nThis is probably a bug.`
+      );
+    }
+    // @t s-ignore
+    cache[storageKey as KnownKeys] = everything[storageKey];
   }
-  console.log(
-    "[initial] Setting cache for key",
-    key,
-    "to assignedValue",
-    data?.domSpec?.assignedValue,
-    "domSpec",
-    data?.domSpec,
-    PROD ? "" : "data:",
-    PROD ? "" : data
-  );
-  cache[key] = data;
-  executeDOMSpecification(data!.domSpec);
 });
+
+// // Retrieve data from chrome storage and put into cache
+// knownKeys.forEach(async (key) => {
+//   // Populate cache
+//   const data = await getStorageData(key);
+//   if (cache[key]) {
+//     console.warn(
+//       "Overwriting cache for key",
+//       key,
+//       "because it is initial run.\nThis could happen when duplicate items in `kno wnKeys` list exist."
+//     );
+//   }
+//   console.log(
+//     "[initial] Setting cache for key",
+//     key,
+//     "to assignedValue",
+//     data?.domSpec?.assignedValue,
+//     "domSpec",
+//     data?.domSpec,
+//     PROD ? "" : "data:",
+//     PROD ? "" : data
+//   );
+//   cache[key] = data;
+//   executeDOMSpecification(data!.domSpec);
+// });
 
 // Listen for messages from popup.ts
 chrome.runtime.onMessage.addListener((request: UserRequest) => {
