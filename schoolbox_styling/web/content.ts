@@ -266,10 +266,10 @@ const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
         key,
         "data:",
         data,
-        "stringified",
-        dataToStore,
-        "last error:",
-        chrome.runtime.lastError,
+        PROD ? "" : "stringified",
+        PROD ? "" : dataToStore,
+        PROD ? "" : "last error:",
+        PROD ? "" : chrome.runtime.lastError,
         PROD ? "" : "[note]: Checking if storage was set ..."
       );
       if (PROD) return;
@@ -476,6 +476,7 @@ knownKeys.forEach(async (key) => {
     PROD ? "" : data
   );
   cache[key] = data;
+  executeDOMSpecification(data!.domSpec);
 });
 
 // Listen for messages from popup.ts
