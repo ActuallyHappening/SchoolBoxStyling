@@ -1,3 +1,5 @@
+const PROD = true;
+
 const knownKeys = [
   "topBar",
   // "topBarIcons",
@@ -18,7 +20,7 @@ const _knownDefaults: Record<
   topBar: {
     querySelector: "nav.tab-bar",
     attribute1: "style",
-    attribute2: "backgroundColor",
+    attribute2: "background",
     // assignedValue:
     //   document.querySelector("nav.tab-bar")?.style.backgroundColor,
   },
@@ -63,12 +65,12 @@ for (const _key of Object.keys(_knownDefaults)) {
       `Could not find element with querySelector: ${spec.querySelector}`
     );
     continue;
-  } else {
-    console.log(
-      `Found element with querySelector: ${spec.querySelector}:`,
-      Node,
-      `with ${spec.attribute1} and ${spec.attribute2}`
-    );
+    // } else {
+    //   console.log(
+    //     `Found element with querySelector: ${spec.querySelector}:`,
+    //     Node,
+    //     `with ${spec.attribute1} and ${spec.attribute2}`
+    //   );
   }
 
   const computedStyles = window.getComputedStyle(Node);
@@ -89,7 +91,7 @@ for (const _key of Object.keys(_knownDefaults)) {
     assignedValue = Node[spec.attribute1];
   }
 
-  console.log("Got assigned value '", assignedValue, "' for key", key);
+  // console.log("Got assigned value '", assignedValue, "' for key", key);
 
   knownDefaults[key] = {
     ..._knownDefaults[key],
@@ -231,12 +233,14 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
       console.log(
         "[getStorageData] key:",
         key,
-        "result:",
-        result[key],
-        "parsedResult:",
-        parsedResult,
-        "lastError:",
-        chrome.runtime.lastError
+        "assignedValue",
+        parsedResult.domSpec.assignedValue,
+        PROD ? "" : "result:",
+        PROD ? "" : parsedResult,
+        PROD ? "" : "raw:",
+        PROD ? "" : result[key],
+        PROD ? "" : "lastError:",
+        PROD ? "" : chrome.runtime.lastError
       );
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
@@ -254,21 +258,36 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
  * @returns true if good, else rejects
  */
 const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
-  new Promise((resolve, reject) =>
-    chrome.storage.sync.set({ key: JSON.stringify(data) }, () => {
+  new Promise((resolve, reject) => {
+    const dataToStore = JSON.stringify(data);
+    chrome.storage.sync.set({ [key]: dataToStore }, () => {
       console.log(
         "[setStorageData] key:",
         key,
         "data:",
         data,
+        "stringified",
+        dataToStore,
         "last error:",
-        chrome.runtime.lastError
+        chrome.runtime.lastError,
+        PROD ? "" : "[note]: Checking if storage was set ..."
       );
+      if (PROD) return;
+      // Test
+      chrome.storage.sync.get([key], (result) => {
+        if (result[key] === dataToStore) {
+          console.log("[setStorageData] [test] Successful!!");
+          resolve(true);
+        } else {
+          console.error("[setStorageData] [test] Failed!!");
+          reject(false);
+        }
+      });
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
         : resolve(true);
-    })
-  );
+    });
+  });
 
 /**
  * Get a key. Use this function, as it handles caching for you.
@@ -441,44 +460,22 @@ function queryMany(querySelector: string, callback: (elem: Node) => void) {
 knownKeys.forEach(async (key) => {
   // Populate cache
   const data = await getStorageData(key);
-  if (data) {
-    if (cache[key]) {
-      console.warn(
-        "Overwriting cache for key",
-        key,
-        "because it is initial run.\nThis could happen when duplicate items in `kno wnKeys` list exist."
-      );
-    }
-    console.log("Setting cache for key", key, "to", data);
-    cache[key] = data;
-  } else {
-    const knownDefault = knownDefaults[key];
-    if (knownDefault) {
-      console.warn(
-        "No data found for key",
-        key,
-        "in initial storage fetch.\nThis is typically because the user has not selected anything for this key yet.",
-        "Setting default value to storage and cache",
-        knownDefault,
-        "Debug query:",
-        document.querySelectorAll(knownDefault.querySelector)
-      );
-      const defaultMemoryUnit: MemoryUnit = { domSpec: knownDefault };
-      setStorageData(key, defaultMemoryUnit);
-      cache[key] = defaultMemoryUnit;
-    } else {
-      console.warn(
-        "No data found for key",
-        key,
-        "in initial storage fetch.\nThis is typically because the user has not selected anything for this key yet.",
-        "No default value found for this key. This is probably a bug. Please report this to the developer.",
-        "Debug knownDefaults:",
-        knownDefaults,
-        "Debug key:",
-        key
-      );
-    }
+  if (cache[key]) {
+    console.warn(
+      "Overwriting cache for key",
+      key,
+      "because it is initial run.\nThis could happen when duplicate items in `kno wnKeys` list exist."
+    );
   }
+  console.log(
+    "[initial] Setting cache for key",
+    key,
+    "to assignedValue",
+    data.domSpec.assignedValue,
+    PROD ? "" : "data:",
+    PROD ? "" : data
+  );
+  cache[key] = data;
 });
 
 // Listen for messages from popup.ts
@@ -493,23 +490,25 @@ chrome.runtime.onMessage.addListener((request: UserRequest) => {
   handleUserRequest(request);
 });
 
-// Testing storage
-const v = "test123";
-chrome.storage.sync.set({ test: v }, () => {
-  console.log("Set test value");
-  chrome.storage.sync.get(["test"], (result) => {
-    console.log(
-      "Value currently is ",
-      result.test,
-      "should be",
-      v,
-      "is?",
-      result.test === v
-    );
-    if (result.test !== v) {
-      throw new Error("Test failed");
-    }
+if (!PROD) {
+  // Testing storage
+  const v = "test123";
+  chrome.storage.sync.set({ test: v }, () => {
+    console.log("Set test value");
+    chrome.storage.sync.get(["test"], (result) => {
+      console.log(
+        "Value currently is ",
+        result.test,
+        "should be",
+        v,
+        "is?",
+        result.test === v
+      );
+      if (result.test !== v) {
+        throw new Error("Test failed");
+      }
+    });
   });
-});
+}
 
 // #endregion
