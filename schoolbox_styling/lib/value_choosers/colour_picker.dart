@@ -6,15 +6,15 @@ import '../constants.dart';
 import '../js_integration.dart';
 
 enum ColourTypes {
-  materialButtons,
-  pallet,
+  material,
+  buttons,
   sliders,
 }
 
 extension ColourTypesExt on ColourTypes {
   String get name => {
-        ColourTypes.pallet: "Colour",
-        ColourTypes.materialButtons: "Colour by buttons",
+        ColourTypes.material: "Colour",
+        ColourTypes.buttons: "Colour by buttons",
         ColourTypes.sliders: "Colour by ✨ sliders ✨",
       }[this]!;
 }
@@ -30,52 +30,8 @@ List<ValueChooser> colourValueChoosers = [
       .toList(),
 ];
 
-class ColourPickers extends StatelessWidget {
-  const ColourPickers({
-    super.key,
-    required this.propertyKey,
-  });
-
-  final KnownKey propertyKey;
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: Column(children: [
-          TabBarView(children: [
-            CustomColourPicker(
-              propertyKey: propertyKey,
-              colourPickerType: ColourTypes.materialButtons,
-            ),
-            CustomColourPicker(
-              propertyKey: propertyKey,
-              colourPickerType: ColourTypes.pallet,
-            ),
-            CustomColourPicker(
-              propertyKey: propertyKey,
-              colourPickerType: ColourTypes.sliders,
-            )
-          ]),
-          TabBar(
-            tabs: [
-              Tab(
-                child: Text(ColourTypes.materialButtons.name),
-              ),
-              Tab(
-                child: Text(ColourTypes.pallet.name),
-              ),
-              Tab(
-                child: Text(ColourTypes.sliders.name),
-              ),
-            ],
-          ),
-        ]));
-  }
-}
-
 class CustomColourPicker extends StatelessWidget {
-  CustomColourPicker({
+  const CustomColourPicker({
     super.key,
     required this.propertyKey,
     required this.colourPickerType,
@@ -84,18 +40,19 @@ class CustomColourPicker extends StatelessWidget {
   final KnownKey propertyKey;
   final ColourTypes colourPickerType;
 
-  late List<Widget> chips;
-
   @override
   Widget build(BuildContext context) {
-    chips = [
+    final chips = [
+      ListTile(
+          title: Text(
+              "This colourPIckerTYpes name: ${colourPickerType.name} $colourPickerType")),
       ListTile(
         leading: const Icon(Icons.restart_alt_rounded),
         title: const Text("Reset"),
         onTap: propertyKey.reset,
       )
     ];
-    return ListView(
+    return Column(
       children: [
         ...chips,
         _CustomColourPicker(
@@ -123,28 +80,28 @@ class _CustomColourPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (colourPickerType) {
-      case ColourTypes.materialButtons:
+      case ColourTypes.material:
         return MaterialPicker(
           pickerColor: defaultColour,
           onColorChanged: onColourChanged,
           // enableLabel: true,
         );
-      case ColourTypes.pallet:
+      case ColourTypes.sliders:
         return ColorPicker(
           pickerColor: defaultColour,
           onColorChanged: onColourChanged,
         );
-      case ColourTypes.sliders:
+      case ColourTypes.buttons:
         return BlockPicker(
           pickerColor: defaultColour,
           onColorChanged: onColourChanged,
         );
-      default:
-        return MaterialPicker(
-          pickerColor: defaultColour,
-          onColorChanged: onColourChanged,
-          // enableLabel: true,
-        );
+      // default:
+      //   return MaterialPicker(
+      //     pickerColor: defaultColour,
+      //     onColorChanged: onColourChanged,
+      //     // enableLabel: true,
+      //   );
     }
   }
 }

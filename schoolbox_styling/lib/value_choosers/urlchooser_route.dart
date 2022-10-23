@@ -112,37 +112,6 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
       data.add(PresetURLInfo(name: title, url: gifUrl, previewURL: gifUrl));
     }
 
-    // if (res != null) {
-    //   print("Tenor API request succeeded: $res");
-    //   for (var tenorResult in res.results) {
-    //     var title = tenorResult.title;
-    //     var media = tenorResult.media;
-    //     debugPrint(
-    //         '$title: gif : ${media?.gif?.previewUrl?.toString()} : raw: $tenorResult');
-    //     if (media?.gif == null) {
-    //       debugPrint("No gif found for $tenorResult");
-    //       continue;
-    //     }
-    //     assert(media?.gif != null);
-    //     if (media!.gif?.url == null) {
-    //       debugPrint("No gif url found for $tenorResult");
-    //       continue;
-    //     }
-    //     assert(media.gif?.url != null);
-    //     if (media.gif?.previewUrl == null) {
-    //       debugPrint("No gif preview url found for $tenorResult");
-    //       continue;
-    //     }
-    //     assert(media.gif?.previewUrl != null);
-    //     data.add(PresetURLInfo(
-    //         url: media.gif!.url!,
-    //         name: tenorResult.title!,
-    //         author: null,
-    //         previewURL: media.gif!.previewUrl));
-    //   }
-    // }
-
-    // debugPrint("Finished data: $data");
     return data;
   }
 
@@ -258,7 +227,7 @@ class URLPresetOption extends StatelessWidget {
     return ListTile(
       title: Text(presetInfo.name),
       subtitle: Text(presetInfo.subTitle),
-      onTap: () => propertyKey.send(value: presetInfo.url),
+      onTap: () => propertyKey.sendBackgroundURL(url: presetInfo.url),
       leading: Image.network(presetInfo.previewURL ?? presetInfo.url),
     );
   }
