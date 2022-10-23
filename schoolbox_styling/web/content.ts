@@ -234,7 +234,7 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
         "[getStorageData] key:",
         key,
         "assignedValue",
-        parsedResult.domSpec.assignedValue,
+        parsedResult?.domSpec?.assignedValue,
         PROD ? "" : "result:",
         PROD ? "" : parsedResult,
         PROD ? "" : "raw:",
@@ -471,7 +471,7 @@ knownKeys.forEach(async (key) => {
     "[initial] Setting cache for key",
     key,
     "to assignedValue",
-    data.domSpec.assignedValue,
+    data?.domSpec?.assignedValue,
     PROD ? "" : "data:",
     PROD ? "" : data
   );
