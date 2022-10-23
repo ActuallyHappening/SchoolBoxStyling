@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/secrets.dart';
+import 'package:tenor/tenor.dart';
 
 import './value_choosers.dart';
 import '../constants.dart';
@@ -35,10 +37,9 @@ class GenericURLChooserBody extends StatelessWidget {
   final KnownKey propertyKey;
   final PresetOptions showPresets;
 
-  final List<Widget> others = const [
+  static List<Widget> others = const [
     Text(
-        "This feature allows you to set any picture as schoolbox's logo. As this can be abused, a password is required to unlock this feature. I am not responsible for you if you get in trouble for using this feature."),
-    Text("Hint: My OneNote"),
+        "As this feature can be abused, a password is required. Hint: My OneNote"),
   ];
 
   @override
@@ -58,16 +59,66 @@ class GenericURLChooserBody extends StatelessWidget {
 }
 
 class TenorAPIPresetURLS extends StatefulWidget {
-  const TenorAPIPresetURLS({super.key});
+  const TenorAPIPresetURLS({super.key, required this.propertyKey});
+
+  final KnownKey propertyKey;
 
   @override
   State<TenorAPIPresetURLS> createState() => _TenorAPIPresetURLSState();
 }
 
 class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
+  Map<String, String> loadedURLPresets = {};
+
+  var tenor = Tenor(apiKey: TENOR_API_KEY);
+
+  loadURLPresets() {
+    getURLPresets().then((value) {
+      setState(() {
+        // ignore: avoid_print
+        print("Setting preset tenor URLS: $value");
+        loadedURLPresets = value;
+      });
+    });
+  }
+
+  Future<Map<String, String>> getURLPresets() async {
+    // Using tenor
+    TenorResponse? res = await tenor.requestTrendingGIF(limit: 5);
+    if (res == null) {
+      // ignore: avoid_print
+      print("Tenor API request failed: $res");
+      return {};
+    }
+    for (var tenorResult in res.results) {
+      var title = tenorResult.title;
+      var media = tenorResult.media;
+      print(
+          '$title: gif : ${media?.gif?.previewUrl?.toString()} : raw: $tenorResult');
+    }
+
+    // debugPrint("Got value: $documentsData");
+    final Map<String, String> data = {};
+
+    // debugPrint("Finished data: $data");
+    return data;
+  }
+
+  @override
+  initState() {
+    super.initState();
+    loadURLPresets();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(children: [
+      const Text("Presets:"),
+      ...loadedURLPresets.entries
+          .map((e) => URLPresetOption(
+              url: e.value, name: e.key, propertyKey: widget.propertyKey))
+          .toList(),
+    ]);
   }
 }
 
@@ -81,7 +132,7 @@ class FireStorePresetURLs extends StatefulWidget {
 }
 
 class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
-  Map<String, String> loadedURLPresets = {"Loading ...": "Loading ..."};
+  Map<String, String> loadedURLPresets = {"Loading ...": ""};
 
   var dio = Dio();
 
@@ -133,30 +184,6 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
               url: e.value, name: e.key, propertyKey: widget.propertyKey))
           .toList(),
     ]);
-    // return StreamBuilder(
-    //     stream:
-    //         FirebaseFirestore.instance.collection('preset-urls').snapshots(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasError) {
-    //         debugPrint(snapshot.error.toString());
-    //         return const Text('Something went wrong retrieving preset urls :(');
-    //       }
-    //       if (!snapshot.hasData) {
-    //         return const Text("Loading preset urls ...");
-    //       }
-    //       assert(snapshot.data?.docs != null);
-    //       return Column(
-    //           children: snapshot.data!.docs.map((doc) {
-    //         assert(doc['name'] != null);
-    //         assert(doc['url'] != null);
-    //         return ListTile(
-    //           title: Text(doc['name']),
-    //           onTap: () {
-    //             propertyKey.send(value: doc['url']);
-    //           },
-    //         );
-    //       }).toList());
-    //     });
   }
 }
 

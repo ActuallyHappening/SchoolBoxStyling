@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_colorpicker: ^1.0.3
   dio: ^4.0.6
+  tenor: ^1.0.9
 
 dev_dependencies:
   flutter_test:
