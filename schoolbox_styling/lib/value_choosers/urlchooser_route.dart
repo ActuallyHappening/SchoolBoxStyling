@@ -68,7 +68,7 @@ class TenorAPIPresetURLS extends StatefulWidget {
 }
 
 class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
-  Map<String, String> loadedURLPresets = {};
+  List<PresetURLInfo> loadedURLPresets = [];
 
   var tenor = Tenor(apiKey: TENOR_API_KEY);
 
@@ -82,23 +82,42 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
     });
   }
 
-  Future<Map<String, String>> getURLPresets() async {
+  Future<List<PresetURLInfo>> getURLPresets() async {
     // Using tenor
-    TenorResponse? res = await tenor.requestTrendingGIF(limit: 5);
+    TenorResponse? res = await tenor.requestTrendingGIF(limit: 10);
     if (res == null) {
       // ignore: avoid_print
       print("Tenor API request failed: $res");
-      return {};
+      return [];
     }
+
+    final List<PresetURLInfo> data = [];
     for (var tenorResult in res.results) {
       var title = tenorResult.title;
       var media = tenorResult.media;
-      print(
+      debugPrint(
           '$title: gif : ${media?.gif?.previewUrl?.toString()} : raw: $tenorResult');
+      if (media?.gif == null) {
+        debugPrint("No gif found for $tenorResult");
+        continue;
+      }
+      assert(media?.gif != null);
+      if (media!.gif?.url == null) {
+        debugPrint("No gif url found for $tenorResult");
+        continue;
+      }
+      assert(media.gif?.url != null);
+      if (media.gif?.previewUrl == null) {
+        debugPrint("No gif preview url found for $tenorResult");
+        continue;
+      }
+      assert(media.gif?.previewUrl != null);
+      data.add(PresetURLInfo(
+          url: media.gif!.url!,
+          name: tenorResult.title!,
+          author: null,
+          previewURL: media.gif!.previewUrl));
     }
-
-    // debugPrint("Got value: $documentsData");
-    final Map<String, String> data = {};
 
     // debugPrint("Finished data: $data");
     return data;
@@ -113,10 +132,10 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const Text("Presets:"),
-      ...loadedURLPresets.entries
-          .map((e) => URLPresetOption(
-              url: e.value, name: e.key, propertyKey: widget.propertyKey))
+      const Text("Trending GIFs (from tenor): "),
+      ...loadedURLPresets
+          .map((e) =>
+              URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
           .toList(),
     ]);
   }
@@ -132,7 +151,7 @@ class FireStorePresetURLs extends StatefulWidget {
 }
 
 class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
-  Map<String, String> loadedURLPresets = {"Loading ...": ""};
+  List<PresetURLInfo> loadedURLPresets = [];
 
   var dio = Dio();
 
@@ -146,7 +165,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     });
   }
 
-  Future<Map<String, String>> getURLPresets() async {
+  Future<List<PresetURLInfo>> getURLPresets() async {
     // Using dio
     // return Dio().get("https://schoolbox-website.web.app/presets.json").then((value) => value.data);
     const String projectID = "better-schoolbox-1f647";
@@ -156,13 +175,14 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     final List<dynamic> documentsData = rawData.data["documents"];
 
     // debugPrint("Got value: $documentsData");
-    final Map<String, String> data = {};
+    final List<PresetURLInfo> data = [];
 
     for (var presetReceived in documentsData) {
       final fields = presetReceived["fields"]!;
       final name = fields["name"]["stringValue"];
       final url = fields["url"]["stringValue"];
-      data[name] = url;
+      // TODO: Add author param here
+      data.add(PresetURLInfo(name: name, url: url));
     }
 
     // debugPrint("Finished data: $data");
@@ -179,33 +199,44 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
   Widget build(BuildContext context) {
     return Column(children: [
       const Text("Presets:"),
-      ...loadedURLPresets.entries
-          .map((e) => URLPresetOption(
-              url: e.value, name: e.key, propertyKey: widget.propertyKey))
+      ...loadedURLPresets
+          .map((e) =>
+              URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
           .toList(),
     ]);
   }
 }
 
-class URLPresetOption extends StatelessWidget {
-  const URLPresetOption(
-      {super.key,
-      required this.url,
-      required this.name,
-      this.author,
-      required this.propertyKey});
-
+class PresetURLInfo {
+  const PresetURLInfo(
+      {required this.name, required this.url, this.previewURL, this.author});
   final String url;
   final String name;
-  final KnownKey propertyKey;
+  final String? previewURL;
   final String? author;
+
+  String get subTitle {
+    if (author != null) {
+      return "By $author";
+    }
+    return "URL: $url";
+  }
+}
+
+class URLPresetOption extends StatelessWidget {
+  const URLPresetOption(
+      {super.key, required this.presetInfo, required this.propertyKey});
+
+  final PresetURLInfo presetInfo;
+  final KnownKey propertyKey;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(name),
-      subtitle: author != null ? Text("By $author") : Text("URL: $url"),
-      onTap: () => propertyKey.send(value: url),
+      title: Text(presetInfo.name),
+      subtitle: Text(presetInfo.subTitle),
+      onTap: () => propertyKey.send(value: presetInfo.url),
+      leading: Image.network(presetInfo.previewURL ?? presetInfo.url),
     );
   }
 }
