@@ -303,7 +303,11 @@ const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
 /**
  * Get a key. Use this function, as it handles caching for you.
  * Returns a MemoryUnit or **undefined** if not found.
- * Will **not** fill in defaults, unless `fillInDefaults` is set to true.
+ * 
+ * Will **not** return a default, unless `fillDefaults` is set to true.
+ * If this is the case, when undefined is returned, it will be set to the default.
+ * The default is found from `defaultMemory[key]`.
+ * 
  * @param key Key to retrieve from storage
  * @returns The Memory Unit stored (as promise)
  */
@@ -366,7 +370,7 @@ async function setKey<
       key,
       "not found in cache during call to `setKey`.\nThe cache should be the source of truth, as storage is slow.\nTo fix this, load the cache with all desired values from storage. This is usually done automatically when `content.ts` is first loaded.\nAutomatically calling `getKey` to load the cache (this is an implementation detail fix) ..."
     );
-    cache[key] = await getKey(key);
+    cache[key] = await getKey(key, { fillDefaults: true });
   }
 
   // TODO: unmounting logic could go here
@@ -510,19 +514,80 @@ function queryMany(querySelector: string, callback: (elem: Node) => void) {
 
 // #endregion
 
-//
+// #region Runtime Validation
+
+function validateDOMSpecification(spec: DOMSpecification): Boolean {
+  if (!spec) {
+    console.error("No DOM specification provided. Doing nothing.");
+    return false;
+  }
+  if (!spec?.querySelector) {
+    console.error("No querySelector found in spec:", spec);
+    return false;
+  }
+  if (!spec?.attribute1) {
+    console.error("No attribute1 found in spec:", spec);
+    return false;
+  }
+  if (!spec?.assignedValue) {
+    console.error("No assignedValue found in spec:", spec);
+    return false;
+  }
+  return true;
+}
+
+// #endregion
 
 // #region Execution
 
-chrome.storage.sync.get(null, (everything) => {
+
+
+chrome.storage.sync.get(null, (everything: Memory) => {
+  if (!everything) {
+    console.warn("[initial] No storage found");
+    return;
+  }
   for (const storageKey in everything) {
-    if (knownKeys.indexOf(storageKey as KnownKeys) == -1) {
+    const key = storageKey as KnownKeys;
+    const value = everything[key];
+
+    if (!key) {
+      console.warn("[initial] No storage key found", key, value);
+      continue;
+    }
+
+    if (!value) {
+      console.warn("[initial] No storage value found", key, value);
+      continue;
+    }
+
+    if (knownKeys.indexOf(key) == -1) {
       console.warn(
-        `Key '${storageKey}' found in storage, but not in knownKeys.\nThis is probably a bug.`
+        `[initial] Key '${key}' found in storage, but not in knownKeys.\nThis is probably a bug.\nValue: ${value}`
       );
     }
-    // @t s-ignore
-    cache[storageKey as KnownKeys] = everything[storageKey];
+
+    if (!validateDOMSpecification(value.domSpec)) {
+      console.warn(
+        `[initial] Invalid DOM specification found for key '${key}'.\nThis is probably a bug.\nValue: ${value}`
+      );
+      continue;
+    }
+
+    cache[key] = value;
+
+    // Validating value's properties against defaults
+    if (
+      value?.domSpec.querySelector !== defaultMemory[key].domSpec.querySelector
+    ) {
+      console.warn(
+        `Key '${key}' has a different querySelector than the default.\nThis is probably a bug.\nValue:`,
+        value
+      );
+    }
+
+    // Use official means, including updating the DOMd
+    setKey(key, value?.domSpec.assignedValue);
   }
 });
 
