@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/secrets.dart';
-import 'package:tenor/tenor.dart';
 
 import './value_choosers.dart';
 import '../constants.dart';
@@ -53,6 +52,8 @@ class GenericURLChooserBody extends StatelessWidget {
         )),
         if (showPresets == PresetOptions.customList)
           FireStorePresetURLs(propertyKey: propertyKey),
+        if (showPresets == PresetOptions.tenorAPI)
+          TenorAPIPresetURLS(propertyKey: propertyKey),
       ],
     );
   }
@@ -70,7 +71,7 @@ class TenorAPIPresetURLS extends StatefulWidget {
 class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   List<PresetURLInfo> loadedURLPresets = [];
 
-  var tenor = Tenor(apiKey: TENOR_API_KEY);
+  var dio = Dio();
 
   loadURLPresets() {
     getURLPresets().then((value) {
@@ -84,40 +85,62 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
 
   Future<List<PresetURLInfo>> getURLPresets() async {
     // Using tenor
-    TenorResponse? res = await tenor.requestTrendingGIF(limit: 10);
-    if (res == null) {
-      // ignore: avoid_print
-      print("Tenor API request failed: $res");
-      return [];
-    }
 
     final List<PresetURLInfo> data = [];
-    for (var tenorResult in res.results) {
-      var title = tenorResult.title;
-      var media = tenorResult.media;
-      debugPrint(
-          '$title: gif : ${media?.gif?.previewUrl?.toString()} : raw: $tenorResult');
-      if (media?.gif == null) {
-        debugPrint("No gif found for $tenorResult");
+
+    final res = await dio.get(
+        "https://tenor.googleapis.com/v2/featured?key=$TENOR_API_KEY&limit=10&client_key=better_schoolbox_gifpage");
+
+    final List json = res.data["results"];
+
+    // debugPrint("Res from dio: $json");
+    for (var element in json) {
+      // debugPrint("Element: $element;; title: ${element["title"]}");
+      final String title = element["title"];
+      final mediaFormats = Map<String, dynamic>.from(element["media_formats"]);
+      final gifResult = mediaFormats["gif"];
+      if (gifResult == null) {
+        debugPrint(
+            "No gif result for '$title' tenor request: ${mediaFormats.keys}");
         continue;
       }
-      assert(media?.gif != null);
-      if (media!.gif?.url == null) {
-        debugPrint("No gif url found for $tenorResult");
+      final gifUrl = gifResult["url"];
+      if (gifUrl == null) {
+        debugPrint("No gif url for '$title' tenor request: $gifResult");
         continue;
       }
-      assert(media.gif?.url != null);
-      if (media.gif?.previewUrl == null) {
-        debugPrint("No gif preview url found for $tenorResult");
-        continue;
-      }
-      assert(media.gif?.previewUrl != null);
-      data.add(PresetURLInfo(
-          url: media.gif!.url!,
-          name: tenorResult.title!,
-          author: null,
-          previewURL: media.gif!.previewUrl));
+      data.add(PresetURLInfo(name: title, url: gifUrl, previewURL: gifUrl));
     }
+
+    // if (res != null) {
+    //   print("Tenor API request succeeded: $res");
+    //   for (var tenorResult in res.results) {
+    //     var title = tenorResult.title;
+    //     var media = tenorResult.media;
+    //     debugPrint(
+    //         '$title: gif : ${media?.gif?.previewUrl?.toString()} : raw: $tenorResult');
+    //     if (media?.gif == null) {
+    //       debugPrint("No gif found for $tenorResult");
+    //       continue;
+    //     }
+    //     assert(media?.gif != null);
+    //     if (media!.gif?.url == null) {
+    //       debugPrint("No gif url found for $tenorResult");
+    //       continue;
+    //     }
+    //     assert(media.gif?.url != null);
+    //     if (media.gif?.previewUrl == null) {
+    //       debugPrint("No gif preview url found for $tenorResult");
+    //       continue;
+    //     }
+    //     assert(media.gif?.previewUrl != null);
+    //     data.add(PresetURLInfo(
+    //         url: media.gif!.url!,
+    //         name: tenorResult.title!,
+    //         author: null,
+    //         previewURL: media.gif!.previewUrl));
+    //   }
+    // }
 
     // debugPrint("Finished data: $data");
     return data;

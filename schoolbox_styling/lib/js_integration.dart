@@ -31,6 +31,20 @@ String toCSSColour(Color colour) {
   return "rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha})";
 }
 
+enum BackgroundURLOptions {
+  none,
+  fit,
+  stretch,
+}
+
+extension BackgroundURLOptionsExt on BackgroundURLOptions {
+  String get description => {
+        BackgroundURLOptions.none: "None: original sizing is kept",
+        BackgroundURLOptions.fit: "Fit: image is safely scaled up",
+        BackgroundURLOptions.stretch: "Stretch: image is forcefully stretched",
+      }[this]!;
+}
+
 extension KeySendValue on KnownKey {
   void send({required String value, bool reset = false}) {
     sendNewValue(
