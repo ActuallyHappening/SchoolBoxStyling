@@ -145,7 +145,7 @@ const debounce = <T extends (...args: any[]) => any>(
   let timeout: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>): ReturnType<T> => {
     let result: any;
-    console.log(debug?.debugBounced ?? "& Bounced");
+    debug?.debugBounced ? console.log(debug?.debugBounced) : null;
     timeout && clearTimeout(timeout);
     timeout = setTimeout(() => {
       console.log(debug?.debugExecuted ?? "& Executed");
@@ -466,14 +466,14 @@ function _updateElem(elem: Node, spec: DOMSpecification) {
     // @ts-ignore
     elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
 
-    console.log(
-      "[_updateElem] Set attribute2",
-      spec.attribute2,
-      "of",
-      elem,
-      "to",
-      spec.assignedValue
-    );
+    // console.log(
+    //   "[_updateElem] Set attribute2",
+    //   spec.attribute2,
+    //   "of",
+    //   elem,
+    //   "to",
+    //   spec.assignedValue
+    // );
   } else {
     console.log(
       "[_updateElem] setting attribute1",
@@ -540,16 +540,24 @@ function validateDOMSpecification(spec: DOMSpecification): Boolean {
 
 // #region Execution
 
-
-
-chrome.storage.sync.get(null, (everything: Memory) => {
+chrome.storage.sync.get(null, (everything: Record<string, string>) => {
   if (!everything) {
     console.warn("[initial] No storage found");
     return;
   }
   for (const storageKey in everything) {
     const key = storageKey as KnownKeys;
-    const value = everything[key];
+    let _parsed;
+    try {
+      _parsed = JSON.parse(everything[key]);
+    } catch (e) {
+      console.error(
+        `Failed to parse JSON for key '${key}'\nValue: ${everything[key]}; e:`,
+        e
+      );
+      continue;
+    }
+    const value = _parsed as MemoryUnit;
 
     if (!key) {
       console.warn("[initial] No storage key found", key, value);
@@ -563,13 +571,15 @@ chrome.storage.sync.get(null, (everything: Memory) => {
 
     if (knownKeys.indexOf(key) == -1) {
       console.warn(
-        `[initial] Key '${key}' found in storage, but not in knownKeys.\nThis is probably a bug.\nValue: ${value}`
+        `[initial] Key '${key}' found in storage, but not in knownKeys.\nThis is probably a bug.\nValue:`,
+        value
       );
     }
 
     if (!validateDOMSpecification(value.domSpec)) {
       console.warn(
-        `[initial] Invalid DOM specification found for key '${key}'.\nThis is probably a bug.\nValue: ${value}`
+        `[initial] Invalid DOM specification found for key '${key}'.\nThis is probably a bug.\nValue:`,
+        value
       );
       continue;
     }
