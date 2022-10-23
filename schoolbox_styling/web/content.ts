@@ -27,14 +27,14 @@ const _knownDefaults: Record<
   leftBar: {
     querySelector: "aside#left-menu",
     attribute1: "style",
-    attribute2: "backgroundColor",
+    attribute2: "background",
     // assignedValue:
     //   document.querySelector("aside#left-menu")?.style.backgroundColor,
   },
   timetableHeaders: {
     querySelector: "table.timetable[data-timetable]>thead>tr>th",
     attribute1: "style",
-    attribute2: "backgroundColor",
+    attribute2: "background",
     // assignedValue: document.querySelector(
     //   "table.timetable[data-timetable]>thead>tr>th"
     // )?.style.backgroundColor,
@@ -42,7 +42,7 @@ const _knownDefaults: Record<
   background: {
     querySelector: "body",
     attribute1: "style",
-    attribute2: "backgroundColor",
+    attribute2: "background",
     // assignedValue:
     //   document.querySelector("body")?.style.backgroundColor ??
     //   "rgb(237, 237, 237)",
@@ -439,15 +439,27 @@ interface DOMSpecification {
 function _updateElem(elem: Node, spec: DOMSpecification) {
   if (spec.attribute2) {
     // @ts-ignore
+    elem[spec.attribute1][spec.attribute2] = "black";
+    // @ts-ignore
     elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
 
-    if (
-      spec.attribute2 === "background" &&
-      spec.assignedValue.includes("url(")
-    ) {
-      console.log("Background image detected.", elem, spec);
-    }
+    console.log(
+      "[_updateElem] Set attribute2",
+      spec.attribute2,
+      "of",
+      elem,
+      "to",
+      spec.assignedValue
+    );
   } else {
+    console.log(
+      "[_updateElem] setting attribute1",
+      spec.attribute1,
+      "of",
+      elem,
+      "to",
+      spec.assignedValue
+    );
     // @ts-ignore
     elem[spec.attribute1] = spec.assignedValue;
   }

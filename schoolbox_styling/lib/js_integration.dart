@@ -33,6 +33,9 @@ String toCSSColour(Color colour) {
 
 enum BackgroundURLOptions {
   smallTiled,
+
+  smallContained,
+
   largeStatic,
   largeScroll,
 }
@@ -45,12 +48,15 @@ extension BackgroundURLOptionsExt on BackgroundURLOptions {
             "Static: image is scaled up but stays still",
         BackgroundURLOptions.largeScroll:
             "Scrollable: image is scale up and scrollable",
+        BackgroundURLOptions.smallContained:
+            "Small contained: image fits in smaller spaces",
       }[this]!;
 
   String get cssSuffix => {
-        BackgroundURLOptions.smallTiled: "",
+        BackgroundURLOptions.smallTiled: "0%",
         BackgroundURLOptions.largeStatic: "0% 0%/cover fixed",
         BackgroundURLOptions.largeScroll: " 0% 0%/cover",
+        BackgroundURLOptions.smallContained: "0% 0%/contain",
       }[this]!;
 }
 
@@ -73,7 +79,7 @@ extension KeySendValue on KnownKey {
 
   void sendBackgroundURL(
       {required String url,
-      BackgroundURLOptions option = BackgroundURLOptions.largeStatic}) {
+      BackgroundURLOptions option = BackgroundURLOptions.smallContained}) {
     send(value: "url($url) ${option.cssSuffix}");
   }
 }
