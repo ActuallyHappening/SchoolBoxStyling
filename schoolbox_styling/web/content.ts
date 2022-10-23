@@ -47,31 +47,53 @@ const _knownDefaults: Record<
   },
 };
 
-const knownDefaults: Record<KnownKeys, DOMSpecification> = {} as any;
+/**
+ * Default memory units, loaded with actual values from DOM.
+ */
+const knownDefaults: Required<Memory<DOMSpecification>> = {} as any;
 for (const _key of Object.keys(_knownDefaults)) {
   const key = _key as KnownKeys;
-  let assignedValue: DOMSpecification["assignedValue"];
+  const _none = "NOT FOUND ON DOM!";
+  let assignedValue: DOMSpecification["assignedValue"] = _none;
 
   const spec = _knownDefaults[key];
-  const query = document.querySelector(spec.querySelector);
-  if (!query) {
+  const Node = document.querySelector(spec.querySelector);
+  if (!Node) {
     console.error(
       `Could not find element with querySelector: ${spec.querySelector}`
     );
     continue;
-  }  
+  } else {
+    console.log(
+      `Found element with querySelector: ${spec.querySelector}:`,
+      Node,
+      `with ${spec.attribute1} and ${spec.attribute2}`
+    );
+  }
+
+  const computedStyles = window.getComputedStyle(Node);
 
   if (spec.attribute2) {
-    // @ts-ignore
-    assignedValue = query[spec.attribute1][spec.attribute2!];
+    if (spec.attribute1 !== "style") {
+      console.warn(
+        "attribute2 is set, but attribute1 is not style\nThis might not work as expected!\nGrabbing from raw _query (DOM node)"
+      );
+      // @ts-ignore
+      assignedValue = Node[spec.attribute1][spec.attribute2];
+    } else {
+      // @ts-ignore
+      assignedValue = computedStyles[spec.attribute2!];
+    }
   } else {
     // @ts-ignore
-    assignedValue = query[spec.attribute1];
+    assignedValue = Node[spec.attribute1];
   }
+
+  console.log("Got assigned value '", assignedValue, "' for key", key);
 
   knownDefaults[key] = {
     ..._knownDefaults[key],
-    assignedValue,
+    assignedValue: assignedValue === _none ? "" : assignedValue,
   };
 }
 //   {
@@ -182,28 +204,59 @@ for (const _key of knownKeys) {
  */
 const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
   new Promise((resolve, reject) =>
-    chrome.storage.sync.get([key], (result) =>
+    chrome.storage.sync.get([key], (result) => {
+      let parsedResult: MemoryUnit;
+      if (!result[key]) {
+        resolve(result[key]);
+        return;
+      }
+      try {
+        parsedResult = JSON.parse(result[key] as any);
+      } catch (e) {
+        console.error("Could not parse result", result, "with key", key);
+        reject(e);
+        return;
+      }
+      console.log(
+        "getStorageData key:",
+        key,
+        "result:",
+        result[key],
+        "parsedResult:",
+        parsedResult,
+        "lastError:",
+        chrome.runtime.lastError
+      );
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
-        : resolve(result[key])
-    )
+        : resolve(parsedResult);
+    })
   );
 
 /**
  * Usage:
- * ``ts
+ * ```ts
  * await setStorageData("myKey", "newValue");
  * ```
+ * Sets the value of `key` to `value` in actual storage.
  * @param data Data to be stored
  * @returns true if good, else rejects
  */
 const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
   new Promise((resolve, reject) =>
-    chrome.storage.sync.set({ key: data }, () =>
+    chrome.storage.sync.set({ key: JSON.stringify(data) }, () => {
+      console.log(
+        "setStorageData key:",
+        key,
+        "data:",
+        data,
+        "last error:",
+        chrome.runtime.lastError
+      );
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
-        : resolve(true)
-    )
+        : resolve(true);
+    })
   );
 
 /**
@@ -388,11 +441,32 @@ knownKeys.forEach(async (key) => {
     console.log("Setting cache for key", key, "to", data);
     cache[key] = data;
   } else {
-    console.warn(
-      "No data found for key",
-      key,
-      "in initial storage fetch.\nThis is typically because the user has not selected anything for this key yet."
-    );
+    const knownDefault = knownDefaults[key];
+    if (knownDefault) {
+      console.warn(
+        "No data found for key",
+        key,
+        "in initial storage fetch.\nThis is typically because the user has not selected anything for this key yet.",
+        "Setting default value to storage and cache",
+        knownDefault,
+        "Debug query:",
+        document.querySelectorAll(knownDefault.querySelector)
+      );
+      const defaultMemoryUnit: MemoryUnit = { domSpec: knownDefault };
+      setStorageData(key, defaultMemoryUnit);
+      cache[key] = defaultMemoryUnit;
+    } else {
+      console.warn(
+        "No data found for key",
+        key,
+        "in initial storage fetch.\nThis is typically because the user has not selected anything for this key yet.",
+        "No default value found for this key. This is probably a bug. Please report this to the developer.",
+        "Debug knownDefaults:",
+        knownDefaults,
+        "Debug key:",
+        key
+      );
+    }
   }
 });
 
@@ -408,4 +482,23 @@ chrome.runtime.onMessage.addListener((request: UserRequest) => {
   handleUserRequest(request);
 });
 
-// #region
+// Testing storage
+const v = "test123";
+chrome.storage.sync.set({ test: v }, () => {
+  console.log("Set test value");
+  chrome.storage.sync.get(["test"], (result) => {
+    console.log(
+      "Value currently is ",
+      result.test,
+      "should be",
+      v,
+      "is?",
+      result.test === v
+    );
+    if (result.test !== v) {
+      throw new Error("Test failed");
+    }
+  });
+});
+
+// #endregion
