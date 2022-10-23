@@ -7,8 +7,8 @@ import '../js_integration.dart';
 
 enum ColourTypes {
   material,
-  buttons,
   sliders,
+  buttons,
 }
 
 extension ColourTypesExt on ColourTypes {
