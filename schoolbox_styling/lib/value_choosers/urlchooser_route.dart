@@ -89,7 +89,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
     final List<PresetURLInfo> data = [];
 
     final res = await dio.get(
-        "https://tenor.googleapis.com/v2/featured?key=$TENOR_API_KEY&limit=10&client_key=better_schoolbox_gifpage");
+        "https://tenor.googleapis.com/v2/featured?key=$TENOR_API_KEY&limit=25&client_key=better_schoolbox_gifpage");
 
     final List json = res.data["results"];
 
