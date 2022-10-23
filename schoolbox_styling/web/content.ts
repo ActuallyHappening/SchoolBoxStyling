@@ -104,6 +104,11 @@ for (const _key of Object.keys(_knownDefaults)) {
 //     defaultValue: "DELETE",
 //   },
 
+const defaultMemory: Required<Memory> = {} as any;
+for (const key of knownKeys) {
+  defaultMemory[key] = { domSpec: knownDefaults[key] };
+}
+
 console.log("content.js loaded");
 
 // #region Helpers
@@ -207,7 +212,13 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
     chrome.storage.sync.get([key], (result) => {
       let parsedResult: MemoryUnit;
       if (!result[key]) {
-        resolve(result[key]);
+        console.warn(
+          "[getStorageData] No data found for key",
+          key,
+          "in storage\nSetting default value"
+        );
+        setStorageData(key, defaultMemory[key]);
+        resolve(defaultMemory[key]);
         return;
       }
       try {
@@ -218,7 +229,7 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
         return;
       }
       console.log(
-        "getStorageData key:",
+        "[getStorageData] key:",
         key,
         "result:",
         result[key],
@@ -246,7 +257,7 @@ const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
   new Promise((resolve, reject) =>
     chrome.storage.sync.set({ key: JSON.stringify(data) }, () => {
       console.log(
-        "setStorageData key:",
+        "[setStorageData] key:",
         key,
         "data:",
         data,
