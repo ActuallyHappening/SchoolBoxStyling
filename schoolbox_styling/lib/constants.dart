@@ -26,10 +26,10 @@ extension RoutingKeysExt on KnownKey {
 
   /// Put in the appBar title
   String get routeTitle => {
-        KnownKey.topBar: "Change Top Bar Colour",
-        KnownKey.leftBar: "Change Left Bar Colour",
-        KnownKey.background: "Change Background Colour",
-        KnownKey.timetableHeaders: "Change Period Colours",
+        KnownKey.topBar: "Style Top Bar",
+        KnownKey.leftBar: "Style Left Bar",
+        KnownKey.background: "Style Background",
+        KnownKey.timetableHeaders: "Style Timetable Headers",
       }[this]!;
 }
 final Map<String, Widget Function(BuildContext)> routes = (() {

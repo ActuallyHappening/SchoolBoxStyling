@@ -43,9 +43,9 @@ class CustomColourPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chips = [
-      ListTile(
-          title: Text(
-              "This colourPIckerTYpes name: ${colourPickerType.name} $colourPickerType")),
+      // ListTile(
+      //     title: Text(
+      //         "This colourPIckerTYpes name: ${colourPickerType.name} $colourPickerType")),
       ListTile(
         leading: const Icon(Icons.restart_alt_rounded),
         title: const Text("Reset"),
