@@ -37,6 +37,7 @@ class AllValueChoosersRoute extends StatelessWidget {
             appBar: AppBar(
                 title: Text(propertyKey.routeTitle),
                 bottom: TabBar(
+                    isScrollable: true,
                     tabs: names.map((name) => Tab(text: name)).toList()))));
   }
 }

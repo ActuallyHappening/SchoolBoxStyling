@@ -13,9 +13,9 @@ enum ColourTypes {
 
 extension ColourTypesExt on ColourTypes {
   String get name => {
-        ColourTypes.pallet: "Colour (pallet)",
-        ColourTypes.materialButtons: "Colour (buttons)",
-        ColourTypes.sliders: "Colour (✨ sliders ✨)",
+        ColourTypes.pallet: "Colour",
+        ColourTypes.materialButtons: "Colour by buttons",
+        ColourTypes.sliders: "Colour by ✨ sliders ✨",
       }[this]!;
 }
 

@@ -8,13 +8,13 @@ import '../js_integration.dart';
 
 List<ValueChooser> urlValueChoosers = [
   ValueChooser(
-      name: "Image (URL)",
+      name: "Custom Image",
       body: (key) => (context) => GenericURLChooserBody(
             propertyKey: key,
             showPresets: PresetOptions.customList,
           )),
   ValueChooser(
-      name: "Image (GIFs)",
+      name: "Online GIFs",
       body: (key) => (context) => GenericURLChooserBody(
             propertyKey: key,
             showPresets: PresetOptions.tenorAPI,
