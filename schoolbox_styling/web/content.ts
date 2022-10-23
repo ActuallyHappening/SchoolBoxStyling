@@ -110,6 +110,14 @@ const defaultMemory: Required<Memory> = {} as any;
 for (const key of knownKeys) {
   defaultMemory[key] = { domSpec: knownDefaults[key] };
 }
+for (const key of knownKeys) {
+  if (!defaultMemory[key]) {
+    console.error(`Key ${key} not found in defaultMemory!`);
+  }
+  if (!defaultMemory[key]?.domSpec) {
+    console.error(`Key ${key} not found in defaultMemorys domSpecs!`);
+  }
+}
 
 console.log("content.js loaded");
 
@@ -219,8 +227,9 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
           key,
           "in storage\nSetting default value"
         );
-        setStorageData(key, defaultMemory[key]);
-        resolve(defaultMemory[key]);
+        const defaultMem = defaultMemory[key];
+        setStorageData(key, defaultMem);
+        resolve(defaultMem);
         return;
       }
       try {
@@ -242,6 +251,9 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit> =>
         PROD ? "" : "lastError:",
         PROD ? "" : chrome.runtime.lastError
       );
+      if (!parsedResult) {
+        throw new Error("Parsed result is falsy");
+      }
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
         : resolve(parsedResult);
@@ -428,6 +440,13 @@ function _updateElem(elem: Node, spec: DOMSpecification) {
   if (spec.attribute2) {
     // @ts-ignore
     elem[spec.attribute1][spec.attribute2] = spec.assignedValue;
+
+    if (
+      spec.attribute2 === "background" &&
+      spec.assignedValue.includes("url(")
+    ) {
+      console.log("Background image detected.", elem, spec);
+    }
   } else {
     // @ts-ignore
     elem[spec.attribute1] = spec.assignedValue;
@@ -435,6 +454,14 @@ function _updateElem(elem: Node, spec: DOMSpecification) {
 }
 
 function executeDOMSpecification(spec: DOMSpecification) {
+  if (!spec) {
+    console.warn("No DOM specification provided. Doing nothing.");
+    return;
+  }
+  if (!spec?.querySelector) {
+    console.error("No querySelector found in spec:", spec);
+    return;
+  }
   queryMany(spec.querySelector, (elem) => {
     _updateElem(elem, spec);
   });
@@ -472,6 +499,8 @@ knownKeys.forEach(async (key) => {
     key,
     "to assignedValue",
     data?.domSpec?.assignedValue,
+    "domSpec",
+    data?.domSpec,
     PROD ? "" : "data:",
     PROD ? "" : data
   );
