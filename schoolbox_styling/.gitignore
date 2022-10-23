@@ -1,3 +1,6 @@
+# Remember to create your own secrets.dart file with your own API keys.
+secrets.dart
+
 # Miscellaneous
 *.class
 *.log

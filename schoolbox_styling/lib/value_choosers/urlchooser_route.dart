@@ -10,21 +10,30 @@ List<ValueChooser> urlValueChoosers = [
       name: "Image (URL)",
       body: (key) => (context) => GenericURLChooserBody(
             propertyKey: key,
+            showPresets: PresetOptions.customList,
           )),
   ValueChooser(
-      name: "Image (Presets)",
+      name: "Image (GIFs)",
       body: (key) => (context) => GenericURLChooserBody(
             propertyKey: key,
-            showPresets: true,
+            showPresets: PresetOptions.tenorAPI,
           )),
 ];
 
+enum PresetOptions {
+  none,
+  customList,
+  tenorAPI,
+}
+
 class GenericURLChooserBody extends StatelessWidget {
   const GenericURLChooserBody(
-      {super.key, required this.propertyKey, this.showPresets = true});
+      {super.key,
+      required this.propertyKey,
+      this.showPresets = PresetOptions.none});
 
   final KnownKey propertyKey;
-  final bool showPresets;
+  final PresetOptions showPresets;
 
   final List<Widget> others = const [
     Text(
@@ -41,9 +50,24 @@ class GenericURLChooserBody extends StatelessWidget {
             child: URLInputFieldWithPassword(
           propertyKey: propertyKey,
         )),
-        if (showPresets) FireStorePresetURLs(propertyKey: propertyKey),
+        if (showPresets == PresetOptions.customList)
+          FireStorePresetURLs(propertyKey: propertyKey),
       ],
     );
+  }
+}
+
+class TenorAPIPresetURLS extends StatefulWidget {
+  const TenorAPIPresetURLS({super.key});
+
+  @override
+  State<TenorAPIPresetURLS> createState() => _TenorAPIPresetURLSState();
+}
+
+class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -105,13 +129,8 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     return Column(children: [
       const Text("Presets:"),
       ...loadedURLPresets.entries
-          .map((e) => ListTile(
-                title: Text(e.key),
-                subtitle: Text(e.value),
-                onTap: () {
-                  widget.propertyKey.send(value: e.value);
-                },
-              ))
+          .map((e) => URLPresetOption(
+              url: e.value, name: e.key, propertyKey: widget.propertyKey))
           .toList(),
     ]);
     // return StreamBuilder(
@@ -138,6 +157,29 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     //         );
     //       }).toList());
     //     });
+  }
+}
+
+class URLPresetOption extends StatelessWidget {
+  const URLPresetOption(
+      {super.key,
+      required this.url,
+      required this.name,
+      this.author,
+      required this.propertyKey});
+
+  final String url;
+  final String name;
+  final KnownKey propertyKey;
+  final String? author;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(name),
+      subtitle: author != null ? Text("By $author") : Text("URL: $url"),
+      onTap: () => propertyKey.send(value: url),
+    );
   }
 }
 
