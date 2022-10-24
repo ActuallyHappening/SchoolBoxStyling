@@ -25,6 +25,8 @@ enum PresetOptions {
   tenorAPI,
 }
 
+
+// #region GENERIC TODO: REMOVE
 class GenericURLChooserBody extends StatelessWidget {
   const GenericURLChooserBody(
       {super.key,
@@ -56,6 +58,7 @@ class GenericURLChooserBody extends StatelessWidget {
     );
   }
 }
+// #endregion
 
 class CustomGIFValueChooser extends StatelessWidget {
   const CustomGIFValueChooser({super.key, required this.propertyKey});
