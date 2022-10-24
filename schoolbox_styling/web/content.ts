@@ -253,6 +253,15 @@ const getStorageData = (key: KnownKeys): Promise<MemoryUnit | undefined> =>
         reject(new Error("Parsed result is falsy"));
         return;
       }
+      if (!parsedResult.domSpec) {
+        reject(new Error("Parsed result has no domSpec"));
+        return;
+      }
+      if (!validateDOMSpecification(parsedResult.domSpec)) {
+        reject(new Error("Parsed result has invalid domSpec"));
+        return;
+      }
+
       chrome.runtime.lastError
         ? reject(Error(chrome.runtime.lastError.message))
         : resolve(parsedResult);
@@ -303,11 +312,11 @@ const setStorageData = (key: KnownKeys, data: MemoryUnit): Promise<boolean> =>
 /**
  * Get a key. Use this function, as it handles caching for you.
  * Returns a MemoryUnit or **undefined** if not found.
- * 
+ *
  * Will **not** return a default, unless `fillDefaults` is set to true.
  * If this is the case, when undefined is returned, it will be set to the default.
  * The default is found from `defaultMemory[key]`.
- * 
+ *
  * @param key Key to retrieve from storage
  * @returns The Memory Unit stored (as promise)
  */
@@ -577,10 +586,15 @@ chrome.storage.sync.get(null, (everything: Record<string, string>) => {
     }
 
     if (!validateDOMSpecification(value.domSpec)) {
-      console.warn(
-        `[initial] Invalid DOM specification found for key '${key}'.\nThis is probably a bug.\nValue:`,
-        value
+      const MANUAL_newValue = console.warn(
+        `[initial] Invalid DOM specification found for key '${key}' in initial storage fetch.\nThis is probably a bug.\nValue:`,
+        value,
+        "\nSetting a default value, [fatal] this will override any valid settings data under key",
+        key,
+        "[manual implementation] Setting to"
       );
+      chrome.storage.sync.set({ [key]: JSON.stringify(defaultMemory[key]) });
+
       continue;
     }
 
