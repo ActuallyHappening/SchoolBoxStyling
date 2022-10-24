@@ -13,7 +13,7 @@ List<ValueChooser> urlValueChoosers = [
             propertyKey: key,
           )),
   ValueChooser(
-      name: "Online GIFs",
+      name: "✨ Online GIFs ✨",
       body: (key) => (context) => OnlineGIFValueChooser(
             propertyKey: key,
           )),
@@ -86,16 +86,19 @@ class OnlineGIFValueChooser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        padding: const EdgeInsets.all(10),
-        children: [...others, TenorAPIPresetURLS(propertyKey: propertyKey)]);
+    return ListView(padding: const EdgeInsets.all(10), children: [
+      ...others,
+      TenorAPIPresetURLS(propertyKey: propertyKey, search: true)
+    ]);
   }
 }
 
 class TenorAPIPresetURLS extends StatefulWidget {
-  const TenorAPIPresetURLS({super.key, required this.propertyKey});
+  const TenorAPIPresetURLS(
+      {super.key, required this.propertyKey, this.search = true});
 
   final KnownKey propertyKey;
+  final bool search;
 
   @override
   State<TenorAPIPresetURLS> createState() => _TenorAPIPresetURLSState();
@@ -181,7 +184,20 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const Text("Trending GIFs (from tenor): "),
+      !widget.search
+          ? const Text("Trending GIFs (from tenor): ")
+          : TextField(
+              onChanged: (value) {
+                if (value == "") {
+                  loadURLPresets();
+                } else {
+                  loadURLFromSearch(value);
+                }
+              },
+              decoration: const InputDecoration(
+                hintText: "Search for GIFs - powered by Tenor",
+              ),
+            ),
       ...loadedURLPresets
           .map((e) =>
               URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
@@ -190,6 +206,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   }
 }
 
+// #region Firebase
 class FireStorePresetURLs extends StatefulWidget {
   const FireStorePresetURLs({super.key, required this.propertyKey});
 
@@ -255,6 +272,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     ]);
   }
 }
+// #endregion
 
 class PresetURLInfo {
   const PresetURLInfo(
@@ -302,6 +320,7 @@ class URLInputFieldWithPassword extends StatefulWidget {
 
 class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
   bool isLocked = true;
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -311,19 +330,23 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
             padding: const EdgeInsets.all(7),
             child: Card(child: Text(isLocked ? "Locked" : "Unlocked!"))),
         TextField(
+          controller: controller,
           onChanged: (text) {
             if (text == "cheat") {
               setState(() {
                 isLocked = false;
               });
+              controller.text = "";
             }
             if (isLocked) {
             } else {
               widget.propertyKey.send(value: text);
             }
           },
-          decoration: const InputDecoration(
-            hintText: "Enter password to unlock",
+          decoration: InputDecoration(
+            hintText: isLocked
+                ? "Enter password to unlock"
+                : "Right click GIF/Image, select 'copy image address', paste here 😀",
           ),
         ),
       ],
