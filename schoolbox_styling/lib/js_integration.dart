@@ -24,7 +24,12 @@ void sendNewValue({
   }
   // ignore: avoid_print
   print('Sending $userRequest to $key');
-  js.context.callMethod("sendNewValue", [key.key, userRequest]);
+  try {
+    js.context.callMethod("sendNewValue", [key.key, userRequest]);
+  } catch (e) {
+    // ignore: avoid_print
+    print('[js_integration] [dart] Error sending $userRequest to $key: $e');
+  }
 }
 
 String toCSSColour(Color colour) {
