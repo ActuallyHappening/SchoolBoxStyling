@@ -9,15 +9,13 @@ import '../js_integration.dart';
 List<ValueChooser> urlValueChoosers = [
   ValueChooser(
       name: "Custom Image",
-      body: (key) => (context) => GenericURLChooserBody(
+      body: (key) => (context) => CustomGIFValueChooser(
             propertyKey: key,
-            showPresets: PresetOptions.customList,
           )),
   ValueChooser(
       name: "Online GIFs",
-      body: (key) => (context) => GenericURLChooserBody(
+      body: (key) => (context) => OnlineGIFValueChooser(
             propertyKey: key,
-            showPresets: PresetOptions.tenorAPI,
           )),
 ];
 
@@ -78,7 +76,9 @@ class CustomGIFValueChooser extends StatelessWidget {
 }
 
 class OnlineGIFValueChooser extends StatelessWidget {
-  const OnlineGIFValueChooser({super.key});
+  const OnlineGIFValueChooser({super.key, required this.propertyKey});
+
+  final KnownKey propertyKey;
 
   static const List<Widget> others = [
     Text("✨ Search for the perfect gif! ✨"),
@@ -86,7 +86,8 @@ class OnlineGIFValueChooser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: const [...others]);
+    return ListView(
+        children: [...others, TenorAPIPresetURLS(propertyKey: propertyKey)]);
   }
 }
 
@@ -115,11 +116,11 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
     });
   }
 
-  loadURLFromSearch(String serachStr) {
-    getURLFromSearch(serachStr).then((value) {
+  loadURLFromSearch(String searchStr) {
+    getURLFromSearch(searchStr).then((value) {
       setState(() {
         // ignore: avoid_print
-        print("Setting preset tenor URLS: $value");
+        print("Setting preset tenor URLS after search '$searchStr': $value");
         loadedURLPresets = value;
       });
     });
@@ -134,10 +135,6 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   }
 
   Future<List<PresetURLInfo>> getURLPresets() async {
-    // Using tenor
-
-    final List<PresetURLInfo> data = [];
-
     final res = await dio.get(
         "https://tenor.googleapis.com/v2/featured?key=$TENOR_API_KEY&limit=$limit&client_key=better_schoolbox_onlinegifpage");
 
