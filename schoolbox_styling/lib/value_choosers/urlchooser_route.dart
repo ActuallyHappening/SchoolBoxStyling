@@ -64,7 +64,7 @@ class CustomGIFValueChooser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
+    return ListView(padding: const EdgeInsets.all(10), children: [
       ...GenericURLChooserBody.others,
       Center(
           child: URLInputFieldWithPassword(
@@ -87,6 +87,7 @@ class OnlineGIFValueChooser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+        padding: const EdgeInsets.all(10),
         children: [...others, TenorAPIPresetURLS(propertyKey: propertyKey)]);
   }
 }

@@ -45,7 +45,7 @@ enum BackgroundURLOptions {
   largeScroll,
 }
 
-extension BackgroundURLOptionsExt on BackgroundURLOptions {
+extension BackgroundURLJsOptionsExt on BackgroundURLOptions {
   String get description => {
         BackgroundURLOptions.smallTiled:
             "Small tiled: image is repeated but small",
