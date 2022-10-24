@@ -164,7 +164,9 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
         debugPrint("No gif url for '$title' tenor request: $gifResult");
         continue;
       }
-      data.add(PresetURLInfo(name: title, url: gifUrl, previewURL: gifUrl));
+      final String? tinyGifURL = mediaFormats["tinygif"]?["url"];
+      data.add(PresetURLInfo(
+          name: title, url: gifUrl, previewURL: tinyGifURL ?? gifUrl));
     }
 
     return data;
