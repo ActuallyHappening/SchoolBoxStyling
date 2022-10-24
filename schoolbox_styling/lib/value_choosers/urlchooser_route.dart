@@ -59,6 +59,37 @@ class GenericURLChooserBody extends StatelessWidget {
   }
 }
 
+class CustomGIFValueChooser extends StatelessWidget {
+  const CustomGIFValueChooser({super.key, required this.propertyKey});
+
+  final KnownKey propertyKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(children: [
+      ...GenericURLChooserBody.others,
+      Center(
+          child: URLInputFieldWithPassword(
+        propertyKey: propertyKey,
+      )),
+      FireStorePresetURLs(propertyKey: propertyKey),
+    ]);
+  }
+}
+
+class OnlineGIFValueChooser extends StatelessWidget {
+  const OnlineGIFValueChooser({super.key});
+
+  static const List<Widget> others = [
+    Text("✨ Search for the perfect gif! ✨"),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(children: const [...others]);
+  }
+}
+
 class TenorAPIPresetURLS extends StatefulWidget {
   const TenorAPIPresetURLS({super.key, required this.propertyKey});
 
@@ -72,6 +103,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   List<PresetURLInfo> loadedURLPresets = [];
 
   var dio = Dio();
+  int limit = 25;
 
   loadURLPresets() {
     getURLPresets().then((value) {
@@ -83,15 +115,40 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
     });
   }
 
+  loadURLFromSearch(String serachStr) {
+    getURLFromSearch(serachStr).then((value) {
+      setState(() {
+        // ignore: avoid_print
+        print("Setting preset tenor URLS: $value");
+        loadedURLPresets = value;
+      });
+    });
+  }
+
+  // getURLFromSearch
+  Future<List<PresetURLInfo>> getURLFromSearch(String searchStr) async {
+    var response = await dio.get(
+        "https://api.tenor.com/v2/search?q=$searchStr&key=$TENOR_API_KEY&limit=$limit&client_key=better_schoolbox_onlinegifpage");
+
+    return extractPresetURLInfoFromTenorAPIResponse(response);
+  }
+
   Future<List<PresetURLInfo>> getURLPresets() async {
     // Using tenor
 
     final List<PresetURLInfo> data = [];
 
     final res = await dio.get(
-        "https://tenor.googleapis.com/v2/featured?key=$TENOR_API_KEY&limit=25&client_key=better_schoolbox_gifpage");
+        "https://tenor.googleapis.com/v2/featured?key=$TENOR_API_KEY&limit=$limit&client_key=better_schoolbox_onlinegifpage");
 
-    final List json = res.data["results"];
+    return extractPresetURLInfoFromTenorAPIResponse(res);
+  }
+
+  /// Use this to extract URLs from a tenor API response
+  List<PresetURLInfo> extractPresetURLInfoFromTenorAPIResponse(dynamic resp) {
+    final List<PresetURLInfo> data = [];
+
+    final List json = resp.data["results"];
 
     // debugPrint("Res from dio: $json");
     for (var element in json) {
