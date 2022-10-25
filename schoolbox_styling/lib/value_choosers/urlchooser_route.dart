@@ -25,7 +25,6 @@ enum PresetOptions {
   tenorAPI,
 }
 
-
 // #region GENERIC TODO: REMOVE
 class GenericURLChooserBody extends StatelessWidget {
   const GenericURLChooserBody(
@@ -325,21 +324,30 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
   bool isLocked = true;
   final TextEditingController controller = TextEditingController();
 
+  // static const spicyDefault = "https://picsum.photos/420/690";
+  static const spicyDefault =
+      "https://media.tenor.com/CWgfFh7ozHkAAAAC/rick-astly-rick-rolled.gif";
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
             padding: const EdgeInsets.all(7),
-            child: Card(child: Text(isLocked ? "Locked" : "Unlocked!"))),
+          child: Card(
+            margin: const EdgeInsets.all(5),
+            child: Text(isLocked ? "Locked" : "Unlocked!"),
+          ),
+        ),
         TextField(
           controller: controller,
           onChanged: (text) {
             if (text == "cheat") {
+              controller.text = spicyDefault;
+              widget.propertyKey.sendBackgroundURL(url: spicyDefault);
               setState(() {
                 isLocked = false;
               });
-              controller.text = "https://picsum.photos/420/690";
             }
             if (isLocked) {
             } else {
