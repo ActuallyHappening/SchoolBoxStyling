@@ -9,9 +9,18 @@ class MyAppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: ListView(
-            children: KnownKey.values.map((key) {
+            children: [
+      ...KnownKey.values.map((key) {
       return DrawerOption(knownKey: key);
-    }).toList()));
+      }).toList(),
+      const Divider(),
+      ListTile(
+        title: const Text("About"),
+        onTap: () {
+          Navigator.pushNamed(context, "/about");
+        },
+      )
+    ]));
   }
 }
 

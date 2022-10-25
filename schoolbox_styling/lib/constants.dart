@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/value_choosers/value_choosers.dart';
 
+import 'about.dart';
+
 enum KnownKey {
   topBar,
   leftBar,
@@ -44,6 +46,7 @@ final Map<String, Widget Function(BuildContext)> routes = (() {
           propertyKey: key,
         );
   }
+  routes["/about"] = (context) => const AboutRoute();
   return routes;
 })();
 
