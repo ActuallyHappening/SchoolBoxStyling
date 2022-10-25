@@ -335,8 +335,14 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
         Padding(
             padding: const EdgeInsets.all(7),
           child: Card(
-            margin: const EdgeInsets.all(5),
-            child: Text(isLocked ? "Locked" : "Unlocked!"),
+            // color: Theme.of(context).primaryColor.withAlpha(0x20),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                isLocked ? "Locked" : "Unlocked!",
+                style: TextStyle(color: isLocked ? Colors.red : Colors.green),
+              ),
+            ),
           ),
         ),
         TextField(
