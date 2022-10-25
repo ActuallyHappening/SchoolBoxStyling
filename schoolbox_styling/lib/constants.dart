@@ -7,6 +7,8 @@ enum KnownKey {
 
   timetableHeaders,
   background,
+
+  allBackgrounds,
 }
 
 extension RoutingKeysExt on KnownKey {
@@ -22,6 +24,7 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.leftBar: "Left Bar",
         KnownKey.background: "Background",
         KnownKey.timetableHeaders: "Period Headers",
+        KnownKey.allBackgrounds: "All Backgrounds",
       }[this]!;
 
   /// Put in the appBar title
@@ -30,6 +33,7 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.leftBar: "Style Left Bar",
         KnownKey.background: "Style Background",
         KnownKey.timetableHeaders: "Style Timetable Headers",
+        KnownKey.allBackgrounds: "Style All Backgrounds",
       }[this]!;
 }
 final Map<String, Widget Function(BuildContext)> routes = (() {

@@ -16,6 +16,17 @@ void sendNewValue({
   required PossibleActions action,
   String? value,
 }) {
+  // Handle the allBackgrounds key specially.
+  if (key == KnownKey.allBackgrounds) {
+    // Call every other key's reset function.
+    for (var newKey in KnownKey.values) {
+      if (newKey != KnownKey.allBackgrounds) {
+        sendNewValue(key: newKey, action: action);
+      }
+    }
+    return;
+  }
+
   String userRequest;
   if (action == PossibleActions.reset) {
     userRequest = 'RESET';
@@ -55,6 +66,7 @@ extension BackgroundURLJsOptionsExt on BackgroundURLOptions {
             "Scrollable: image is scale up and scrollable",
         BackgroundURLOptions.smallContained:
             "Small contained: image fits in smaller spaces",
+        
       }[this]!;
 
   String get cssSuffix => {
