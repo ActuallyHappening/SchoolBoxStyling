@@ -60,20 +60,15 @@ for (const _key of Object.keys(_knownDefaults)) {
 
   const spec = _knownDefaults[key];
   const Node = document.querySelector(spec.querySelector);
+  let computedStyles;
   if (!Node) {
     console.error(
       `Could not find element with querySelector: ${spec.querySelector}`
     );
-    continue;
-    // } else {
-    //   console.log(
-    //     `Found element with querySelector: ${spec.querySelector}:`,
-    //     Node,
-    //     `with ${spec.attribute1} and ${spec.attribute2}`
-    //   );
+    computedStyles = { background: "initial" };
+  } else {
+    computedStyles = window.getComputedStyle(Node);
   }
-
-  const computedStyles = window.getComputedStyle(Node);
 
   if (spec.attribute2) {
     if (spec.attribute1 !== "style") {
@@ -88,7 +83,7 @@ for (const _key of Object.keys(_knownDefaults)) {
     }
   } else {
     // @ts-ignore
-    assignedValue = Node[spec.attribute1];
+    assignedValue = (Node ?? { src: "initial" })[spec.attribute1];
   }
 
   // console.log("Got assigned value '", assignedValue, "' for key", key);
@@ -602,7 +597,8 @@ chrome.storage.sync.get(null, (everything: Record<string, string>) => {
 
     // Validating value's properties against defaults
     if (
-      value?.domSpec.querySelector !== defaultMemory[key].domSpec.querySelector
+      value?.domSpec?.querySelector !==
+      defaultMemory[key]?.domSpec?.querySelector
     ) {
       console.warn(
         `Key '${key}' has a different querySelector than the default.\nThis is probably a bug.\nValue:`,

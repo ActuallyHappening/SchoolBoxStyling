@@ -26,6 +26,7 @@ void sendNewValue({
       if (newKey != KnownKey.allBackgrounds) {
         sendNewValue(key: newKey, action: action, value: value);
       } else {
+        // ignore: avoid_print
         print("[js_integration dart] Skipping allBackgrounds key");
       }
     }
