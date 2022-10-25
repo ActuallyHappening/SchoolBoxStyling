@@ -342,10 +342,22 @@ async function getKey(
   }
 }
 
-const _setKey = debounce(setStorageData, 1000, {
-  debugExecuted: "Set key EXECUTED",
-  debugBounced: "Set key debounced",
+const _setKeyList: typeof setStorageData[] = knownKeys.map((key) => {
+  return debounce(setStorageData, 1000, {
+    debugExecuted: `Set '${key}' EXECUTED`,
+    debugBounced: `Set '${key}' debounced`,
+  });
 });
+const _setKey: Record<KnownKeys, typeof setStorageData> = _setKeyList.reduce(
+  (previousValue, currentValue, i) => {
+    previousValue[knownKeys[i]] = currentValue;
+    return previousValue;
+  },
+  {} as any
+);
+
+console.info("Set key", _setKey);
+
 /**
  * Sets the desired `key`s (`domSpec`) `property` (commonly `assignedValue`) to `value` in storage,
  * note this *uses a cache*.
@@ -382,7 +394,7 @@ async function setKey<
   // This would allow changes such as to `querySelector` to work as expected
 
   cache[key]!.domSpec[property] = value;
-  _setKey(key, cache[key]!);
+  _setKey[key](key, cache[key]!); // Debounces
 
   // Update DOM
   executeDOMSpecification(cache[key]!.domSpec);
