@@ -9,6 +9,7 @@ enum KnownKey {
 
   timetableHeaders,
   background,
+  iconNotifications,
 
   allBackgrounds,
 }
@@ -26,6 +27,7 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.leftBar: "Left Bar",
         KnownKey.background: "Background",
         KnownKey.timetableHeaders: "Period Headers",
+        KnownKey.iconNotifications: "Notifications",
         KnownKey.allBackgrounds: "All Backgrounds",
       }[this]!;
 
@@ -35,6 +37,7 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.leftBar: "Style Left Bar",
         KnownKey.background: "Style Background",
         KnownKey.timetableHeaders: "Style Timetable Headers",
+        KnownKey.iconNotifications: "Style Notifications Bar",
         KnownKey.allBackgrounds: "Style All Backgrounds",
       }[this]!;
 }

@@ -7,6 +7,8 @@ const knownKeys = [
   "timetableHeaders",
   "background",
 
+  "iconNotifications",
+
   // "sectionHeaders",
 ] as const;
 export type KnownKeys = typeof knownKeys[number];
@@ -46,6 +48,11 @@ const _knownDefaults: Record<
     // assignedValue:
     //   document.querySelector("body")?.style.backgroundColor ??
     //   "rgb(237, 237, 237)",
+  },
+  iconNotifications: {
+    querySelector: "a.icon-notifications",
+    attribute1: "style",
+    attribute2: "background",
   },
 };
 
