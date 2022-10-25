@@ -339,7 +339,7 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
               setState(() {
                 isLocked = false;
               });
-              controller.text = "picsum.photos/420/690";
+              controller.text = "https://picsum.photos/420/690";
             }
             if (isLocked) {
             } else {
