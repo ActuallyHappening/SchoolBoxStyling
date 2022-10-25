@@ -362,9 +362,7 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
               setState(() {
                 isLocked = false;
               });
-            }
-            if (isLocked) {
-            } else {
+            } else if (!isLocked) {
               widget.propertyKey.sendBackgroundURL(url: text);
             }
           },
