@@ -270,7 +270,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const Text("Custom GIFs collated by the community"),
+      const Text("Custom GIFs collated by the community:"),
       const SizedBox(height: 15),
       ...loadedURLPresets
           .map((e) =>
