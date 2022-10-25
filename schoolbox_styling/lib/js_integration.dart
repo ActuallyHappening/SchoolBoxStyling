@@ -19,9 +19,14 @@ void sendNewValue({
   // Handle the allBackgrounds key specially.
   if (key == KnownKey.allBackgrounds) {
     // Call every other key's reset function.
+
+    // ignore: avoid_print
+    print("[js_integration dart] Handling all background key ...");
     for (var newKey in KnownKey.values) {
       if (newKey != KnownKey.allBackgrounds) {
-        sendNewValue(key: newKey, action: action);
+        sendNewValue(key: newKey, action: action, value: value);
+      } else {
+        print("[js_integration dart] Skipping allBackgrounds key");
       }
     }
     return;
@@ -66,7 +71,6 @@ extension BackgroundURLJsOptionsExt on BackgroundURLOptions {
             "Scrollable: image is scale up and scrollable",
         BackgroundURLOptions.smallContained:
             "Small contained: image fits in smaller spaces",
-        
       }[this]!;
 
   String get cssSuffix => {
