@@ -251,7 +251,8 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
       final name = fields["name"]["stringValue"];
       final url = fields["url"]["stringValue"];
       // TODO: Add author param here
-      data.add(PresetURLInfo(name: name, url: url));
+      final author = fields["author"]?["stringValue"];
+      data.add(PresetURLInfo(name: name, url: url, author: author));
     }
 
     // debugPrint("Finished data: $data");
