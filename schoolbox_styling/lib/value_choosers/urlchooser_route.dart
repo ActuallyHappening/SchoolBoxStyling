@@ -72,6 +72,10 @@ class CustomGIFValueChooser extends StatelessWidget {
           child: URLInputFieldWithPassword(
         propertyKey: propertyKey,
       )),
+      // const Divider(indent: 10, endIndent: 10, ),
+      const SizedBox(
+        height: 20,
+      ),
       FireStorePresetURLs(propertyKey: propertyKey),
     ]);
   }
@@ -266,11 +270,15 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      const Text("Presets:"),
+      const Text("Custom GIFs collated by the community"),
+      const SizedBox(height: 15),
       ...loadedURLPresets
           .map((e) =>
               URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
           .toList(),
+      const SizedBox(height: 15),
+      const Text(
+          "Want to add your own? Contact me on discord: Actually Happening#4909; Or, by email: 23269@students.emmanuel.qld.edu.au"),
     ]);
   }
 }
@@ -333,7 +341,7 @@ class _URLInputFieldWithPasswordState extends State<URLInputFieldWithPassword> {
     return Column(
       children: [
         Padding(
-            padding: const EdgeInsets.all(7),
+          padding: const EdgeInsets.all(7),
           child: Card(
             // color: Theme.of(context).primaryColor.withAlpha(0x20),
             child: Padding(

@@ -6,6 +6,7 @@ class AboutRoute extends StatelessWidget {
   const AboutRoute({super.key});
 
   static const discordInviteURL = "https://discord.gg/8PZpmndNbr";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +31,7 @@ class AboutRoute extends StatelessWidget {
             const Text(
                 "This extension is made by an Emmanuel Student, for the purpose of spicing up the schoolbox UI. It is not affiliated with Emmanuel College in any way."),
             const Text(
-                "Use this as your own risk, if you get into trouble its your fault! If you have any issues, please contact me on Discord: Actually Happening#4909"),
+                "Use this as your own risk, if you get into trouble its your fault! If you have any issues, please contact me on Discord: Actually Happening#4909; Or email: 23269@students.emmanuel.qld.edu.au"),
             const Divider(),
             ElevatedButton(
                 onPressed: () async {
@@ -40,7 +41,7 @@ class AboutRoute extends StatelessWidget {
                     print("Failed to open URL!");
                     messenger.showSnackBar(const SnackBar(
                         content: Text(
-                            "Failed to open Discord. Please contact Actually Happening#4909")));
+                            "Failed to open Discord. Please contact Actually Happening#4909 (discord), or through email: 23269@students.emmanuel.qld.edu.au")));
                   }
                 },
                 child: const Text("Join the discord server!")),
