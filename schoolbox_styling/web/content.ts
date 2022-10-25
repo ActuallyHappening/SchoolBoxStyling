@@ -50,7 +50,7 @@ const _knownDefaults: Record<
     //   "rgb(237, 237, 237)",
   },
   iconNotifications: {
-    querySelector: "a.icon-notifications",
+    querySelector: "a.icon-notifications, label#notification-toggle-full",
     attribute1: "style",
     attribute2: "background",
   },
