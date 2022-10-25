@@ -34,11 +34,11 @@ class AboutRoute extends StatelessWidget {
             const Divider(),
             ElevatedButton(
                 onPressed: () async {
+                  final messenger = ScaffoldMessenger.of(context);
                   if (!await launchUrl(Uri.parse(discordInviteURL))) {
                     // ignore: avoid_print
                     print("Failed to open URL!");
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    messenger.showSnackBar(const SnackBar(
                         content: Text(
                             "Failed to open Discord. Please contact Actually Happening#4909")));
                   }
