@@ -4,15 +4,23 @@ import 'package:schoolbox_styling/js_integration.dart';
 
 // TODO: Rename to `AllRouteNamesDrawer`
 class MyAppDrawer extends StatelessWidget {
-  const MyAppDrawer({Key? key}) : super(key: key);
+  const MyAppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> drawerExpand = [];
+    for (var key in KnownKey.values) {
+      final isAllBackground = key == KnownKey.allBackgrounds;
+      if (isAllBackground) {
+        drawerExpand.add(const Divider());
+      }
+      drawerExpand.add(DrawerOption(
+          knownKey: key,
+          colour: isAllBackground ? Colors.green : Colors.white));
+    }
     return Drawer(
         child: ListView(children: [
-      ...KnownKey.values.map((key) {
-        return DrawerOption(knownKey: key);
-      }).toList(),
+      ...drawerExpand,
       const Divider(),
       ListTile(
           title: const Text("RESET ALL"),
@@ -32,14 +40,17 @@ class MyAppDrawer extends StatelessWidget {
 }
 
 class DrawerOption extends StatelessWidget {
-  const DrawerOption({super.key, required this.knownKey});
+  const DrawerOption(
+      {super.key, required this.knownKey, this.colour = Colors.white});
 
   final KnownKey knownKey;
+  final Color colour;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(knownKey.routeName),
+      tileColor: colour,
       onTap: () {
         // ignore: avoid_print
         print(
