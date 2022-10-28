@@ -16,7 +16,7 @@ class MyAppDrawer extends StatelessWidget {
       }
       drawerExpand.add(DrawerOption(
           knownKey: key,
-          colour: isAllBackground ? Colors.green : Colors.white));
+          colour: isAllBackground ? Colors.green as Color : null));
     }
     return Drawer(
         child: ListView(children: [
@@ -44,7 +44,7 @@ class DrawerOption extends StatelessWidget {
       {super.key, required this.knownKey, this.colour = Colors.white});
 
   final KnownKey knownKey;
-  final Color colour;
+  final Color? colour;
 
   @override
   Widget build(BuildContext context) {
