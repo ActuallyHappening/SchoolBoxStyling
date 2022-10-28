@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class MetaData {
+  static const version = "1.7.3";
+}
+
 class AboutRoute extends StatelessWidget {
   const AboutRoute({super.key});
 
@@ -48,7 +52,10 @@ class AboutRoute extends StatelessWidget {
             const Divider(),
             TextButton(
                 onPressed: () {
-                  showAboutDialog(context: context);
+                  showAboutDialog(
+                      context: context,
+                      applicationVersion: MetaData.version,
+                      applicationName: "Schoolbox Styling");
                 },
                 child: const Text(
                     "More Info, & Terms and Conditions (Legal stuff I don't care about :)"))
