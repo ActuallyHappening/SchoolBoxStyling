@@ -1,5 +1,25 @@
 const PROD = true;
 
+
+type querySelector = string;
+type attr1 = "__style__" | "src" | "innerHTML";
+type attr2 = "background" | undefined;
+type assignedValue = string;
+
+/**
+ * Uses - in name, i.e.
+ *
+ * default-config = {...}
+ */
+type _defaultConfig = {
+  _inbuilt_shared: { _inbuilt_keys: KnownKeys[] } & {
+    [key in KnownKeys]: [querySelector, attr1, attr2];
+  };
+  emmanuel_sensible_defaults: {
+    [key in KnownKeys]: assignedValue;
+  };
+};
+
 const knownKeys = [
   "topBar",
   // "topBarIcons",
