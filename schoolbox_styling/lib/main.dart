@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: routes,
-      initialRoute: "/${KnownKey.topBar.key}",
+      initialRoute: "/${KnownKey.allBackgrounds.key}",
     );
   }
 }
