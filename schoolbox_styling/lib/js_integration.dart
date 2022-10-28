@@ -1,6 +1,7 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:js' as js;
-import 'dart:ui';
+
+import 'package:flutter/material.dart';
 
 import 'constants.dart';
 
@@ -104,4 +105,9 @@ extension KeySendValue on KnownKey {
       BackgroundURLOptions option = BackgroundURLOptions.smallContained}) {
     send(value: "url($url) ${option.cssSuffix}");
   }
+}
+
+void setNewSize(int x, int y) {
+  debugPrint("Setting new size to $x, $y");
+  js.context.callMethod("setNewSize", [x, y]);
 }

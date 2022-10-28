@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/constants.dart';
-import 'package:schoolbox_styling/drawer.dart';
+import 'package:schoolbox_styling/routes/drawer.dart';
 import 'package:schoolbox_styling/value_choosers/colour_picker.dart';
 import 'package:schoolbox_styling/value_choosers/urlchooser_route.dart';
 

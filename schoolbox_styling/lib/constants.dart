@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/value_choosers/value_choosers.dart';
 
-import 'about.dart';
+import 'routes/about.dart';
 
 enum KnownKey {
   topBar,
