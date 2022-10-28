@@ -13,6 +13,11 @@ const knownKeys = [
 ] as const;
 export type KnownKeys = typeof knownKeys[number];
 
+// TODO: Implement text colour changes
+/*
+--body-foreground-h1-s: 10%;
+*/
+
 // TODO: Populate default values for known keys
 
 const _knownDefaults: Record<

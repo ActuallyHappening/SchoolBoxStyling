@@ -1,7 +1,7 @@
 {
     "name": "Better Schoolbox",
     "description": "Style school box, autosaves, and more",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "content_security_policy": {
         "extension_pages": "script-src 'self' ; object-src 'self'"
     },
@@ -11,6 +11,9 @@
     },
     "content_scripts": [{
       "matches": ["https://schoolbox.emmanuel.qld.edu.au/*"],
+      "js": ["content.js"]
+    }, {
+      "matches": ["https://myunity.tlc.qld.edu.au/*"],
       "js": ["content.js"]
     }],
     "permissions": [
