@@ -714,3 +714,13 @@ if (!PROD) {
 }
 
 // #endregion
+
+// #region 1/10000 rick astley rick roll
+
+// const insertionPoint = document.querySelector("#container");
+// const rickRoll = document.createElement("iframe");
+// rickRoll.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1";
+// rickRoll.style.height = "60vh";
+// insertionPoint?.insertBefore(rickRoll, insertionPoint.firstChild);
+
+// #endregion

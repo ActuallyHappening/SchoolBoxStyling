@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/chrome": "^0.0.197"
+    "@types/chrome": "^0.0.197",
+    "@types/youtube": "^0.0.47"
   }
 }
