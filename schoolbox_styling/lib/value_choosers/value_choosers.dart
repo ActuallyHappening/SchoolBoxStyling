@@ -31,7 +31,7 @@ class AllValueChoosersRoute extends StatelessWidget {
         valueChoosers.map((chooser) => chooser.body(propertyKey)).toList();
     return DefaultTabController(
         length: valueChoosers.length,
-        initialIndex: 2,
+        initialIndex: 1,
         child: Scaffold(
             body: TabBarView(
                 children:
