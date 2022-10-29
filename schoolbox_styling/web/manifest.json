@@ -1,7 +1,7 @@
 {
     "name": "Better Schoolbox",
     "description": "Style school box, autosaves, and more",
-    "version": "1.7.3",
+    "version": "1.7.4",
     "content_security_policy": {
         "extension_pages": "script-src 'self' ; object-src 'self'"
     },
@@ -17,6 +17,9 @@
       "js": ["content.js"]
     }, {
       "matches": ["https://schoolbox.bbc.qld.edu.au/*"],
+      "js": ["content.js"]
+    }, {
+      "matches": ["https://schoolbox.somerset.qld.edu.au/*"],
       "js": ["content.js"]
     }],
     "permissions": [
