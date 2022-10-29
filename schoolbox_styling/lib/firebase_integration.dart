@@ -37,9 +37,12 @@ class BasicFirebaseAPI {
   static const String urlPrefix =
       "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/";
 
-  static String formDocumentURL({required FirebaseCollectionIDs collectionID}) {
+  static String formCollectionURL(
+      {required FirebaseCollectionIDs collectionID}) {
     return urlPrefix + collectionID.collectionID;
   }
+
+  
 }
 
 // Future<List<PresetURLInfo>> getURLPresets() async {
