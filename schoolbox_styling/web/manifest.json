@@ -1,30 +1,43 @@
 {
-    "name": "Better Schoolbox",
-    "description": "Style school box, autosaves, and more",
-    "version": "1.7.4",
-    "content_security_policy": {
-        "extension_pages": "script-src 'self' ; object-src 'self'"
-    },
-    "action": {
-        "default_popup": "index.html",
-        "default_icon": "icons/Binary swift icon.png"
-    },
-    "content_scripts": [{
-      "matches": ["https://schoolbox.emmanuel.qld.edu.au/*"],
-      "js": ["content.js"]
-    }, {
-      "matches": ["https://myunity.tlc.qld.edu.au/*"],
-      "js": ["content.js"]
-    }, {
-      "matches": ["https://schoolbox.bbc.qld.edu.au/*"],
-      "js": ["content.js"]
-    }, {
-      "matches": ["https://schoolbox.somerset.qld.edu.au/*"],
-      "js": ["content.js"]
-    }],
-    "permissions": [
-      "activeTab",
-      "storage"
-    ],
-    "manifest_version": 3
+  "name": "Better Schoolbox",
+  "description": "Style school box, autosaves, and more",
+  "version": "1.7.4",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' ; object-src 'self'"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icons/Binary swift icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://schoolbox.emmanuel.qld.edu.au/*",
+        "https://myunity.tlc.qld.edu.au/*",
+        "https://schoolbox.bbc.qld.edu.au/*",
+        "https://schoolbox.somerset.qld.edu.au/*",
+        "https://www.tss.qld.edu.au/*",
+        "https://schoolbox.kings.net.nz/*",
+        "https://schoolbox.somerville.qld.edu.au/*",
+        "https://schoolbox.wcc.qld.edu.au/*",
+        "https://schoolbox.wicv.net/*",
+        "https://schoolbox.shalomcollege.com/*",
+        "https://my.ipswichgrammar.com/*",
+        "https://schoolbox.downlands.qld.edu.au/*",
+        "https://schoolbox.arden.nsw.edu.au/*",
+        "https://schoolbox.westbourne.vic.edu.au/*",
+        "https://sb.amity.nsw.edu.au/*",
+        "https://schoolbox.mecs.vic.edu.au/*",
+        "https://saltwatercollege.vic.edu.au/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "manifest_version": 3
 }
