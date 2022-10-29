@@ -3,7 +3,7 @@ import 'package:schoolbox_styling/routes/drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MetaData {
-  static const version = "1.7.3";
+  static const version = "1.7.4";
 }
 
 class AboutRoute extends StatelessWidget {
