@@ -1,21 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'firebase_options.dart';
 // import 'firebase_options.dart';
 
 void main() async {
   debugPrint("Route names are: ${routes.keys}");
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  final db = FirebaseFirestore.instance;
-  final data = db.collection("preset-values");
-  // ignore: avoid_print
-  print(data);
+
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  // final db = FirebaseFirestore.instance;
+  // final data = db.collection("preset-values");
+  // // ignore: avoid_print
+  // print(data);
+
   runApp(const MyApp());
 }
 
