@@ -40,6 +40,8 @@ dependencies:
   dio: ^4.0.6
   tenor: ^1.0.9
   url_launcher: ^6.1.6
+  provider: ^6.0.4
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
