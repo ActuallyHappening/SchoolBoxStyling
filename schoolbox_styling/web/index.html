@@ -32,13 +32,13 @@
   <title>Schoolbox Styling</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
-
   <script src="popup.js" defer></script>
-  <!-- <script src="DIRTY_manual_CSP_fix.js" defer></script> -->
 </head>
 <body>
+  <!-- Add module attr -->
+  <script type="module" src="DIRTY/DIRTY_manual_CSP_fix.js"></script>
+  <script type="module" src="DIRTY/firebase-app-check-v9.11.js"></script>
+  
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
