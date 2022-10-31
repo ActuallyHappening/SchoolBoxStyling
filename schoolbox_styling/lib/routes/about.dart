@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:schoolbox_styling/easter_egg.dart';
 import 'package:schoolbox_styling/routes/drawer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,9 +30,7 @@ class AboutRoute extends StatelessWidget {
           // ),
         ),
         drawer: const MyAppDrawer(),
-        body: Consumer<EasterEggState>(
-          builder: (context, eggState, child) {
-            return Padding(
+        body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView(padding: const EdgeInsets.all(8), children: [
                 const Text(
@@ -61,16 +58,11 @@ class AboutRoute extends StatelessWidget {
                           applicationVersion: MetaData.version,
                           applicationName: "Schoolbox Styling");
                     },
-                    child: const Text(
-                        "More Info, & Terms and Conditions (Legal stuff I don't care about :)")),
-                eggState.eggEnabled
-                    ? const Text(
-                        "You feel a power, over your schoolbox icon ...")
-                    : const Text(
-                        "The power to change the schoolbox icon lurks ..."),
-              ]),
-            );
-          },
+                  child: const EasterEggTextGuesser(
+                      textPrefix:
+                          "More Info, & Terms and Conditions (Legal stuff I don't care about :)")),
+            ],
+          ),
         ));
   }
 }

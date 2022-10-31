@@ -30,7 +30,10 @@ class MyAppDrawer extends StatelessWidget {
           }),
       const Divider(),
       ListTile(
-        title: const Text("About"),
+        title: const Text(
+          "About",
+          style: TextStyle(fontStyle: FontStyle.italic),
+        ),
         onTap: () {
           Navigator.pushNamed(context, "/about");
         },
