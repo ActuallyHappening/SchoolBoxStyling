@@ -58,9 +58,11 @@ class AboutRoute extends StatelessWidget {
                           applicationVersion: MetaData.version,
                           applicationName: "Schoolbox Styling");
                     },
-                  child: const EasterEggTextGuesser(
-                      textPrefix:
+                  child: const Text(
                           "More Info, & Terms and Conditions (Legal stuff I don't care about :)")),
+              const Divider(),
+              const EasterEggTextGuesser(
+                  textPrefix: "The power over your schoolbox icon lurks"),
             ],
           ),
         ));
