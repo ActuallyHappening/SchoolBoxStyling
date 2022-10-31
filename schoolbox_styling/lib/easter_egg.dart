@@ -46,25 +46,45 @@ class EasterEggState extends ChangeNotifier {
   }
 }
 
-class EasterEggTextGuesser extends StatelessWidget {
+class EasterEggTextGuesser extends StatefulWidget {
   const EasterEggTextGuesser({super.key, required this.textPrefix});
   final String textPrefix;
 
   @override
+  State<EasterEggTextGuesser> createState() => _EasterEggTextGuesserState();
+}
+
+class _EasterEggTextGuesserState extends State<EasterEggTextGuesser> {
+  final keyboard = HardwareKeyboard();
+
+  bool handler(KeyEvent event) {
+    debugPrint("$event");
+    if (event is KeyDownEvent) {
+      final key = event.character;
+      if (key != null) {
+        context.read<EasterEggState>().addLetter(key);
+      }
+    }
+    return false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    keyboard.addHandler(handler);
+  }
+
+  @override
+  void dispose() {
+    keyboard.removeHandler(handler);
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    HardwareKeyboard().addHandler(
-      (event) {
-        if (event is KeyDownEvent) {
-          final key = event.character;
-          if (key != null) {
-            context.read<EasterEggState>().addLetter(key);
-          }
-        }
-        return false;
-      },
-    );
     return Consumer<EasterEggState>(builder: (context, eggState, _) {
-      return Text("$textPrefix ... ${eggState.currentTypedText}");
+      return Text("${widget.textPrefix} ... ${eggState.currentTypedText}");
     });
   }
 }
