@@ -27,6 +27,7 @@ class EasterEggState extends ChangeNotifier {
 
   void addLetter(String letter) {
     currentTypedText = "$currentTypedText$letter";
+
     if (currentTypedText == password) {
       _eggEnabled = true;
       prefs.setBool("easterEggEnabled", true);
@@ -36,6 +37,7 @@ class EasterEggState extends ChangeNotifier {
         currentTypedText = initial;
       }
     }
+    
     notifyListeners();
   }
 
