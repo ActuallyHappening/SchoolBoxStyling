@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/chrome": "^0.0.197",
-    "@types/youtube": "^0.0.47"
+    "@types/youtube": "^0.0.47",
+    "firebase": "^9.13.0"
   },
   "devDependencies": {
     "vite": "^3.2.1"
