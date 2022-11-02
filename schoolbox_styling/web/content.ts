@@ -1,7 +1,5 @@
 const PROD = true;
 
-
-
 type querySelector = string;
 type attr1 = "__style__" | "src" | "innerHTML";
 type attr2 = "background" | undefined;
