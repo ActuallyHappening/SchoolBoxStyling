@@ -25,40 +25,6 @@ enum PresetOptions {
   tenorAPI,
 }
 
-// #region GENERIC TODO: REMOVE
-class GenericURLChooserBody extends StatelessWidget {
-  const GenericURLChooserBody(
-      {super.key,
-      required this.propertyKey,
-      this.showPresets = PresetOptions.none});
-
-  final KnownKey propertyKey;
-  final PresetOptions showPresets;
-
-  static List<Widget> others = const [
-    Text(
-        "As this feature can be abused, a password is required. Hint: My OneNote"),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ...others,
-        Center(
-            child: URLInputFieldWithPassword(
-          propertyKey: propertyKey,
-        )),
-        if (showPresets == PresetOptions.customList)
-          FireStorePresetURLs(propertyKey: propertyKey),
-        if (showPresets == PresetOptions.tenorAPI)
-          TenorAPIPresetURLS(propertyKey: propertyKey),
-      ],
-    );
-  }
-}
-// #endregion
-
 class CustomGIFValueChooser extends StatelessWidget {
   const CustomGIFValueChooser({super.key, required this.propertyKey});
 
@@ -67,7 +33,8 @@ class CustomGIFValueChooser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(10), children: [
-      ...GenericURLChooserBody.others,
+      const Text(
+          "As this feature can be abused, a password is required. Ask around, or join the discord server to be told."),
       Center(
           child: URLInputFieldWithPassword(
         propertyKey: propertyKey,
