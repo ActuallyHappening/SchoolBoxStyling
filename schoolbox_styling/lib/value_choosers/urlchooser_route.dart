@@ -114,7 +114,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   List<PresetURLInfo> loadedURLPresets = [];
 
   var dio = Dio();
-  int limit = 25;
+  int limit = 150;
 
   loadURLPresets() {
     getURLPresets().then((value) {

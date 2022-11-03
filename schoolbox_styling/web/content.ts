@@ -1,5 +1,8 @@
 const PROD = true;
 
+console.log("TESTING!");
+console.log("window", window);
+
 type querySelector = string;
 type attr1 = "__style__" | "src" | "innerHTML";
 type attr2 = "background" | undefined;

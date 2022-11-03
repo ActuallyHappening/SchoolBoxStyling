@@ -1,7 +1,14 @@
 echo "Building ..."
 
+set -e
+
 # Compile typescript
 ./compile
+
+# Compile chat-feature
+cd chat-feature
+npm run build
+cd ..
 
 # Move to flutter project root directory
 cd ..
