@@ -61,23 +61,21 @@ class OnlineGIFValueChooser extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(10), children: [
       ...others,
-      TenorAPIPresetURLS(propertyKey: propertyKey, search: true)
+      TenorAPIDisplay(propertyKey: propertyKey)
     ]);
   }
 }
 
-class TenorAPIPresetURLS extends StatefulWidget {
-  const TenorAPIPresetURLS(
-      {super.key, required this.propertyKey, this.search = true});
+class TenorAPIDisplay extends StatefulWidget {
+  const TenorAPIDisplay({super.key, required this.propertyKey});
 
   final KnownKey propertyKey;
-  final bool search;
 
   @override
-  State<TenorAPIPresetURLS> createState() => _TenorAPIPresetURLSState();
+  State<TenorAPIDisplay> createState() => _TenorAPIDisplayState();
 }
 
-class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
+class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   List<PresetURLInfo> loadedURLPresets = [];
   String queryMsg = "Type to start searching! Loading featured GIFs ...";
 
@@ -85,7 +83,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   final int limit = 150;
 
   /// Load into state urls from featured GIFs on tenor
-  loadURLPresets() {
+  loadURLFeatured() {
     getURLPresets().then((value) {
       setState(() {
         // ignore: avoid_print
@@ -156,18 +154,16 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   @override
   initState() {
     super.initState();
-    loadURLPresets();
+    loadURLFeatured();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      !widget.search
-          ? Text(queryMsg)
-          : TextField(
+      TextField(
               onChanged: (value) {
                 if (value == "") {
-                  loadURLPresets();
+            loadURLFeatured();
                 } else {
                   loadURLFromSearch(value);
                 }
@@ -176,6 +172,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
                 hintText: "Search for GIFs - powered by Tenor",
               ),
             ),
+      Text(queryMsg),
       ...loadedURLPresets
           .map((e) =>
               URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
