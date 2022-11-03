@@ -24,25 +24,21 @@ List<ValueChooser> valueChoosers = [
 
 class ValueChoosersRoute extends StatelessWidget {
   const ValueChoosersRoute(
-      {super.key, required this.propertyKey, this.supportedValueChoosers});
+      {super.key,
+      required this.propertyKey,
+      required this.supportedValueChoosers});
 
   final KnownKey propertyKey;
-  final List<ValueChooser>? supportedValueChoosers;
+  final List<ValueChooser> supportedValueChoosers;
 
   @override
   Widget build(BuildContext context) {
-    List<String> names = valueChoosers.map((e) => e.name).toList();
+    List<String> names = supportedValueChoosers.map((e) => e.name).toList();
     List<WidgetBuilder> bodies =
         valueChoosers.map((chooser) => chooser.body(propertyKey)).toList();
-    if (supportedValueChoosers != null) {
-      names = supportedValueChoosers!.map((e) => e.name).toList();
-      bodies = supportedValueChoosers!
-          .map((chooser) => chooser.body(propertyKey))
-          .toList();
-    }
     return DefaultTabController(
-        length: valueChoosers.length,
-        initialIndex: 1,
+        length: supportedValueChoosers.length,
+        initialIndex: supportedValueChoosers.length > 1 ? 1 : 0,
         child: Scaffold(
             body: TabBarView(
                 children:
