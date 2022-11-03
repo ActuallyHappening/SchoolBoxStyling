@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/js_integration.dart';
 import 'package:schoolbox_styling/value_choosers/value_choosers.dart';
 
 import 'routes/about.dart';
@@ -48,8 +49,9 @@ final Map<String, Widget Function(BuildContext)> routes = (() {
   Map<String, Widget Function(BuildContext)> routes = {};
   for (var key in KnownKey.values) {
     // Every key has a routeName -> ValueChoosersRoute mapping
-    routes[key.route] = (context) => AllValueChoosersRoute(
+    routes[key.route] = (context) => ValueChoosersRoute(
           propertyKey: key,
+          supportedValueChoosers: key.valueChoosersSupported,
         );
   }
   routes["/about"] = (context) => const AboutRoute();

@@ -4,6 +4,8 @@ import 'dart:js' as js;
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
+import 'value_choosers/text_chooser.dart';
+import 'value_choosers/value_choosers.dart';
 
 enum PossibleActions {
   /// Requests content.ts to reset the given key
@@ -105,6 +107,15 @@ extension KeyType on KnownKey {
   /// Returns true if type is background or text
   /// Returns false if type is multi
   bool get canSend => type != KnownKeyType.multi;
+
+  /// Returns supported ValueChoosers for this key
+  List<ValueChooser> get valueChoosersSupported {
+    if (type == KnownKeyType.text) {
+      return textValueChoosers;
+    } else {
+      return valueChoosers;
+    }
+  }
 }
 
 extension KeySendValue on KnownKey {
