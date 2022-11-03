@@ -114,7 +114,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   List<PresetURLInfo> loadedURLPresets = [];
 
   var dio = Dio();
-  int limit = 150;
+  final int limit = 150;
 
   loadURLPresets() {
     getURLPresets().then((value) {
@@ -237,14 +237,41 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
     });
   }
 
-  Future<List<PresetURLInfo>> getURLPresets() async {
-    // Using dio
-    // return Dio().get("https://schoolbox-website.web.app/presets.json").then((value) => value.data);
+  Future<List<dynamic>> _getSpecifiedNumber(int number) async {
     const String projectID = "better-schoolbox-1f647";
     const String collectionID = "preset-urls";
-    final rawData = await dio.get(
-        "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/$collectionID");
-    final List<dynamic> documentsData = rawData.data["documents"];
+    final List<dynamic> documentsData = [];
+
+    final String url =
+        "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/$collectionID?pageSize=$number";
+
+    // repeat get until we have enough
+    String? nextPageToken;
+    while (documentsData.length < number) {
+      final response = await dio
+          .get(nextPageToken != null ? "$url?pageToken=$nextPageToken" : url);
+      nextPageToken = response.data["nextPageToken"];
+
+      final List<dynamic> documents = response.data["documents"];
+      documentsData.addAll(documents);
+      if (nextPageToken == null) {
+        print(
+            "No more pages, stopping at ${documentsData.length} documents, aiming for $number");
+        break;
+      }
+
+      print(
+          "Fetched ${documents.length} documents, have a total of ${documentsData.length} documents, aiming for $number");
+    }
+
+    return documentsData;
+  }
+
+  Future<List<PresetURLInfo>> getURLPresets() async {
+    const int limit = 200;
+    final List<dynamic> documentsData = await _getSpecifiedNumber(limit);
+
+// https://firestore.googleapis.com/v1/projects/better-schoolbox-1f647/databases/(default)/documents/preset-urls
 
     // debugPrint("Got value: $documentsData");
     final List<PresetURLInfo> data = [];
