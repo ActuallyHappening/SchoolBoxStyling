@@ -70,6 +70,9 @@ class TenorAPIDisplay extends StatefulWidget {
 
   final KnownKey propertyKey;
 
+  /// Maximum number of featured tenor icons can be displayed
+  static const maxNum = 200;
+
   @override
   State<TenorAPIDisplay> createState() => _TenorAPIDisplayState();
 }
@@ -184,7 +187,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
           .map((e) =>
               URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
           .toList(),
-      (limit < 50)
+      (limit < TenorAPIDisplay.maxNum)
           ? ElevatedButton(
               onPressed: () {
                 limit += 25;
