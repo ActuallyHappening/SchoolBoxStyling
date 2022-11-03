@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/constants.dart';
 import 'package:schoolbox_styling/routes/drawer.dart';
 import 'package:schoolbox_styling/value_choosers/colour_picker.dart';
-import 'package:schoolbox_styling/value_choosers/text_chooser.dart';
 import 'package:schoolbox_styling/value_choosers/urlchooser_route.dart';
 
 /// A simple class. Use a Column as top level widget
@@ -17,7 +16,7 @@ class ValueChooser {
 }
 
 List<ValueChooser> valueChoosers = [
-  ...textValueChoosers,
+  // ...textValueChoosers,
   ...urlValueChoosers,
   ...colourValueChoosers,
 ];
