@@ -183,23 +183,23 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
         ),
       ),
       Text(queryMsg),
-      SizedBox(
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: GridView.count(
-          // Create a grid with 2 columns. If you change the scrollDirection to
-          // horizontal, this produces 2 rows.
-          crossAxisCount: 3,
-          // shrinkWrap: true,
+      // SizedBox(
+      //   height: MediaQuery.of(context).size.height * 0.5,
+      //   child: GridView.count(
+      //     // Create a grid with 2 columns. If you change the scrollDirection to
+      //     // horizontal, this produces 2 rows.
+      //     crossAxisCount: 3,
+      //     // shrinkWrap: true,
 
-          // Generate 100 widgets that display their index in the List.
-          children: List.generate(loadedURLPresets.length, (index) {
-            return URLPresetOption(
-                large: true,
-                presetInfo: loadedURLPresets[index],
-                propertyKey: widget.propertyKey);
-          }),
-        ),
-      ),
+      //     // Generate 100 widgets that display their index in the List.
+      //     children: List.generate(loadedURLPresets.length, (index) {
+      //       return URLPresetOption(
+      //           large: true,
+      //           presetInfo: loadedURLPresets[index],
+      //           propertyKey: widget.propertyKey);
+      //     }),
+      //   ),
+      // ),
       const Spacer(),
       (limit < TenorAPIDisplay.maxNum)
           ? ElevatedButton(
