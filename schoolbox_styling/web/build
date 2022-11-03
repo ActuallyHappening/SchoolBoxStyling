@@ -6,9 +6,9 @@ set -e
 ./compile
 
 # Compile chat-feature
-# cd chat-feature
-# npm run build
-# cd ..
+cd chat-feature
+npm run build
+cd ..
 
 # Move to flutter project root directory
 cd ..
@@ -37,7 +37,7 @@ rm macro.py
 rm -rf ./node_modules
 rm compile
 # remove chat-feature
-rm -rf ./chat-feature
+rm -rf ./chat-feature # Still keeps chat-dist folder
 
 # Remove files from web/ dir
 cd ../../web

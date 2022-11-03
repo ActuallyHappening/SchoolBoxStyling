@@ -30,6 +30,7 @@ const knownKeys = [
   "background",
 
   "iconNotifications",
+  "nameText",
 
   // "sectionHeaders",
 ] as const;
@@ -80,6 +81,10 @@ const _knownDefaults: Record<
     querySelector: "a.icon-notifications, label#notification-toggle-full",
     attribute1: "style",
     attribute2: "background",
+  },
+  nameText: {
+    querySelector: "h1>strong",
+    attribute1: "innerText",
   },
 };
 

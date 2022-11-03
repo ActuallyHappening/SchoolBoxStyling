@@ -83,6 +83,20 @@ extension BackgroundURLJsOptionsExt on BackgroundURLOptions {
       }[this]!;
 }
 
+enum KnownKeyType { background, text, multi }
+
+extension KeyType on KnownKey {
+  KnownKeyType get type => {
+        KnownKey.topBar: KnownKeyType.background,
+        KnownKey.leftBar: KnownKeyType.background,
+        KnownKey.background: KnownKeyType.background,
+        KnownKey.timetableHeaders: KnownKeyType.background,
+        KnownKey.iconNotifications: KnownKeyType.background,
+        KnownKey.allBackgrounds: KnownKeyType.background,
+        KnownKey.nameText: KnownKeyType.text,
+      }[this]!;
+}
+
 extension KeySendValue on KnownKey {
   void send({required String value, bool reset = false}) {
     sendNewValue(

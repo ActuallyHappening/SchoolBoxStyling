@@ -7,10 +7,5 @@ export default defineConfig({
   build: {
     outDir: "../chat-dist",
     sourcemap: "inline",
-    rollupOptions: {
-      output: {
-        file: "../chat-dist/index.html",
-      },
-    },
   },
 });
