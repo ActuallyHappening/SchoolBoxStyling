@@ -183,10 +183,24 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
         ),
       ),
       Text(queryMsg),
-      ...loadedURLPresets
-          .map((e) =>
-              URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
-          .toList(),
+      SizedBox(
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: GridView.count(
+          // Create a grid with 2 columns. If you change the scrollDirection to
+          // horizontal, this produces 2 rows.
+          crossAxisCount: 3,
+          // shrinkWrap: true,
+
+          // Generate 100 widgets that display their index in the List.
+          children: List.generate(loadedURLPresets.length, (index) {
+            return URLPresetOption(
+                large: true,
+                presetInfo: loadedURLPresets[index],
+                propertyKey: widget.propertyKey);
+          }),
+        ),
+      ),
+      const Spacer(),
       (limit < TenorAPIDisplay.maxNum)
           ? ElevatedButton(
               onPressed: () {
@@ -316,18 +330,25 @@ class PresetURLInfo {
 
 class URLPresetOption extends StatelessWidget {
   const URLPresetOption(
-      {super.key, required this.presetInfo, required this.propertyKey});
+      {super.key,
+      required this.presetInfo,
+      required this.propertyKey,
+      this.large = false});
 
   final PresetURLInfo presetInfo;
   final KnownKey propertyKey;
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    final img = Image.network(presetInfo.previewURL ?? presetInfo.url);
+    return large
+        ? img
+        : ListTile(
       title: Text(presetInfo.name),
       subtitle: Text(presetInfo.subTitle),
       onTap: () => propertyKey.sendBackgroundURL(url: presetInfo.url),
-      leading: Image.network(presetInfo.previewURL ?? presetInfo.url),
+            leading: img,
     );
   }
 }
