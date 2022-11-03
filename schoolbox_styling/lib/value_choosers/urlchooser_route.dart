@@ -183,7 +183,9 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
           hintText: "Search for GIFs - powered by Tenor",
         ),
       ),
+      const Divider(),
       Text(queryMsg),
+      const Divider(),
       SizedBox(
         height: MediaQuery.of(context).size.height * 0.6,
         child: GridView.count(
