@@ -185,7 +185,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
       ),
       Text(queryMsg),
       SizedBox(
-        height: MediaQuery.of(context).size.height * 0.5,
+        height: MediaQuery.of(context).size.height * 0.6,
         child: GridView.count(
           // Create a grid with 2 columns. If you change the scrollDirection to
           // horizontal, this produces 2 rows.
