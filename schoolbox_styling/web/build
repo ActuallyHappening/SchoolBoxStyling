@@ -36,6 +36,8 @@ rm build
 rm macro.py
 rm -rf ./node_modules
 rm compile
+# remove chat-feature
+rm -rf ./chat-feature
 
 # Remove files from web/ dir
 cd ../../web

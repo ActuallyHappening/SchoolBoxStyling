@@ -33,18 +33,6 @@
       "js": [
         "content.js"
       ]
-    },
-    {
-      "matches": [
-        "https://intentional.null/value/to/use/custom/scripts"
-      ],
-      "js": [
-        "DIRTY/DIRTY_manual_CSP_fix.js",
-        "DIRTY/firebase-app-check-v9.11.js",
-        "DIRTY/firebase-app-v9.11.js",
-        "DIRTY/firebase-firestore-v9.11.js",
-        "DIRTY/firebase-remote-config-v9.11.js"
-      ]
     }
   ],
   "permissions": [
