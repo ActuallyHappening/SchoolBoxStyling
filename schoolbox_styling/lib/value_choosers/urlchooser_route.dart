@@ -80,7 +80,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   String queryMsg = "Type to start searching! Loading featured GIFs ...";
 
   final dio = Dio();
-  final int limit = 150;
+  final int limit = 25;
 
   /// Load into state urls from featured GIFs on tenor
   loadURLFeatured() {
