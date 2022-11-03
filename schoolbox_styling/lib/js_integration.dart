@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 
 enum PossibleActions {
+  /// Requests content.ts to reset the given key
   reset,
 
   /// Assign a new value to a known key.
@@ -83,8 +84,13 @@ extension BackgroundURLJsOptionsExt on BackgroundURLOptions {
       }[this]!;
 }
 
+/// Specifies what kind of Key is being used.
+/// * background must be cssPrefixed
+/// * text can only be text
+/// * multi is used to specify many keys at once
 enum KnownKeyType { background, text, multi }
 
+/// Get the type of key
 extension KeyType on KnownKey {
   KnownKeyType get type => {
         KnownKey.topBar: KnownKeyType.background,
@@ -92,13 +98,21 @@ extension KeyType on KnownKey {
         KnownKey.background: KnownKeyType.background,
         KnownKey.timetableHeaders: KnownKeyType.background,
         KnownKey.iconNotifications: KnownKeyType.background,
-        KnownKey.allBackgrounds: KnownKeyType.background,
+        KnownKey.allBackgrounds: KnownKeyType.multi,
         KnownKey.nameText: KnownKeyType.text,
       }[this]!;
+
+  /// Returns true if type is background or text
+  /// Returns false if type is multi
+  bool get canSend => type != KnownKeyType.multi;
 }
 
 extension KeySendValue on KnownKey {
   void send({required String value, bool reset = false}) {
+    if (!canSend) {
+      throw Exception("Cannot send value to key $this");
+      // return;
+    }
     sendNewValue(
       value: value,
       key: this,

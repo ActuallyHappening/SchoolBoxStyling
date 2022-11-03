@@ -4,6 +4,7 @@ import 'package:schoolbox_styling/routes/drawer.dart';
 import 'package:schoolbox_styling/value_choosers/colour_picker.dart';
 import 'package:schoolbox_styling/value_choosers/urlchooser_route.dart';
 
+/// A simple class. Use a Column as top level widget
 class ValueChooser {
   ValueChooser({
     required this.name,
