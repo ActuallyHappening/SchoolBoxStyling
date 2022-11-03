@@ -79,26 +79,31 @@ class TenorAPIPresetURLS extends StatefulWidget {
 
 class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   List<PresetURLInfo> loadedURLPresets = [];
+  String queryMsg = "Type to start searching! Loading featured GIFs ...";
 
-  var dio = Dio();
+  final dio = Dio();
   final int limit = 150;
 
+  /// Load into state urls from featured GIFs on tenor
   loadURLPresets() {
     getURLPresets().then((value) {
       setState(() {
         // ignore: avoid_print
         print("Setting preset tenor URLS: $value");
         loadedURLPresets = value;
+        queryMsg = "Type to start searching! Showing featured GIFs";
       });
     });
   }
 
+  /// Loads into state urls from searching the tenor api
   loadURLFromSearch(String searchStr) {
     getURLFromSearch(searchStr).then((value) {
       setState(() {
         // ignore: avoid_print
         print("Setting preset tenor URLS after search '$searchStr': $value");
         loadedURLPresets = value;
+        queryMsg = "Showing results for '$searchStr'";
       });
     });
   }
@@ -158,7 +163,7 @@ class _TenorAPIPresetURLSState extends State<TenorAPIPresetURLS> {
   Widget build(BuildContext context) {
     return Column(children: [
       !widget.search
-          ? const Text("Trending GIFs (from tenor): ")
+          ? Text(queryMsg)
           : TextField(
               onChanged: (value) {
                 if (value == "") {
