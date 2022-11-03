@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:schoolbox_styling/value_choosers/value_choosers.dart';
 
 import '../constants.dart';
+import '../js_integration.dart';
+import 'value_choosers.dart';
 
 final textValueChoosers = <ValueChooser>[
   ValueChooser(
@@ -24,6 +25,11 @@ class TextValueChooser extends StatefulWidget {
 class _TextValueChooserState extends State<TextValueChooser> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(children: [
+      const Text("Choose your own name!"),
+      TextField(
+        onChanged: (text) => widget.propertyKey.send(value: text),
+      ),
+    ]);
   }
 }
