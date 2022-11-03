@@ -59,10 +59,9 @@ class OnlineGIFValueChooser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(10), children: [
-      ...others,
-      TenorAPIDisplay(propertyKey: propertyKey)
-    ]);
+    return ListView(
+        padding: const EdgeInsets.all(10),
+        children: [...others, TenorAPIDisplay(propertyKey: propertyKey)]);
   }
 }
 
@@ -80,7 +79,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   String queryMsg = "Type to start searching! Loading featured GIFs ...";
 
   final dio = Dio();
-  final int limit = 25;
+  int limit = 25;
 
   /// Load into state urls from featured GIFs on tenor
   loadURLFeatured() {
@@ -148,7 +147,21 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
           name: title, url: gifUrl, previewURL: tinyGifURL ?? gifUrl));
     }
 
+    print("Number of extracted urls: ${data.length}");
+
     return data;
+  }
+
+  String _currentInput = "";
+
+  /// Update the state with the current input
+  updateFromInput(String value) {
+    _currentInput = value;
+    if (value == "") {
+      loadURLFeatured();
+    } else {
+      loadURLFromSearch(value);
+    }
   }
 
   @override
@@ -161,22 +174,24 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   Widget build(BuildContext context) {
     return Column(children: [
       TextField(
-              onChanged: (value) {
-                if (value == "") {
-            loadURLFeatured();
-                } else {
-                  loadURLFromSearch(value);
-                }
-              },
-              decoration: const InputDecoration(
-                hintText: "Search for GIFs - powered by Tenor",
-              ),
-            ),
+        onChanged: updateFromInput,
+        decoration: const InputDecoration(
+          hintText: "Search for GIFs - powered by Tenor",
+        ),
+      ),
       Text(queryMsg),
       ...loadedURLPresets
           .map((e) =>
               URLPresetOption(presetInfo: e, propertyKey: widget.propertyKey))
           .toList(),
+      (limit < 50)
+          ? ElevatedButton(
+              onPressed: () {
+                limit += 25;
+                updateFromInput(_currentInput);
+              },
+              child: const Text("Load more"))
+          : const Text("Potential feature: infinite scrolling?")
     ]);
   }
 }
