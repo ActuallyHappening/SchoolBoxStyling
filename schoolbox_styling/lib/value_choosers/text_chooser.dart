@@ -27,8 +27,13 @@ class _TextValueChooserState extends State<TextValueChooser> {
   Widget build(BuildContext context) {
     return Column(children: [
       const Text("Choose your own name!"),
-      TextField(
-        onChanged: (text) => widget.propertyKey.send(value: text),
+      Padding(
+        padding: const EdgeInsets.all(8),
+        child: TextField(
+          onChanged: (text) => widget.propertyKey.send(value: text),
+          decoration:
+              const InputDecoration(hintText: "Type to change your name!"),
+        ),
       ),
     ]);
   }

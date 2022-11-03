@@ -107,15 +107,6 @@ extension KeyType on KnownKey {
   /// Returns true if type is background or text
   /// Returns false if type is multi
   bool get canSend => type != KnownKeyType.multi;
-
-  /// Returns supported ValueChoosers for this key
-  List<ValueChooser> get valueChoosersSupported {
-    if (type == KnownKeyType.text) {
-      return textValueChoosers;
-    } else {
-      return valueChoosers;
-    }
-  }
 }
 
 extension KeySendValue on KnownKey {

@@ -4,6 +4,9 @@ import 'package:schoolbox_styling/routes/drawer.dart';
 import 'package:schoolbox_styling/value_choosers/colour_picker.dart';
 import 'package:schoolbox_styling/value_choosers/urlchooser_route.dart';
 
+import '../js_integration.dart';
+import 'text_chooser.dart';
+
 /// A simple class. Use a Column as top level widget
 class ValueChooser {
   ValueChooser({
@@ -20,6 +23,17 @@ List<ValueChooser> valueChoosers = [
   ...urlValueChoosers,
   ...colourValueChoosers,
 ];
+
+extension SupportedKnownKeyTypes on KnownKey {
+  /// Returns supported ValueChoosers for this key
+  List<ValueChooser> get valueChoosersSupported {
+    if (type == KnownKeyType.text) {
+      return textValueChoosers;
+    } else {
+      return valueChoosers;
+    }
+  }
+}
 
 class ValueChoosersRoute extends StatelessWidget {
   const ValueChoosersRoute(
