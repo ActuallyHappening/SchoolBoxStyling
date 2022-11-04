@@ -345,12 +345,16 @@ class URLPresetOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final img = Image.network(presetInfo.previewURL ?? presetInfo.url);
+    onPressed() => propertyKey.sendBackgroundURL(url: presetInfo.url);
     return large
-        ? img
+        ? IconButton(
+            icon: img,
+            onPressed: onPressed,
+          )
         : ListTile(
       title: Text(presetInfo.name),
       subtitle: Text(presetInfo.subTitle),
-      onTap: () => propertyKey.sendBackgroundURL(url: presetInfo.url),
+            onTap: onPressed,
             leading: img,
     );
   }
