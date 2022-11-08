@@ -104,7 +104,7 @@ extension KeyType on KnownKey {
 
   /// Returns true if type is background or text
   /// Returns false if type is multi
-  bool get canSend => type != KnownKeyType.multi;
+  bool get canSend => true;
 }
 
 extension KeySendValue on KnownKey {
