@@ -4,8 +4,6 @@ import 'dart:js' as js;
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'value_choosers/text_chooser.dart';
-import 'value_choosers/value_choosers.dart';
 
 enum PossibleActions {
   /// Requests content.ts to reset the given key
@@ -101,7 +99,7 @@ extension KeyType on KnownKey {
         KnownKey.timetableHeaders: KnownKeyType.background,
         KnownKey.iconNotifications: KnownKeyType.background,
         KnownKey.allBackgrounds: KnownKeyType.multi,
-        KnownKey.nameText: KnownKeyType.text,
+        // KnownKey.nameText: KnownKeyType.text,
       }[this]!;
 
   /// Returns true if type is background or text

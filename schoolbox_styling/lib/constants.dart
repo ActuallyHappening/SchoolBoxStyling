@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:schoolbox_styling/js_integration.dart';
 import 'package:schoolbox_styling/value_choosers/value_choosers.dart';
 
 import 'routes/about.dart';
@@ -13,7 +12,7 @@ enum KnownKey {
   iconNotifications,
 
   allBackgrounds,
-  nameText,
+  // nameText,
 }
 
 extension RoutingKeysExt on KnownKey {
@@ -31,7 +30,7 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.timetableHeaders: "Period Headers",
         KnownKey.iconNotifications: "Notifications",
         KnownKey.allBackgrounds: "All Backgrounds",
-        KnownKey.nameText: "Your Name",
+        // KnownKey.nameText: "Your Name",
       }[this]!;
 
   /// Put in the appBar title
@@ -42,7 +41,7 @@ extension RoutingKeysExt on KnownKey {
         KnownKey.timetableHeaders: "Style Timetable Headers",
         KnownKey.iconNotifications: "Style Notifications Bar",
         KnownKey.allBackgrounds: "Style All Backgrounds",
-        KnownKey.nameText: "Change Your Name",
+        // KnownKey.nameText: "Change Your Name",
       }[this]!;
 }
 final Map<String, Widget Function(BuildContext)> routes = (() {

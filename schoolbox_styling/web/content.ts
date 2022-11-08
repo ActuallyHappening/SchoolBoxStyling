@@ -1,7 +1,7 @@
 const PROD = true;
 
-console.log("TESTING!");
-console.log("window", window);
+// console.log("TESTING!");
+// console.log("window", window);
 type configs = "*" | "url-backgrounds";
 type Config = {
   [key in configs]: "enabled" | string;
