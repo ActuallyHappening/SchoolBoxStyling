@@ -2,15 +2,30 @@ const PROD = true;
 
 console.log("TESTING!");
 console.log("window", window);
+type configs = "*" | "url-backgrounds";
 type Config = {
-  [key in "*" | "url-backgrounds"]: "enabled" | string;
+  [key in configs]: "enabled" | string;
 };
-const config = fetch(
+const config: Promise<Config> = fetch(
   "https://firestore.googleapis.com/v1/projects/better-schoolbox-1f647/databases/(default)/documents/default-config/global"
 )
   .then((resp) => resp.json())
   .then((resp) => {
-    return resp.fields as Config;
+    const _config = resp.fields as Record<configs, { stringValue: string }>;
+    const config: Config = {
+      "*": _config["*"].stringValue,
+      "url-backgrounds": _config["url-backgrounds"].stringValue,
+    };
+    if (!config["*"]) {
+      config["*"] = "enabled";
+      console.warn("No config found for *");
+    }
+    if (!config["url-backgrounds"]) {
+      config["url-backgrounds"] = "enabled";
+      console.warn("No config found for url-backgrounds");
+    }
+    console.warn("Config:", config);
+    return config;
     // XXX potential runtime checking here
   });
 
