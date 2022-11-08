@@ -62,7 +62,7 @@ hintStatus(context, {bool? url, bool? fatal}) async {
     return SnackBar(
       content: Text(text),
       behavior: SnackBarBehavior.fixed,
-      duration: const Duration(minutes: 5),
+      duration: const Duration(seconds: 30),
     );
   }
 
