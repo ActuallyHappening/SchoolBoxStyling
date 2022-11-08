@@ -59,7 +59,7 @@ class DrawerOption extends StatelessWidget {
         print(
             "Changing screen to ${knownKey.route} for key $knownKey, name ${knownKey.routeName}.");
 
-        hintStatus(context);
+        hintStatus(context, fatal: true);
 
         Navigator.pushNamed(context, knownKey.route);
       },

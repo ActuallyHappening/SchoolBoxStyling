@@ -43,7 +43,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-hintStatus(context) async {
+/// Hints at status.
+/// If you only care about url, url=true
+/// If you only case about fatal, fatal=true
+hintStatus(context, {bool? url, bool? fatal}) async {
   final messenger = ScaffoldMessenger.of(context);
   final resp0 = await Dio().get(
       "https://firestore.googleapis.com/v1/projects/better-schoolbox-1f647/databases/(default)/documents/default-config/global");
@@ -55,18 +58,24 @@ hintStatus(context) async {
   final fully = resp["*"]!["stringValue"];
   final urlBackgrounds = resp["url-backgrounds"]!["stringValue"];
 
+  SnackBar genSnackBar(String text) {
+    return SnackBar(
+      content: Text(text),
+      behavior: SnackBarBehavior.fixed,
+      duration: const Duration(minutes: 1),
+    );
+  }
+
   if (fully != "enabled") {
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text("Extension disabled warning: $fully"),
-      ),
-    );
+    // Fully disabled
+    // if url=true, then don't care
+    // && url != true
+    messenger.showSnackBar(genSnackBar("Extension disabled warning: $fully"));
   } else if (urlBackgrounds != "enabled") {
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-            "Extension disabled (from showing GIFs) warning: $urlBackgrounds"),
-      ),
-    );
+    // Just urls disabled
+    // if fatal, don't care
+    //  && fatal != true
+    messenger.showSnackBar(genSnackBar(
+        "Extension disabled (from showing GIFs) warning: $urlBackgrounds"));
   }
 }

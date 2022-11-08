@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:schoolbox_styling/main.dart';
 import 'package:schoolbox_styling/secrets.dart';
 
 import './value_choosers.dart';
@@ -171,6 +172,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   @override
   initState() {
     super.initState();
+    hintStatus(context, url: true);
     loadURLFeatured();
   }
 
@@ -296,6 +298,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
   @override
   initState() {
     super.initState();
+    hintStatus(context, url: true);
     loadURLPresets();
   }
 
@@ -353,11 +356,11 @@ class URLPresetOption extends StatelessWidget {
             onPressed: onPressed,
           )
         : ListTile(
-      title: Text(presetInfo.name),
-      subtitle: Text(presetInfo.subTitle),
+            title: Text(presetInfo.name),
+            subtitle: Text(presetInfo.subTitle),
             onTap: onPressed,
             leading: img,
-    );
+          );
   }
 }
 
