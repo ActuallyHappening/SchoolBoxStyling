@@ -445,6 +445,16 @@ async function setKey<
   value: MemoryUnit["domSpec"][Property],
   property: Property = "assignedValue" as any
 ) {
+  const _config = await config;
+  if (value?.includes("url") && _config["url-backgrounds"] != "enabled") {
+    console.error(
+      "Extension URL images disabled: ",
+      _config["url-backgrounds"],
+      ""
+    );
+    return;
+  }
+
   if (!cache[key]) {
     console.warn(
       "Key",
@@ -570,16 +580,24 @@ function _updateElem(elem: Node, spec: DOMSpecification) {
 }
 
 function executeDOMSpecification(spec: DOMSpecification) {
-  if (!spec) {
-    console.warn("No DOM specification provided. Doing nothing.");
-    return;
-  }
-  if (!spec?.querySelector) {
-    console.error("No querySelector found in spec:", spec);
-    return;
-  }
-  queryMany(spec.querySelector, (elem) => {
-    _updateElem(elem, spec);
+  config.then((config) => {
+    if (config["*"] != "enabled") {
+      console.error(
+        "Not going to update the DOM, because the extension is disabled FULLY"
+      );
+      throw new Error("Extension (fully) disabled: " + config["*"]);
+    }
+    if (!spec) {
+      console.warn("No DOM specification provided. Doing nothing.");
+      return;
+    }
+    if (!spec?.querySelector) {
+      console.error("No querySelector found in spec:", spec);
+      return;
+    }
+    queryMany(spec.querySelector, (elem) => {
+      _updateElem(elem, spec);
+    });
   });
 }
 
@@ -620,127 +638,112 @@ function validateDOMSpecification(spec: DOMSpecification): Boolean {
 // #endregion
 
 // #region Execution
-
-config.then((config) => {
-  if (config["*"] != "enabled") {
-    throw new Error("Extension disabled:" + config["*"]);
+chrome.storage.sync.get(null, (everything: Record<string, string>) => {
+  if (!everything) {
+    console.warn("[initial] No storage found");
+    return;
   }
-  chrome.storage.sync.get(null, (everything: Record<string, string>) => {
-    if (!everything) {
-      console.warn("[initial] No storage found");
-      return;
-    }
-    for (const storageKey in everything) {
-      const key = storageKey as KnownKeys;
-      let _parsed;
-      try {
-        _parsed = JSON.parse(everything[key]);
-      } catch (e) {
-        console.error(
-          `Failed to parse JSON for key '${key}'\nValue: ${everything[key]}; e:`,
-          e
-        );
-        continue;
-      }
-      const value = _parsed as MemoryUnit;
-
-      if (!key) {
-        console.warn("[initial] No storage key found", key, value);
-        continue;
-      }
-
-      if (!value) {
-        console.warn("[initial] No storage value found", key, value);
-        continue;
-      }
-
-      if (knownKeys.indexOf(key) == -1) {
-        console.warn(
-          `[initial] Key '${key}' found in storage, but not in knownKeys.\nThis is probably a bug.\nValue:`,
-          value
-        );
-      }
-
-      if (!validateDOMSpecification(value.domSpec)) {
-        const MANUAL_newValue = console.warn(
-          `[initial] Invalid DOM specification found for key '${key}' in initial storage fetch.\nThis is probably a bug.\nValue:`,
-          value,
-          "\nSetting a default value, [fatal] this will override any valid settings data under key",
-          key,
-          "[manual implementation] Setting to"
-        );
-        chrome.storage.sync.set({
-          [key]: JSON.stringify(defaultMemory[key]),
-        });
-
-        continue;
-      }
-
-      cache[key] = value;
-
-      // Validating value's properties against defaults
-      if (
-        value?.domSpec?.querySelector !==
-        defaultMemory[key]?.domSpec?.querySelector
-      ) {
-        console.warn(
-          `Key '${key}' has a different querySelector than the default.\nThis is probably a bug.\nValue:`,
-          value
-        );
-      }
-
-      // Use official means, including updating the DOM
-
-      // Checks config HERE
-      // XXX : CONFIG CHECK HERE
-      const newValue = value?.domSpec.assignedValue;
-      if (config["url-backgrounds"] != "enabled") {
-        console.error(
-          "Extension URL images disabled:",
-          config["url-backgrounds"]
-        );
-      } else {
-        setKey(key, newValue);
-      }
-    }
-  });
-
-  // // Retrieve data from chrome storage and put into cache
-  // knownKeys.forEach(async (key) => {
-  //   // Populate cache
-  //   const data = await getStorageData(key);
-  //   if (cache[key]) {
-  //     console.warn(
-  //       "Overwriting cache for key",
-  //       key,
-  //       "because it is initial run.\nThis could happen when duplicate items in `kno wnKeys` list exist."
-  //     );
-  //   }
-  //   console.log(
-  //     "[initial] Setting cache for key",
-  //     key,
-  //     "to assignedValue",
-  //     data?.domSpec?.assignedValue,
-  //     "domSpec",
-  //     data?.domSpec,
-  //     PROD ? "" : "data:",
-  //     PROD ? "" : data
-  //   );
-  //   cache[key] = data;
-  //   executeDOMSpecification(data!.domSpec);
-  // });
-
-  // Listen for messages from popup.ts
-  chrome.runtime.onMessage.addListener((request: UserRequest) => {
-    if (!request.__is_user_request) {
-      console.warn(
-        "Received message from popup.ts, but it was not a user request.\nIgnoring.",
-        request
+  for (const storageKey in everything) {
+    const key = storageKey as KnownKeys;
+    let _parsed;
+    try {
+      _parsed = JSON.parse(everything[key]);
+    } catch (e) {
+      console.error(
+        `Failed to parse JSON for key '${key}'\nValue: ${everything[key]}; e:`,
+        e
       );
-      return;
+      continue;
     }
-    handleUserRequest(request);
-  });
+    const value = _parsed as MemoryUnit;
+
+    if (!key) {
+      console.warn("[initial] No storage key found", key, value);
+      continue;
+    }
+
+    if (!value) {
+      console.warn("[initial] No storage value found", key, value);
+      continue;
+    }
+
+    if (knownKeys.indexOf(key) == -1) {
+      console.warn(
+        `[initial] Key '${key}' found in storage, but not in knownKeys.\nThis is probably a bug.\nValue:`,
+        value
+      );
+    }
+
+    if (!validateDOMSpecification(value.domSpec)) {
+      const MANUAL_newValue = console.warn(
+        `[initial] Invalid DOM specification found for key '${key}' in initial storage fetch.\nThis is probably a bug.\nValue:`,
+        value,
+        "\nSetting a default value, [fatal] this will override any valid settings data under key",
+        key,
+        "[manual implementation] Setting to"
+      );
+      chrome.storage.sync.set({
+        [key]: JSON.stringify(defaultMemory[key]),
+      });
+
+      continue;
+    }
+
+    cache[key] = value;
+
+    // Validating value's properties against defaults
+    if (
+      value?.domSpec?.querySelector !==
+      defaultMemory[key]?.domSpec?.querySelector
+    ) {
+      console.warn(
+        `Key '${key}' has a different querySelector than the default.\nThis is probably a bug.\nValue:`,
+        value
+      );
+    }
+
+    // Use official means, including updating the DOM
+
+    const newValue = value?.domSpec.assignedValue;
+    setKey(key, newValue);
+  }
+});
+
+// // Retrieve data from chrome storage and put into cache
+// knownKeys.forEach(async (key) => {
+//   // Populate cache
+//   const data = await getStorageData(key);
+//   if (cache[key]) {
+//     console.warn(
+//       "Overwriting cache for key",
+//       key,
+//       "because it is initial run.\nThis could happen when duplicate items in `kno wnKeys` list exist."
+//     );
+//   }
+//   console.log(
+//     "[initial] Setting cache for key",
+//     key,
+//     "to assignedValue",
+//     data?.domSpec?.assignedValue,
+//     "domSpec",
+//     data?.domSpec,
+//     PROD ? "" : "data:",
+//     PROD ? "" : data
+//   );
+//   cache[key] = data;
+//   executeDOMSpecification(data!.domSpec);
+// });
+
+// Listen for messages from popup.ts
+chrome.runtime.onMessage.addListener((request: UserRequest) => {
+  if (!request.__is_user_request) {
+    console.warn(
+      "Received message from popup.ts, but it was not a user request.\nIgnoring.",
+      request
+    );
+    return;
+  }
+  handleUserRequest(request);
 });
 
 // #endregion
