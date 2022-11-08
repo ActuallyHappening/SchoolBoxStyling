@@ -172,7 +172,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   @override
   initState() {
     super.initState();
-    hintStatus(context, url: true);
+    Future.delayed(Duration.zero, () => hintStatus(context, url: true));
     loadURLFeatured();
   }
 
@@ -298,7 +298,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
   @override
   initState() {
     super.initState();
-    hintStatus(context, url: true);
+    Future.delayed(Duration.zero, () => hintStatus(context, url: true));
     loadURLPresets();
   }
 
