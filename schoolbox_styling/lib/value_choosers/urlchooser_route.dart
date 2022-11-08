@@ -248,6 +248,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
 
     final String url =
         "https://firestore.googleapis.com/v1/projects/$projectID/databases/(default)/documents/$collectionID?pageSize=$number";
+    // Full: https://firestore.googleapis.com/v1/projects/better-schoolbox-1f647/databases/(default)/documents/preset-urls?pageSize=10
 
     // repeat get until we have enough
     String? nextPageToken;

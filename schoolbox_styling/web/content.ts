@@ -2,6 +2,19 @@ const PROD = true;
 
 console.log("TESTING!");
 console.log("window", window);
+type Config = {
+  [key in "*" | "*-background" | "url-backgrounds"]: "enabled" | string;
+};
+let config: Config;
+(async () => {
+  const _config_resp = await fetch(
+    "https://firestore.googleapis.com/v1/projects/better-schoolbox-1f647/databases/(default)/documents/default-config/global"
+  );
+  const _config = await _config_resp.json();
+
+  config = _config.fields;
+  console.warn("CONFIG: ", config);
+})();
 
 type querySelector = string;
 type attr1 = "__style__" | "src" | "innerHTML";
