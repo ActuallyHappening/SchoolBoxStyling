@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:schoolbox_styling/constants.dart';
 import 'package:schoolbox_styling/js_integration.dart';
+import 'package:schoolbox_styling/main.dart';
 
-// TODO: Rename to `AllRouteNamesDrawer`
 class MyAppDrawer extends StatelessWidget {
   const MyAppDrawer({super.key});
 
@@ -58,6 +58,9 @@ class DrawerOption extends StatelessWidget {
         // ignore: avoid_print
         print(
             "Changing screen to ${knownKey.route} for key $knownKey, name ${knownKey.routeName}.");
+
+        hintStatus(context);
+
         Navigator.pushNamed(context, knownKey.route);
       },
     );
