@@ -1,7 +1,7 @@
 {
   "name": "Better Schoolbox",
   "description": "Style school box, autosaves, and more",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "content_security_policy": {
     "extension_pages": "script-src 'self' ; object-src 'self'"
   },
