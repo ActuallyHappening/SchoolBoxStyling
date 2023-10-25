@@ -36,8 +36,8 @@ rm compile
 cd ../../web
 rm content.js
 rm popup.js
-rm content.js.map
-rm popup.js.map
+# rm content.js.map
+# rm popup.js.map
 
 echo "Done"
 
