@@ -37,7 +37,10 @@
   ],
   "permissions": [
     "activeTab",
-    "storage"
+		"storage"
   ],
+	"host_permissions": [
+		"https://api.tenor.com/"
+	],
   "manifest_version": 3
 }
