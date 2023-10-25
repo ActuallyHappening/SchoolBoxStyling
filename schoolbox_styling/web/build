@@ -1,6 +1,6 @@
 echo "Building ..."
 
-set -e
+set -eux
 
 # Compile typescript
 ./compile

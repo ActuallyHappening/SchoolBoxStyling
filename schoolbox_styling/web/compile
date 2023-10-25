@@ -1,3 +1,5 @@
+set -eux
+
 echo "Compiling ..."
 tsc
 python3 -c "import macro;macro.main()"
