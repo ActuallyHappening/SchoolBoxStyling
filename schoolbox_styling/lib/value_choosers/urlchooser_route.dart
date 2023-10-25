@@ -102,10 +102,15 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   loadURLFromSearch(String searchStr) {
     getURLFromSearch(searchStr).then((value) {
       setState(() {
-        // ignore: avoid_print
-        print("Setting preset tenor URLS after search '$searchStr': $value");
-        loadedURLPresets = value;
-        queryMsg = "Showing results for '$searchStr'";
+        if (searchStr == _currentInput) {
+          // ignore: avoid_print
+          print("Setting preset tenor URLS after search '$searchStr': $value");
+          loadedURLPresets = value;
+          queryMsg = "Showing results for '$searchStr'";
+        } else {
+          // ignore: avoid_print
+          print("Ignoring old '$searchStr' because current is '$value'");
+        }
       });
     });
   }
