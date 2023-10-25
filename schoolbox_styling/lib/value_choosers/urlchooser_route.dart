@@ -109,7 +109,8 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
           queryMsg = "Showing results for '$searchStr'";
         } else {
           // ignore: avoid_print
-          print("Ignoring old '$searchStr' because current is '$value'");
+          print(
+              "Ignoring old '$searchStr' because current search is '$_currentInput'");
         }
       });
     });
