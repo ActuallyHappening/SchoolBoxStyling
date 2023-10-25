@@ -40,7 +40,7 @@
 		"storage"
   ],
 	"host_permissions": [
-		"https://api.tenor.com/"
+		"https://tenor.googleapis.com"
 	],
   "manifest_version": 3
 }

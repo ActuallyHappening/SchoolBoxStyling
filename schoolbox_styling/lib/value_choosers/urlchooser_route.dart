@@ -113,7 +113,7 @@ class _TenorAPIDisplayState extends State<TenorAPIDisplay> {
   // getURLFromSearch
   Future<List<PresetURLInfo>> getURLFromSearch(String searchStr) async {
     var response = await dio.get(
-        "https://api.tenor.com/v2/search?q=$searchStr&key=$TENOR_API_KEY&limit=$limit&client_key=better_schoolbox_onlinegifpage");
+        "https://tenor.googleapis.com/v2/search?q=$searchStr&key=$TENOR_API_KEY&limit=$limit&client_key=better_schoolbox_onlinegifpage");
 
     return extractPresetURLInfoFromTenorAPIResponse(response);
   }
