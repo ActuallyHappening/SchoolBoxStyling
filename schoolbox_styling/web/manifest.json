@@ -28,7 +28,8 @@
         "https://schoolbox.westbourne.vic.edu.au/*",
         "https://sb.amity.nsw.edu.au/*",
         "https://schoolbox.mecs.vic.edu.au/*",
-        "https://saltwatercollege.vic.edu.au/*"
+				"https://saltwatercollege.vic.edu.au/*",
+				"https://thehub.lcs.tas.edu.au/*"
       ],
       "js": [
         "content.js"

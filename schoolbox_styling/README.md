@@ -6,5 +6,11 @@ Install flutter:
 `brew install flutter`
 
 Build:
-`cd web && ./build`
+
+```sh
+cd web
+npm i
+./build
+```
+<!-- `cd web && ./build` -->
 Outputted files in `build/web`

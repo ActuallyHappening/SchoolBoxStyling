@@ -3,3 +3,5 @@
 // and add the following line:
 //
 // const TENOR_API_KEY = "YOUR_API_KEY_HERE";
+//
+// You can get one from https://developers.google.com/tenor/guides/quickstart

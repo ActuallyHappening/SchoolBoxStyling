@@ -31,6 +31,8 @@ rm build
 rm macro.py
 rm -rf ./node_modules
 rm compile
+rm publish.sh
+rm .last_build_id
 
 # Remove files from web/ dir
 cd ../../web
