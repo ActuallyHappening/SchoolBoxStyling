@@ -14,3 +14,8 @@ npm i
 ```
 <!-- `cd web && ./build` -->
 Outputted files in `build/web`
+You can run the publish.sh script:
+```sh
+cd web
+./publish.sh 1.7.10
+```
