@@ -1,7 +1,7 @@
 {
   "name": "Better Schoolbox",
   "description": "Style school box, autosaves, and more",
-	"version": "1.7.9",
+  "version": "1.7.10",
   "content_security_policy": {
     "extension_pages": "script-src 'self' ; object-src 'self'"
   },
@@ -28,20 +28,14 @@
         "https://schoolbox.westbourne.vic.edu.au/*",
         "https://sb.amity.nsw.edu.au/*",
         "https://schoolbox.mecs.vic.edu.au/*",
-				"https://saltwatercollege.vic.edu.au/*",
-				"https://thehub.lcs.tas.edu.au/*"
+        "https://saltwatercollege.vic.edu.au/*",
+        "https://thehub.lcs.tas.edu.au/*",
+        "https://schoolbox.investigator.sa.edu.au/"
       ],
-      "js": [
-        "content.js"
-      ]
+      "js": ["content.js"]
     }
   ],
-  "permissions": [
-    "activeTab",
-		"storage"
-  ],
-	"host_permissions": [
-		"https://tenor.googleapis.com/*"
-	],
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": ["https://tenor.googleapis.com/*"],
   "manifest_version": 3
 }

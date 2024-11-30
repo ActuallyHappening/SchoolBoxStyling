@@ -319,7 +319,7 @@ class _FireStorePresetURLsState extends State<FireStorePresetURLs> {
           .toList(),
       const SizedBox(height: 15),
       const Text(
-          "Want to add your own? Contact me on discord: Actually Happening#4909; Or, by email: 23269@students.emmanuel.qld.edu.au"),
+          "Want to add your own? Contact me on discord: actuallyhappening; Or, by email: calebyates42@gmail.com"),
     ]);
   }
 }
