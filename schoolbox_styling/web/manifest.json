@@ -30,7 +30,7 @@
         "https://schoolbox.mecs.vic.edu.au/*",
         "https://saltwatercollege.vic.edu.au/*",
         "https://thehub.lcs.tas.edu.au/*",
-        "https://schoolbox.investigator.sa.edu.au/"
+        "https://schoolbox.investigator.sa.edu.au/*"
       ],
       "js": ["content.js"]
     }
