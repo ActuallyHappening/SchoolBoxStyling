@@ -1,7 +1,7 @@
 {
   "name": "Better Schoolbox",
   "description": "Style school box, autosaves, and more",
-  "version": "1.7.10",
+  "version": "1.7.11",
   "content_security_policy": {
     "extension_pages": "script-src 'self' ; object-src 'self'"
   },
@@ -30,7 +30,8 @@
         "https://schoolbox.mecs.vic.edu.au/*",
         "https://saltwatercollege.vic.edu.au/*",
         "https://thehub.lcs.tas.edu.au/*",
-        "https://schoolbox.investigator.sa.edu.au/*"
+        "https://schoolbox.investigator.sa.edu.au/*",
+        "https://ollie.delasalle.vic.edu.au/*"
       ],
       "js": ["content.js"]
     }
